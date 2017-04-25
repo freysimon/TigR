@@ -19,14 +19,15 @@ read.xts(x, datecolums = c(1:5), format = "\%Y \%m \%d \%H \%M",
 \item{...}{additional arguments from other methods passed to read.table}
 
 \item{datacolums}{integer vector. Giving the columns with date informations}
-
-\item{return}{xts object}
+}
+\value{
+an xts object.
 }
 \description{
 Read a text file and directly save it as xts object.
 }
 \examples{
-fpath <- system.file("extdata","qobs_qsim.txt", package = "ownfunc")
+fpath <- system.file("extdata","qobs_qsim.txt", package = "TigeR")
 out <- read.xts(x = fpath)
 }
 \author{

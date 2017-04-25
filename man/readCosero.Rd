@@ -39,7 +39,7 @@ Reading the file Q_output.txt.
 }
 \examples{
 data(area)
-fpath <- system.file("extdata","Q_output.txt", package = "ownfunc")
+fpath <- system.file("extdata","Q_output.txt", package = "TigeR")
 x <- readCosero(qoutput = fpath, area = area)
 x <- readCosero(qoutput = fpath)
 }

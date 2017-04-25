@@ -30,8 +30,15 @@ An xts object is plotted
 \description{
 Plots an xts object splitted in hydrological years
 }
+\examples{
+data(runoff)
+yearplot(sim = runoff[,2], obs = runoff[,1])
+}
 \seealso{
 \code{\link{dev.new.file}}
 
 \code{\link{plot.better.xts}}
+}
+\author{
+Simon Frey
 }

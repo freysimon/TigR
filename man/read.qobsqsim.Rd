@@ -19,7 +19,7 @@ Reads a qobs_qsim.txt file which is written by COSERO. Returns the recordings as
 The file qobs_qsim.txt typically is located in the output folder of COSERO. However, by default, COSERO does NOT  write this file. To tell COSERO to write this, use OUTCONTROL = 1 or 2 in the COSERO defaults file. For reading Q_output.txt, which is always be written by COSERO, see \code{\link{readCosero}}.
 }
 \examples{
-fpath <- system.file("extdata","qobs_qsim.txt", package = "ownfunc")
+fpath <- system.file("extdata","qobs_qsim.txt", package = "TigeR")
 out <- read.qobsqsim(fpath)
 summary(out)
 }
