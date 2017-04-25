@@ -1,13 +1,16 @@
 Package: TigeR
 Type: Package
 Title: Collection of more or less usefull functions
-Version: 0.0.1
+Version: 0.0.2
 Author: Who wrote it
 Depends:
     R (>= 3.3.2)
 IMPORTS: 
     xts,
     magrittr
+DEPENDS:
+	xts,
+	magrittr
 Maintainer: Simon Frey <simon.frey@verbund.com>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.

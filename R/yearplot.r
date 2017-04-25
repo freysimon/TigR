@@ -7,7 +7,11 @@
 #' @param dev characterstring. format of the plot (valid is "dev","pdf","png")
 #' @param plotfile characterstring. Filename of the plot if dev != "dev"
 #' @param ... additional arguments passed to plot
+#' @author Simon Frey
 #' @return An xts object is plotted
+#' @examples
+#' data(runoff)
+#' yearplot(sim = runoff[,2], obs = runoff[,1])
 #' @seealso \code{\link{dev.new.file}}
 #' @seealso \code{\link{plot.better.xts}}
 yearplot <- function(sim, obs, NB=NULL, plot = TRUE, maxrow = 4, dev = "dev", plotfile = NULL, ...){
