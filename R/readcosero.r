@@ -47,6 +47,8 @@
 #' @param timestep numeric. Timestep of the data.
 #' @param ... Additional arguments passed to read.table from other methods.
 #' @author Simon Frey
+#' @export
+#' @import xts
 #' @description Read COSERO outputfiles and store them into a list.
 #' @details Reading the file Q_output.txt.
 #'

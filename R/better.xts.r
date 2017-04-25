@@ -24,6 +24,7 @@
 #'    If xlabels is FALSE, no lables are drawn (but the ticks are). If it is TRUE, the lables determined by the xts function are drawn. If it is a vector, this vector is used for labeling. Will be recycled.
 #' @return Plots an xts object to the current device.
 #' @author Simon Frey
+#' @export
 #' @seealso \code{\link{xts}}
 #' @examples
 #' data(sample_matrix)

@@ -12,6 +12,7 @@
 #' @param upperbound numeric. (Optional). Upper boundary. Below this, smoothing will be performed.
 #' @return An xts object
 #' @author Simon Frey
+#' @export
 #' @description Smooth a time series, optionally within two boundaries.
 #' @details It uses the function \code{\link{embed.fullextent}} to smooth the timeseries
 #' @examples

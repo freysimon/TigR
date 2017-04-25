@@ -8,6 +8,8 @@
 #' @param plotfile characterstring. Filename of the plot if dev != "dev"
 #' @param ... additional arguments passed to plot
 #' @author Simon Frey
+#' @export
+#' @import magrittr
 #' @return An xts object is plotted
 #' @examples
 #' data(runoff)

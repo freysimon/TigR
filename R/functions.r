@@ -13,6 +13,7 @@
 #' @param x character. A character string
 #' @param n integer. Number of characters
 #' @return character string of the last n characters of x
+#' @export
 #' @seealso \code{\link{substr}}
 #' @author Simon Frey
 #' @examples
@@ -29,6 +30,7 @@ substrRight <- function(x, n){
 #' @return character string
 #' @description Adds a slash (/) to x, if x does not already end with one.
 #' @author Simon Frey
+#' @export
 #' @examples
 #' addSlash("C:/TEMP)
 #' addSlash("C:/TEMP/)
@@ -61,6 +63,7 @@ rna <- function(z) {
 #' @param area numeric. Area in m^2
 #' @param dt numeric. time step
 #' @return numeric of the same type as input
+#' @export
 #' @author Simon Frey
 #' @examples
 #' data("runoff")
@@ -81,6 +84,7 @@ mm2m3s <- function(input,area,dt){
 #' @param dt numeric. time step
 #' @return numeric of the same type as input
 #' @author Simon Frey
+#' @export
 #' @examples
 #' data("Nile")
 #' m3s2mm(input = Nile, area = 6852000000, dt = 86400 * 365)
@@ -100,6 +104,7 @@ m3s2mm <- function(input,area,dt){
 #' @param x xts object
 #' @return xts object
 #' @author Simon Frey
+#' @export
 #' @description Searches duplicated timestamps in an xts object. If some are found, the values of this entry and its neighbours are averaged
 clear.duplicated <- function(x){
   any.duplicated <- anyDuplicated(time(x))
@@ -118,6 +123,7 @@ clear.duplicated <- function(x){
 #' @param year numeric
 #' @return logical. TRUE if year is a leap year
 #' @author Simon Frey
+#' @export
 #' @examples
 #' is.leapyear(2000)
 #' is.leapyear(2001)
@@ -133,6 +139,7 @@ is.leapyear=function(year){
 #' @param FUN function to apply to x
 #' @param ... additonal arguments passed to apply
 #' @author Simon Frey
+#' @export
 #' @description Aggregate an xts object to hourly values. It is a wrapper of \code{\link{period.apply}} with endpoints = "hours"
 #' @seealso \code{\link{period.apply}}
 apply.hourly <- function(x, FUN, ...){
@@ -145,14 +152,17 @@ apply.hourly <- function(x, FUN, ...){
 #' @param x character string pointing towards the file qobs_qsim.txt
 #' @author Simon Frey
 #' @return a list of length 2 with QOBS and QSIM values, respectively
+#' @import xts
+#' @export
 #' @description Reads a qobs_qsim.txt file which is written by COSERO. Returns the recordings as list holding xts objects.
-#' @details The file qobs_qsim.txt typically is located in the output folder of COSERO. However, by default, COSERO does NOT  write this file. To tell COSERO to write this, use OUTCONTROL = 1 or 2 in the COSERO defaults file. For reading Q_output.txt, which is always be written by COSERO, see \code{\link{readCosero}}.
+#' @details The file qobs_qsim.txt typically is located in the output folder of COSERO. However, by default, COSERO does NOT  write this file. To tell COSERO to write this, use OUTCONTROL = 1 or 2 in the COSERO defaults file.
+#'
+#'     For reading Q_output.txt, which is always be written by COSERO, see \code{\link{readCosero}}.
 #' @examples
 #' fpath <- system.file("extdata","qobs_qsim.txt", package = "TigeR")
 #' out <- read.qobsqsim(fpath)
 #' summary(out)
 #' @seealso \code{\link{readCosero}}
-#'
 read.qobsqsim <- function(x){
   output <- list()
   library(xts)
@@ -177,6 +187,8 @@ read.qobsqsim <- function(x){
 #' @param tz character string. Time zone of the data
 #' @param ... additional arguments from other methods passed to read.table
 #' @return an xts object.
+#' @import xts
+#' @export
 #' @description Read a text file and directly save it as xts object.
 #' @author Simon Frey
 #' @examples
@@ -210,6 +222,7 @@ read.xts <- function(x, datecolums=c(1:5), format="%Y %m %d %H %M", header=TRUE,
 #' @return If return.device = TRUE, device is retured. Else nothing is returned.
 #' @description Open a new graphical device on screen or open a pdf/png file for plotting
 #' @author Simon Frey
+#' @export
 #' @details Valid arguments for device are "dev", "png" and "pdf".
 #'
 #'     If device = "dev", the standard, then a new graphical deive is opened by calling dev.new()
@@ -270,6 +283,7 @@ dev.new.file <- function(device="dev",return.device=TRUE,filename=NULL, ...){
 #' @param na.rm logical. Should NA values be removed?
 #' @return numerical vector
 #' @author Simon Frey
+#' @export
 #' @examples
 #' data("runoff")
 #' colMax(runoff)
@@ -295,13 +309,13 @@ colMin <- function (colData,na.rm=TRUE) {
 #' @param x xts object
 #' @param ... Additonal arguments passed to write.table
 #' @author Simon Frey
+#' @export
 #' @description Writing an xts object to a file using its date format as rownames instead of the numerical values of the date
 #' @examples
 #' ### do not run
 #' data("runoff")
 #' write.xts(runoff, file = tempfile())
 write.xts <- function(x,...){
-  library(xts)
   if(!is.xts(x)){
     stop("x must be an xts object")
   }
@@ -317,6 +331,7 @@ write.xts <- function(x,...){
 #'@return integer vector of length 2
 #'@description returns an integer vector of length 2 giving the rows and columns
 #'@author Simon Frey
+#'@export
 #'@examples
 #' setcolumns(x = 6)
 #' setcolumns(x = 6, maxrow = 2)
@@ -334,6 +349,7 @@ setcolumns <- function(x,maxrow = 4){
 #'@param capitals logical. Return uppercase letters?
 #'@return character.
 #'@author Simon Frey
+#'@export
 #'@examples
 #' abc(1)
 #' abc(x=7, capitals = TRUE)
