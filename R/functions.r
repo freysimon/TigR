@@ -223,11 +223,11 @@ read.xts <- function(x, datecolums=c(1:5), format="%Y %m %d %H %M", header=TRUE,
 #' @description Open a new graphical device on screen or open a pdf/png file for plotting
 #' @author Simon Frey
 #' @export
-#' @details Valid arguments for device are "dev", "png" and "pdf".
+#' @details Valid arguments for device are "dev", "png", "pdf" and "svg".
 #'
 #'     If device = "dev", the standard, then a new graphical deive is opened by calling dev.new()
 #'
-#'     If device = "png" or "pdf" the respective file specified by filename is opend for wrting. Note that it is not automatically closed.
+#'     If device = "png", "pdf" or "svg" the respective file specified by filename is opend for writing. Note that it is not automatically closed.
 #'
 #'     Filename doesn't need to end with an ending. It will be concatenated if missing.
 #'
@@ -245,13 +245,13 @@ dev.new.file <- function(device="dev",return.device=TRUE,filename=NULL, ...){
   ##  Kann durch device angegeben werden:
   ##    - device = dev : öffenen eines neuen device (dev.new)
   ##    - device = png : öffenen einer neuen PNG Datei
-  ##    - deevice = pdf : öffnen einer neuen pdf Datei
+  ##    - device = pdf : öffnen einer neuen pdf Datei
   ##
   ##    Simon Frey
   ##    September 2016 - Februar 2017
   ##############################################################################
 
-  if(!device %in% c("dev","png","pdf")){
+  if(!device %in% c("dev","png","pdf","svg")){
     stop("ERROR: unknown file format")
   }
 
@@ -272,6 +272,9 @@ dev.new.file <- function(device="dev",return.device=TRUE,filename=NULL, ...){
   }
   if(device == "pdf"){
     pdf(file = filename, ...)
+  }
+  if(device == "svg"){
+    svg(filename, ...)
   }
   if(return.device){
     return(device)

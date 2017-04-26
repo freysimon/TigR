@@ -23,6 +23,8 @@ Calculate water balance within a time span
 Sim and obs are subsetted into bits given by time. Accepted values are "none", "year".
 
    Cumulated sums are then calculated of the time spans for sim and obs and returned as a list.
+
+   If time = year, sim and obs are subsetted in hydrological years (1st of November until 30th of October).
 }
 \examples{
 data("area")

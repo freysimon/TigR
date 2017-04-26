@@ -8,6 +8,8 @@
 #' @details Sim and obs are subsetted into bits given by time. Accepted values are "none", "year".
 #'
 #'    Cumulated sums are then calculated of the time spans for sim and obs and returned as a list.
+#'
+#'    If time = year, sim and obs are subsetted in hydrological years (1st of November until 30th of October).
 #' @export
 #' @import magrittr
 #' @author Simon Frey
@@ -38,12 +40,12 @@ wbl <- function(sim, obs, time = "year"){
         unique()
 
     # preallocate a list with length of found years
-    temp <- vector("list",length(years))
-    names(temp) <- as.character(years)
+    temp <- vector("list",length(tspan))
+    names(temp) <- as.character(tspan)
 
     # subset ts into singe years
-    for(k in 1:(length(years)-1)){
-      jj <- paste(years[k],"-11-01/",years[k+1],"-10-31",sep="")
+    for(k in 1:(length(tspan)-1)){
+      jj <- paste(tspan[k],"-11-01/",tspan[k+1],"-10-31",sep="")
       temp[[k]] <- cbind(sim[jj] %>% cumsum(),
                        obs[jj] %>% cumsum())
     }

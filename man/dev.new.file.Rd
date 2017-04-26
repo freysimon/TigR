@@ -22,11 +22,11 @@ If return.device = TRUE, device is retured. Else nothing is returned.
 Open a new graphical device on screen or open a pdf/png file for plotting
 }
 \details{
-Valid arguments for device are "dev", "png" and "pdf".
+Valid arguments for device are "dev", "png", "pdf" and "svg".
 
     If device = "dev", the standard, then a new graphical deive is opened by calling dev.new()
 
-    If device = "png" or "pdf" the respective file specified by filename is opend for wrting. Note that it is not automatically closed.
+    If device = "png", "pdf" or "svg" the respective file specified by filename is opend for writing. Note that it is not automatically closed.
 
     Filename doesn't need to end with an ending. It will be concatenated if missing.
 
