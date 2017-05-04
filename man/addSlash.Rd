@@ -16,8 +16,9 @@ character string
 Adds a slash (/) to x, if x does not already end with one.
 }
 \examples{
-addSlash("C:/TEMP)
-addSlash("C:/TEMP/)
+addSlash("C:/TEMP")
+addSlash("C:/TEMP/")
+#' @seealso \\code{\\link{removeSlash}} for removing a trailing slash
 }
 \author{
 Simon Frey

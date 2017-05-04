@@ -24,7 +24,6 @@ substrRight <- function(x, n){
 }
 
 
-# Einem string  (z.B. Pfad) einen slash hinzufügen
 #' Add a slash to an existing character string
 #' @param x character string
 #' @return character string
@@ -32,11 +31,29 @@ substrRight <- function(x, n){
 #' @author Simon Frey
 #' @export
 #' @examples
-#' addSlash("C:/TEMP)
-#' addSlash("C:/TEMP/)
+#' addSlash("C:/TEMP")
+#' addSlash("C:/TEMP/")
+#' #' @seealso \code{\link{removeSlash}} for removing a trailing slash
 addSlash <- function(x){
-  if(substrRight(x,1) != "/"){
+  if(TigeR::substrRight(x,1) != "/"){
     x <- paste(x,"/",sep="")
+  }
+  return(x)
+}
+
+#' Remove a trailing slash from a character string
+#' @param x character string
+#' @return character string without a trailing slash
+#' @description Removes a trailing slash (/) from x
+#' @author Simon Frey
+#' @export
+#' @examples
+#' removeSlash("C:/Temp/")
+#' removeSlash("C:/Temp")
+#' @seealso \code{\link{addSlash}} for adding a trailing slash
+removeSlash <- function(x){
+  if(TigeR::substrRight(x,1) == "/"){
+    x <- substr(x,1,nchar(x)-1)
   }
   return(x)
 }
@@ -365,6 +382,50 @@ abc <- function(x, capitals = FALSE){
     return(toupper(atoz[x]))
   } else {
     return(atoz[x])
+  }
+}
+
+#' unpack an archive (zip or tar)
+#' @param x character sting. file to be unpacked
+#' @param keeptar logical. If TRUE only decompresses the .tar.gz archive, otherwise fully unpack it?
+#' @param exdir character string. The directory to extract files to.
+#' @param ... arguments passed from other method
+#' @return The default of unzip/untar/gunzip will be returned
+#' @description This funtcion tries to unpack a tar.gz or zip file
+#' @details If keeptar == TRUE, the .tar.gz archive is only beeing decompressed using the \code{\link{gunzip}}-function from the R.utils-package (to the .tar-file). Note that remove is set to FALSE, unlike the default of gunzip.
+#'
+#'    If keeptar == FALSE, the archive is fully unpacked using the \code{\link{untar}} function.
+#' @author Simon Frey
+#' @import R.utils
+#' @export
+#' @seealso \code{\link{unzip}}, \code{\link{untar}}, \code{\link{gunzip}}
+unpack <- function (x, keeptar = TRUE, exdir = ".", ...){
+  extention <- unlist(strsplit(x, "[.]"))
+  if (tail(extention, n = 1) == "gz") {
+    if (tail(extention, n = 2)[1] != "tar") {
+      stop("Filetype not recognized")
+    }
+    else {
+      if (keeptar) {
+        library(R.utils)
+        tarfile <- gunzip(as.character(x), remove = FALSE, ...)
+        if (exdir != ".") {
+          file.copy(from = tarfile, to = paste(TigeR::addSlash(exdir),
+                                               tail(unlist(strsplit(tarfile, "/")), 1),
+                                               sep = ""))
+          file.remove(tarfile)
+        }
+      }
+      else {
+        untar(x, exdir = exdir, ...)
+      }
+    }
+  }
+  else if (tail(extention, n = 1) == "zip") {
+    unzip(x, exdir = exdir, ...)
+  }
+  else {
+    stop("Filetype not recognized")
   }
 }
 
