@@ -4,7 +4,7 @@
 \alias{unpack}
 \title{unpack an archive (zip or tar)}
 \usage{
-unpack(x, keeptar = TRUE, exdir = ".", ...)
+unpack(x, keeptar = TRUE, exdir = ".", copyfirst = TRUE, ...)
 }
 \arguments{
 \item{x}{character sting. file to be unpacked}
@@ -12,6 +12,8 @@ unpack(x, keeptar = TRUE, exdir = ".", ...)
 \item{keeptar}{logical. If TRUE only decompresses the .tar.gz archive, otherwise fully unpack it?}
 
 \item{exdir}{character string. The directory to extract files to.}
+
+\item{copyfirst}{logical. Should the tar.gz file first be copied to the exdir directory?}
 
 \item{...}{arguments passed from other method}
 }
@@ -25,6 +27,8 @@ This funtcion tries to unpack a tar.gz or zip file
 If keeptar == TRUE, the .tar.gz archive is only beeing decompressed using the \code{\link{gunzip}}-function from the R.utils-package (to the .tar-file). Note that remove is set to FALSE, unlike the default of gunzip.
 
    If keeptar == FALSE, the archive is fully unpacked using the \code{\link{untar}} function.
+
+   If copyfirst == TRUE (the default), the tar.gz file is copied to the exdir directory befor it is unpacked. Might be faster when unpacking from a slow source, e.g. an external harddrive. Only affects extraction of tar.gz files if kepptar == TRUE.
 }
 \seealso{
 \code{\link{unzip}}, \code{\link{untar}}, \code{\link{gunzip}}
