@@ -35,7 +35,7 @@ substrRight <- function(x, n){
 #' addSlash("C:/TEMP/")
 #' #' @seealso \code{\link{removeSlash}} for removing a trailing slash
 addSlash <- function(x){
-  if(TigeR::substrRight(x,1) != "/"){
+  if(TigR::substrRight(x,1) != "/"){
     x <- paste(x,"/",sep="")
   }
   return(x)
@@ -52,7 +52,7 @@ addSlash <- function(x){
 #' removeSlash("C:/Temp")
 #' @seealso \code{\link{addSlash}} for adding a trailing slash
 removeSlash <- function(x){
-  if(TigeR::substrRight(x,1) == "/"){
+  if(TigR::substrRight(x,1) == "/"){
     x <- substr(x,1,nchar(x)-1)
   }
   return(x)
@@ -176,7 +176,7 @@ apply.hourly <- function(x, FUN, ...){
 #'
 #'     For reading Q_output.txt, which is always be written by COSERO, see \code{\link{readCosero}}.
 #' @examples
-#' fpath <- system.file("extdata","qobs_qsim.txt", package = "TigeR")
+#' fpath <- system.file("extdata","qobs_qsim.txt", package = "TigR")
 #' out <- read.qobsqsim(fpath)
 #' summary(out)
 #' @seealso \code{\link{readCosero}}
@@ -209,7 +209,7 @@ read.qobsqsim <- function(x){
 #' @description Read a text file and directly save it as xts object.
 #' @author Simon Frey
 #' @examples
-#' fpath <- system.file("extdata","qobs_qsim.txt", package = "TigeR")
+#' fpath <- system.file("extdata","qobs_qsim.txt", package = "TigR")
 #' out <- read.xts(x = fpath)
 read.xts <- function(x, datecolums=c(1:5), format="%Y %m %d %H %M", header=TRUE, tz = "utc", ...){
   library(xts)
@@ -412,7 +412,7 @@ unpack <- function (x, keeptar = TRUE, exdir = ".", copyfirst = TRUE, ...){
         library(R.utils)
         if(copyfirst){
           if(exdir != "."){
-            copy <- paste(TigeR::addSlash(exdir), tail(unlist(strsplit(x, "/")), 1), sep = "")
+            copy <- paste(TigR::addSlash(exdir), tail(unlist(strsplit(x, "/")), 1), sep = "")
             file.copy(from = x, to = copy)
             gunzip(as.character(copy), remove = TRUE, ...)
           } else {
@@ -421,7 +421,7 @@ unpack <- function (x, keeptar = TRUE, exdir = ".", copyfirst = TRUE, ...){
         } else {
           tarfile <- gunzip(as.character(x), remove = FALSE, ...)
           if (exdir != ".") {
-            file.copy(from = tarfile, to = paste(TigeR::addSlash(exdir),
+            file.copy(from = tarfile, to = paste(TigR::addSlash(exdir),
                                                tail(unlist(strsplit(tarfile, "/")), 1),
                                                sep = ""))
             file.remove(tarfile)
@@ -439,6 +439,35 @@ unpack <- function (x, keeptar = TRUE, exdir = ".", copyfirst = TRUE, ...){
   }
   else {
     warning("Filetype not recognized")
+  }
+}
+
+#' Loading many libraries at once
+#' @param x character vector. Name(s) of the libraries that are loaded/installed.
+#' @param ... Arguments passed to \code{\link{require}} and \code{\link{install.packages}}
+#' @author Simon Frey
+#' @description This function tries to load more than one package at once. If any of these packages is not installed it tries to istall them and load them afterward.
+#' @export
+#' @examples
+#' # loading xts 
+#' libraries("xts")
+#' libraries(c("xts","shiny"))
+#' @return Returns nothing but gives a warning if it cannot load/install a library/package
+#' @seealso \code{\link{require}}, \code{\link{library}}, \code{\link{install.packages}} 
+libraries <- function(x, ...){
+  
+  temp <- suppressWarnings(unlist(lapply(x,require,character.only=TRUE, ...)))
+  
+  if(any(!temp)){
+    w <- which(!temp)
+    install.packages(x[w],...)
+    
+    
+    temp <- suppressWarnings(unlist(lapply(x[w],require,character.only=TRUE, ...)))
+    if(!any(temp)){
+      w <- which(!temp)
+      stop(paste("Error loading ",x[w],sep=""))
+    }
   }
 }
 
