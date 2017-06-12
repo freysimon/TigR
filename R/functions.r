@@ -327,6 +327,7 @@ colMin <- function (colData,na.rm=TRUE) {
 
 #' Write an xts object using the date format as rownames
 #' @param x xts object
+#' @param format format-style argument for formatting the date/time
 #' @param ... Additonal arguments passed to write.table
 #' @author Simon Frey
 #' @export
@@ -335,11 +336,18 @@ colMin <- function (colData,na.rm=TRUE) {
 #' ### do not run
 #' data("runoff")
 #' write.xts(runoff, file = tempfile())
-write.xts <- function(x,...){
+#' write.xts(runoff, format = "%d.%m.%Y %H:%M")
+write.xts <- function(x,format = NULL, ...){
   if(!is.xts(x)){
     stop("x must be an xts object")
   }
-  times <- as.character(time(x))
+  
+  if(is.null(format)){
+    times <- as.character(time(x))
+  } else {
+    times <- as.character(format(time(x), format = format))
+  }
+  
   xx <- as.matrix(x)
   rownames(xx) <- times
   write.table(xx,row.names=TRUE,...)
