@@ -21,7 +21,7 @@ The file qobs_qsim.txt typically is located in the output folder of COSERO. Howe
     For reading Q_output.txt, which is always be written by COSERO, see \code{\link{readCosero}}.
 }
 \examples{
-fpath <- system.file("extdata","qobs_qsim.txt", package = "TigeR")
+fpath <- system.file("extdata","qobs_qsim.txt", package = "TigR")
 out <- read.qobsqsim(fpath)
 summary(out)
 }

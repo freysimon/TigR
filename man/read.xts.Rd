@@ -27,7 +27,7 @@ an xts object.
 Read a text file and directly save it as xts object.
 }
 \examples{
-fpath <- system.file("extdata","qobs_qsim.txt", package = "TigeR")
+fpath <- system.file("extdata","qobs_qsim.txt", package = "TigR")
 out <- read.xts(x = fpath)
 }
 \author{
