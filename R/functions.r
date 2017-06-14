@@ -480,6 +480,35 @@ libraries <- function(x, ...){
 }
 
 
+#' Faster version of last observation carried forward
+#' @param x an xts object
+#' @param ... further arguments, e.g. na.rm; see \code{\link{na.locf}}
+#' @author Simon Frey
+#' @description This is basically a wrapper around \code{\link{na.locf}} from the xts package. It avoids the column-by-column copying. Usefull if there are many columns in the xts object.
+#' @export
+#' @examples 
+#' data(runoff)
+#' # add some NAs
+#' runoff[2,] <- NA
+#' index(runoff)[2] <- NA
+#' 
+#' a <- nalocf(runoff)
+#' b <- na.locf(runoff)
+#' identical(a,b)
+#' @return Returns an xts object
+#' 
+nalocf <- function(x, ...){
+  library(xts)
+  if(class(x)[1] != "xts"){
+    stop("x must be an xts object")
+  }
+  TI <- index(x)
+  x <- apply(x, 2, na.locf)
+  x <- as.xts(x, order.by = TI)
+  return(x)
+}
+
+
 
 
 
