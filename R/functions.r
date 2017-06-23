@@ -482,6 +482,7 @@ libraries <- function(x, ...){
 
 #' Faster version of last observation carried forward
 #' @param x an xts object
+#' @param loop logical. Should the operation be performed as a loop (slower but maybe better for RAM management)
 #' @param ... further arguments, e.g. na.rm; see \code{\link{na.locf}}
 #' @author Simon Frey
 #' @description This is basically a wrapper around \code{\link{na.locf}} from the xts package. It avoids the column-by-column copying. Usefull if there are many columns in the xts object.
@@ -497,13 +498,28 @@ libraries <- function(x, ...){
 #' identical(a,b)
 #' @return Returns an xts object
 #' 
-nalocf <- function(x, ...){
+nalocf <- function(x, loop = FALSE, ...){
   library(xts)
   if(class(x)[1] != "xts"){
     stop("x must be an xts object")
   }
   TI <- index(x)
-  x <- apply(x, 2, na.locf)
+  if(loop){
+    temp <- matrix(ncol = ncol(x), nrow = nrow(x), data = NA)
+    for(k in 1:ncol(x)){
+      if(any(is.na(x[,k]))){
+        temp[,k] <- na.locf(x[,k])
+      } else {
+        temp[,k] <- x[,k]
+      }
+    }
+    x <- temp
+    rm(temp)
+    gc()
+  } else {
+    x <- apply(x, 2, na.locf) 
+  }
+  
   x <- as.xts(x, order.by = TI)
   return(x)
 }

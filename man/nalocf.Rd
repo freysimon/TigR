@@ -4,10 +4,12 @@
 \alias{nalocf}
 \title{Faster version of last observation carried forward}
 \usage{
-nalocf(x, ...)
+nalocf(x, loop = FALSE, ...)
 }
 \arguments{
 \item{x}{an xts object}
+
+\item{loop}{logical. Should the operation be performed as a loop (slower but maybe better for RAM management)}
 
 \item{...}{further arguments, e.g. na.rm; see \code{\link{na.locf}}}
 }

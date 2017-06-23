@@ -52,7 +52,7 @@
 #' @description Read COSERO outputfiles and store them into a list.
 #' @details Reading the file Q_output.txt.
 #'
-#'    The function automatically searches for the file containing data about precipitation, runoff composition, eta, storage or snowmelt if the respective arguments are set TRUE. Note that those file are NOT written by COSERO by default. Use OUTCONTROL = 1 or 2 in the defaults file of COSERO to activate writing of them. They are given in mm. To compare them to runoff, be adviced that runoff should be transformed into mm, too. This, however, can only be done if both area is given. It is done via \code{\link{m3s2mm}}. The argument timestep my be provided. If NULL the function will try to gather it from the data.
+#'    The function automatically searches for the file containing data about precipitation, runoff composition, eta, storage or snowmelt if the respective arguments are set TRUE. Note that those file are NOT written by COSERO by default. Use OUTCONTROL = 1 or 2 in the defaults file of COSERO to activate writing of them. They are given in mm. To compare them to runoff, be adviced that runoff should be transformed into mm, too. This, however, can only be done if area is given. It is done via \code{\link{m3s2mm}}. The argument timestep may be provided. If NULL the function will try to gather it from the data.
 #'
 #'    For reading qobs_qsim.txt see \code{\link{read.qobsqsim}}
 #' @examples
