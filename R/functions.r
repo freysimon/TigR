@@ -116,7 +116,7 @@ m3s2mm <- function(input,area,dt){
 }
 
 
-# Suche nach Doppelten Zeitflags. Falls welche gefunden werden, wird der Wert beider Einträge gemittelt.
+# Suche nach doppelten Zeitflags. Falls welche gefunden werden, wird der Wert beider Einträge gemittelt.
 #' Remove duplicated entries
 #' @param x xts object
 #' @return xts object
@@ -198,7 +198,7 @@ read.qobsqsim <- function(x){
 }
 #' read a textfile and save it as xts-object
 #' @param x character string. file to load
-#' @param datacolums integer vector. Giving the columns with date informations
+#' @param datecolumns integer vector. Giving the columns with date informations
 #' @param format character string. Specify the format of the date
 #' @param header logical. Does the data have a header?
 #' @param tz character string. Time zone of the data
@@ -211,15 +211,15 @@ read.qobsqsim <- function(x){
 #' @examples
 #' fpath <- system.file("extdata","qobs_qsim.txt", package = "TigR")
 #' out <- read.xts(x = fpath)
-read.xts <- function(x, datecolums=c(1:5), format="%Y %m %d %H %M", header=TRUE, tz = "utc", ...){
+read.xts <- function(x, datecolumns=c(1:5), format="%Y %m %d %H %M", header=TRUE, tz = "utc", ...){
   library(xts)
   temp <- read.table(x,nrow=1,header=header,...)
   nc <- ncol(temp)
-  temp <- read.table(x,colClasses=c(rep("character",max(datecolums)),
-                                    rep("numeric",nc-max(datecolums))),
+  temp <- read.table(x,colClasses=c(rep("character",max(datecolumns)),
+                                    rep("numeric",nc-max(datecolumns))),
                      header=header,...)
-  for(k in datecolums){
-    if(k == datecolums[1]){
+  for(k in datecolumns){
+    if(k == datecolumns[1]){
       datum <- temp[,k]
     } else {
       datum <- paste(datum,temp[,k],sep=" ")

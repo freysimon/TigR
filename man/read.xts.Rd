@@ -4,11 +4,13 @@
 \alias{read.xts}
 \title{read a textfile and save it as xts-object}
 \usage{
-read.xts(x, datecolums = c(1:5), format = "\%Y \%m \%d \%H \%M",
+read.xts(x, datecolumns = c(1:5), format = "\%Y \%m \%d \%H \%M",
   header = TRUE, tz = "utc", ...)
 }
 \arguments{
 \item{x}{character string. file to load}
+
+\item{datecolumns}{integer vector. Giving the columns with date informations}
 
 \item{format}{character string. Specify the format of the date}
 
@@ -17,8 +19,6 @@ read.xts(x, datecolums = c(1:5), format = "\%Y \%m \%d \%H \%M",
 \item{tz}{character string. Time zone of the data}
 
 \item{...}{additional arguments from other methods passed to read.table}
-
-\item{datacolums}{integer vector. Giving the columns with date informations}
 }
 \value{
 an xts object.
