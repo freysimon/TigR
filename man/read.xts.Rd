@@ -5,7 +5,7 @@
 \title{read a textfile and save it as xts-object}
 \usage{
 read.xts(x, datecolumns = c(1:5), format = "\%Y \%m \%d \%H \%M",
-  header = TRUE, tz = "utc", ...)
+  header = TRUE, tz = "utc", skip = 0, ...)
 }
 \arguments{
 \item{x}{character string. file to load}
@@ -17,6 +17,8 @@ read.xts(x, datecolumns = c(1:5), format = "\%Y \%m \%d \%H \%M",
 \item{header}{logical. Does the data have a header?}
 
 \item{tz}{character string. Time zone of the data}
+
+\item{skip}{integer: the number of lines of the data file to skip before beginning to read data}
 
 \item{...}{additional arguments from other methods passed to read.table}
 }

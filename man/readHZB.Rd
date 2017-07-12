@@ -5,7 +5,7 @@
 \title{read a file provides by HZB}
 \usage{
 readHZB(file, name = TRUE, keyword = "Messstelle",
-  format = "\%d.\%m.\%Y \%H:\%M", tz = "UTC")
+  format = "\%d.\%m.\%Y \%H:\%M", tz = "UTC", ...)
 }
 \arguments{
 \item{file}{file to read}
@@ -17,6 +17,8 @@ readHZB(file, name = TRUE, keyword = "Messstelle",
 \item{format}{format for the formatting date and time (see \code{\link{as.POSIXct}})}
 
 \item{tz}{timezone}
+
+\item{...}{agruments passed on to \code{\link{read.xts}}}
 }
 \value{
 an xts object
@@ -33,6 +35,8 @@ read a file provided by HZB (e.g. from ehyd)
 \code{\link{read.table}}
 
 \code{\link{readLines}}
+
+\code{\link{read.xts}}
 }
 \author{
 Simon Frey
