@@ -4,14 +4,18 @@
 \alias{write.xts}
 \title{Write an xts object using the date format as rownames}
 \usage{
-write.xts(x, format = NULL, ...)
+write.xts(x, format = NULL, fmt = NULL, quote = FALSE, ...)
 }
 \arguments{
 \item{x}{xts object}
 
 \item{format}{format-style argument for formatting the date/time}
 
+\item{quote}{logical. Should characterers be encapsulated in ""?}
+
 \item{...}{Additonal arguments passed to write.table}
+
+\item{FMT}{character string passed on to \code{\link{sprintf}} for formatting numerical values. If NULL, no special format is used.}
 }
 \description{
 Writing an xts object to a file using its date format as rownames instead of the numerical values of the date
@@ -21,6 +25,7 @@ Writing an xts object to a file using its date format as rownames instead of the
 data("runoff")
 write.xts(runoff, file = tempfile())
 write.xts(runoff, format = "\%d.\%m.\%Y \%H:\%M")
+write.xts(runoff, fmt = "\%5.1f")
 }
 \author{
 Simon Frey

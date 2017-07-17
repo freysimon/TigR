@@ -71,6 +71,7 @@ smoothXTS <- function(x,timesteps=24,lowerbound=NULL, upperbound=NULL){
 #' @description Modified version of \code{\link{embed}}.
 #' @details By adding the last timesteps-1 entries at the end of the result of embed, the length of the output is equal to the length of x. Otherwise the length of the output would be length(x)-(timesteps-1)
 #' @examples
+#' @export
 #' x <- 1:10
 #' embed.fullextent(x,3)
 embed.fullextent <- function(x,timesteps=timesteps){
@@ -96,8 +97,9 @@ embed.fullextent <- function(x,timesteps=timesteps){
 #' @param upperbound (Optional) A numeric value giving the threshold below which smoothing is performed.
 #' @return A smoothed xts.
 #' @description Smoothes an time series x on daily basis
-#' @details Smoothing is performed if no value within the processed day exeeds upperbound. Smoothing is done by \eqn{(max(x)+max(y))/2}.
+#' @details Smoothing is performed if no value within the processed day exeeds upperbound. Smoothing is done by \eqn{(max(x)+min(x))/2}.
 #' @author Simon Frey
+#' @export
 #' @examples
 #' data(runoff)
 #' x <- smoothdaily(runoff[,1])

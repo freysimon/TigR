@@ -20,10 +20,6 @@ Modified version of \code{\link{embed}}.
 \details{
 By adding the last timesteps-1 entries at the end of the result of embed, the length of the output is equal to the length of x. Otherwise the length of the output would be length(x)-(timesteps-1)
 }
-\examples{
-x <- 1:10
-embed.fullextent(x,3)
-}
 \author{
 Simon Frey
 }

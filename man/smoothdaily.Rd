@@ -18,7 +18,7 @@ A smoothed xts.
 Smoothes an time series x on daily basis
 }
 \details{
-Smoothing is performed if no value within the processed day exeeds upperbound. Smoothing is done by \eqn{(max(x)+max(y))/2}.
+Smoothing is performed if no value within the processed day exeeds upperbound. Smoothing is done by \eqn{(max(x)+min(x))/2}.
 }
 \examples{
 data(runoff)
