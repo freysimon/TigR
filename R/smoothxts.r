@@ -12,10 +12,9 @@
 #' @param upperbound numeric. (Optional). Upper boundary. Below this, smoothing will be performed.
 #' @return An xts object
 #' @author Simon Frey
-#' @export
 #' @description Smooth a time series, optionally within two boundaries.
 #' @details It uses the function \code{\link{embed.fullextent}} to smooth the timeseries
-#' @examples
+#' @examples 
 #' data(runoff)
 #' x <- runoff[,1]
 #' summary(x)
@@ -24,6 +23,7 @@
 #' X <- smoothXTS(x, lowerbound = quantile(x,0.2), upperbound = quantile(x, 0.8))
 #' summary(X)
 #' @seealso \code{\link{embed.fullextent}}
+#' @export
 smoothXTS <- function(x,timesteps=24,lowerbound=NULL, upperbound=NULL){
 
   # x = Zeitreihe, die geglättet werden soll
@@ -70,8 +70,8 @@ smoothXTS <- function(x,timesteps=24,lowerbound=NULL, upperbound=NULL){
 #' @author Simon Frey
 #' @description Modified version of \code{\link{embed}}.
 #' @details By adding the last timesteps-1 entries at the end of the result of embed, the length of the output is equal to the length of x. Otherwise the length of the output would be length(x)-(timesteps-1)
-#' @examples
 #' @export
+#' @examples
 #' x <- 1:10
 #' embed.fullextent(x,3)
 embed.fullextent <- function(x,timesteps=timesteps){

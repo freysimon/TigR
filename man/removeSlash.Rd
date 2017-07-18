@@ -20,7 +20,7 @@ removeSlash("C:/Temp/")
 removeSlash("C:/Temp")
 }
 \seealso{
-\code{\link{addSlash}} for adding a trailing slash
+\code{\link{addSlash}} for adding a trailing slash; \code{\link{changeSlash}} for substituting a slah with a double backslash
 }
 \author{
 Simon Frey

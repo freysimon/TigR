@@ -33,7 +33,7 @@ substrRight <- function(x, n){
 #' @examples
 #' addSlash("C:/TEMP")
 #' addSlash("C:/TEMP/")
-#' #' @seealso \code{\link{removeSlash}} for removing a trailing slash
+#' @seealso \code{\link{removeSlash}} for removing a trailing slash; \code{\link{changeSlash}} for substituting a slah with a double backslash
 addSlash <- function(x){
   if(TigR::substrRight(x,1) != "/"){
     x <- paste(x,"/",sep="")
@@ -50,12 +50,26 @@ addSlash <- function(x){
 #' @examples
 #' removeSlash("C:/Temp/")
 #' removeSlash("C:/Temp")
-#' @seealso \code{\link{addSlash}} for adding a trailing slash
+#' @seealso \code{\link{addSlash}} for adding a trailing slash; \code{\link{changeSlash}} for substituting a slah with a double backslash
 removeSlash <- function(x){
   if(TigR::substrRight(x,1) == "/"){
     x <- substr(x,1,nchar(x)-1)
   }
   return(x)
+}
+
+#' Substitute slashes by double backslashes
+#' @param x character string
+#' @return charater string with double backslashes instead of slashes
+#' @description Substitute slashes by double backslashes in a character string.
+#' @author Simon Frey
+#' @export
+#' @examples 
+#' changeSlash("C:/Temp")
+#' changeSlash("C:/firstlevel/secondlevel")
+#' @seealso See \code{\link{addSlash}} for adding a trailing slash and \code{\link{removeSlash}} for removing a trailing slash from a character string.
+changeSlash <- function(x){
+  return(gsub("/","\\",x,fixed = TRUE))
 }
 
 # Falls na.locf nicht funktioniert

@@ -18,7 +18,9 @@ Adds a slash (/) to x, if x does not already end with one.
 \examples{
 addSlash("C:/TEMP")
 addSlash("C:/TEMP/")
-#' @seealso \\code{\\link{removeSlash}} for removing a trailing slash
+}
+\seealso{
+\code{\link{removeSlash}} for removing a trailing slash; \code{\link{changeSlash}} for substituting a slah with a double backslash
 }
 \author{
 Simon Frey
