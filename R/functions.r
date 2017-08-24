@@ -418,60 +418,173 @@ abc <- function(x, capitals = FALSE){
   }
 }
 
-#' unpack an archive (zip or tar)
-#' @param x character sting. file to be unpacked
-#' @param keeptar logical. If TRUE only decompresses the .tar.gz archive, otherwise fully unpack it?
+#' #' unpack an archive (zip or tar)
+#' #' @param x character sting. file to be unpacked
+#' #' @param keeptar logical. If TRUE only decompresses the .tar.gz archive, otherwise fully unpack it?
+#' #' @param exdir character string. The directory to extract files to.
+#' #' @param copyfirst logical. Should the tar.gz file first be copied to the exdir directory?
+#' #' @param overwrite logical. Should any existing files be overwritten?
+#' #' @param skip logical. Skip existing files if overwrite == FALSE.
+#' #' @param remove logical. Should the archive be deleted after extraction? Also deletes skipped archives.
+#' #' @param ... arguments passed from other method
+#' #' @return The default of unzip/untar/gunzip will be returned
+#' #' @description This funtcion tries to unpack a tar.gz or zip file
+#' #' @details If keeptar == TRUE, the .tar.gz archive is only beeing decompressed using the \code{\link{gunzip}}-function from the R.utils-package (to the .tar-file). Note that remove is set to FALSE, unlike the default of gunzip.
+#' #'
+#' #'    If keeptar == FALSE, the archive is fully unpacked using the \code{\link{untar}} function.
+#' #'
+#' #'    If copyfirst == TRUE (the default), the tar.gz file is copied to the exdir directory befor it is unpacked. Might be faster when unpacking from a slow source, e.g. an external harddrive. Only affects extraction of tar.gz files if kepptar == TRUE.
+#' #' @author Simon Frey
+#' #' @import R.utils
+#' #' @export
+#' #' @seealso \code{\link{unzip}}, \code{\link{untar}}, \code{\link{gunzip}}
+#' unpack <- function (x, keeptar = TRUE, exdir = ".", copyfirst = TRUE, overwrite = FALSE, skip = TRUE, remove = FALSE, ...){
+#'   extention <- unlist(strsplit(x, "[.]"))
+#'   if (tail(extention, n = 1) == "gz") {
+#'     if (tail(extention, n = 2)[1] != "tar") {
+#'       warning("Filetype not recognized")
+#'     } else {
+#'       if(copyfirst){
+#'         if(exdir != "."){
+#'           copy <- paste(TigR::addSlash(exdir), tail(unlist(strsplit(x, "/")), 1), sep = "")
+#'           file.copy(from = x, to = copy)
+#'           x <- copy
+#'         }
+#'       }
+#'       if (keeptar) {
+#'         library(R.utils)
+#'         tarfile <- gunzip(as.character(x), remove = remove, overwrite = overwrite, skip = skip, ...)
+#'         if (exdir != ".") {
+#'           if(!copyfirst){
+#'             file.copy(from = tarfile, to = paste(TigR::addSlash(exdir),
+#'                                                tail(unlist(strsplit(tarfile, "/")), 1),
+#'                                                sep = ""))
+#'             file.remove(tarfile)
+#'           }
+#'         }
+#'       } else {
+#'         if(!overwrite){
+#'           # list all files
+#'           tarlist <- untar(x, list = TRUE, exdir = exdir, ...)
+#'           
+#'           #extract only non extisting files
+#'           untar(x, exdir = exdir, files = tarlist[which(!file.exists(tarlist))], ...)
+#'           
+#'         } else {
+#'           untar(x, exdir = exdir, ...)
+#'         }
+#'       }
+#'     }
+#'   }
+#'   else if (tail(extention, n = 1) == "zip") {
+#'     if(copyfirst){
+#'       if(exdir != "."){
+#'         copy <- paste(TigR::addSlash(exdir), tail(unlist(strsplit(x, "/")), 1), sep = "")
+#'         file.copy(from = x, to = copy)
+#'         x <- copy
+#'       }
+#'     }
+#'     unzip(x, exdir = exdir, overwrite = overwrite, ...)
+#'   }
+#'   else {
+#'     warning("Filetype not recognized")
+#'   }
+#'   # delete any existing archive
+#'   if(remove){
+#'     if(file.exists(x)){
+#'       file.remove(x)
+#'     }
+#'   }
+#' }
+
+#' unpack a set of files
+#' @param x vector of filenames
+#' @param keeptar Should the tar.gz archives be extracted or extracted and untared?
 #' @param exdir character string. The directory to extract files to.
-#' @param copyfirst logical. Should the tar.gz file first be copied to the exdir directory?
+#' @param overwrite logical. Should any existing files be overwritten?
+#' @param remove logical. Should the archive be deleted after extraction? Also deletes skipped archives.
+#' @param cores integer. Number of cores used to extract the files. Defaults to NULL which is a single core.
+#' @param barstyle character. Style of the progressbar drawn by \code{\link{pbapply}}. Possible values are "timer", "txt", "win", "tk", or "none".  
+#' @param debug logical. Should informations about debugging be printed?
 #' @param ... arguments passed from other method
 #' @return The default of unzip/untar/gunzip will be returned
-#' @description This funtcion tries to unpack a tar.gz or zip file
-#' @details If keeptar == TRUE, the .tar.gz archive is only beeing decompressed using the \code{\link{gunzip}}-function from the R.utils-package (to the .tar-file). Note that remove is set to FALSE, unlike the default of gunzip.
-#'
-#'    If keeptar == FALSE, the archive is fully unpacked using the \code{\link{untar}} function.
-#'
-#'    If copyfirst == TRUE (the default), the tar.gz file is copied to the exdir directory befor it is unpacked. Might be faster when unpacking from a slow source, e.g. an external harddrive. Only affects extraction of tar.gz files if kepptar == TRUE.
 #' @author Simon Frey
-#' @import R.utils
-#' @export
 #' @seealso \code{\link{unzip}}, \code{\link{untar}}, \code{\link{gunzip}}
-unpack <- function (x, keeptar = TRUE, exdir = ".", copyfirst = TRUE, ...){
+#' @description This function can handle tar.gz and zip files. One can decide if tar.gz files should be just extracted (use keeptar = TRUE) or extracted and untared (use keeptar = FALSE). 
+#' @import R.utils
+#' @import parallel
+#' @import pbapply 
+#' @export
+unpack <- function(x, keeptar = TRUE, exdir = ".", overwrite = TRUE,  
+                       remove = FALSE, cores = NULL, barstyle = "win", debug = FALSE, ...){
+  library(pbapply)
+  library(parallel)
+  if(keeptar) library(R.utils)
   extention <- unlist(strsplit(x, "[.]"))
   if (tail(extention, n = 1) == "gz") {
     if (tail(extention, n = 2)[1] != "tar") {
-      warning("Filetype not recognized")
-    } else {
-      if (keeptar) {
-        library(R.utils)
-        if(copyfirst){
-          if(exdir != "."){
-            copy <- paste(TigR::addSlash(exdir), tail(unlist(strsplit(x, "/")), 1), sep = "")
-            file.copy(from = x, to = copy)
-            gunzip(as.character(copy), remove = TRUE, ...)
-          } else {
-            gunzip(as.character(x), remove = FALSE, ...)
-          }
-        } else {
-          tarfile <- gunzip(as.character(x), remove = FALSE, ...)
-          if (exdir != ".") {
-            file.copy(from = tarfile, to = paste(TigR::addSlash(exdir),
-                                               tail(unlist(strsplit(tarfile, "/")), 1),
-                                               sep = ""))
-            file.remove(tarfile)
-          }
-        }
-
+      stop("Filetype not recognized")
+    }
+    
+    if(debug) print(paste("x is: ", x, sep =""))
+    
+    # first copy files ...
+    # copyto <- gsub(pattern = dirname(x)[1], exdir, x)
+    # file.copy(from = x, to = copyto,  overwrite = overwrite)
+    # x <- copyto
+    # 
+    # if(debug) print(paste("copying successfully done! New x is: ",x, sep =""))
+    
+    # create cluster for multithreading
+    if(!is.null(cores)){
+      if(!is.integer(cores)){
+        warning("cores must be an integer representing the number of cores you want to use. Now we're using all but one cores.")
+        cores <- detectCores()-1
       }
-      else {
-        untar(x, exdir = exdir, ...)
+      if(debug) print(paste("Creating cluster using ", cores, " cores", sep=""))
+      cl <- makeCluster(cores)
+      clusterExport(cl = cl, varlist=c("x","remove","overwrite"), envir = environment())
+      #clusterExport(cl, "exdir")
+    } else {
+      cl = NULL
+    }
+    
+    pboptions(type = barstyle, label = "Extracting files ...")
+    
+    # ... then extract them
+    if(keeptar){
+      pbsapply(x, FUN = gunzip, remove = remove,  overwrite = overwrite, ..., cl = cl)
+    } else {
+      unTar <- function(x, remove, overwrite, ...){
+        if(overwrite){
+          files <- untar(x, list = TRUE)
+          untar(x, files[which(!file.exists(files))], ...)
+        } else {
+          untar(x)
+        }
+        if(remove) file.remove(x)
+      }
+      if(!is.null(cores)){
+        clusterExport(cl, "unTar", envir = environment())
+      }
+      
+      pbsapply(x, FUN = unTar, remove = remove, overwrite = overwrite, ..., cl = cl)
+    }
+  } else if (tail(extention, n = 1) == "zip"){
+    unZip <- function(x, remove, overwrite, ...){
+      unzip(x, overwrite = overwrite, ...)
+      if(remove){
+        file.remove(x)
       }
     }
+    if(!is.null(cores)){
+      clusterExport(cl, "unZip", envir = environment())
+    }
+    
+    pbsapply(x, FUN = unZip, remove = remove, overwrite = overwrite, ..., cl = cl)
   }
-  else if (tail(extention, n = 1) == "zip") {
-    unzip(x, exdir = exdir, ...)
-  }
-  else {
-    warning("Filetype not recognized")
+  if(!is.null(cores)){
+    stopCluster(cl)
   }
 }
 

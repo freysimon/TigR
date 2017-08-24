@@ -1,8 +1,8 @@
 Package: TigR
 Type: Package
 Title: A collection of more or less usefull R functions
-Version: 0.1.6.2
-IMPORTS: xts, magrittr, R.utils
+Version: 0.1.6.9
+IMPORTS: xts, magrittr, R.utils, parallel, pbapply
 Author: Simon Frey
 Maintainer: Simon Frey <simon.frey@verbund.com>
 Description: More about what it does (maybe more than one line)
