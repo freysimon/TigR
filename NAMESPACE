@@ -2,6 +2,7 @@
 
 export(abc)
 export(addSlash)
+export(apply.daily.columns)
 export(apply.hourly)
 export(changeSlash)
 export(clear.duplicated)

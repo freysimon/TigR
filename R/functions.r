@@ -418,84 +418,84 @@ abc <- function(x, capitals = FALSE){
   }
 }
 
-#' #' unpack an archive (zip or tar)
-#' #' @param x character sting. file to be unpacked
-#' #' @param keeptar logical. If TRUE only decompresses the .tar.gz archive, otherwise fully unpack it?
-#' #' @param exdir character string. The directory to extract files to.
-#' #' @param copyfirst logical. Should the tar.gz file first be copied to the exdir directory?
-#' #' @param overwrite logical. Should any existing files be overwritten?
-#' #' @param skip logical. Skip existing files if overwrite == FALSE.
-#' #' @param remove logical. Should the archive be deleted after extraction? Also deletes skipped archives.
-#' #' @param ... arguments passed from other method
-#' #' @return The default of unzip/untar/gunzip will be returned
-#' #' @description This funtcion tries to unpack a tar.gz or zip file
-#' #' @details If keeptar == TRUE, the .tar.gz archive is only beeing decompressed using the \code{\link{gunzip}}-function from the R.utils-package (to the .tar-file). Note that remove is set to FALSE, unlike the default of gunzip.
-#' #'
-#' #'    If keeptar == FALSE, the archive is fully unpacked using the \code{\link{untar}} function.
-#' #'
-#' #'    If copyfirst == TRUE (the default), the tar.gz file is copied to the exdir directory befor it is unpacked. Might be faster when unpacking from a slow source, e.g. an external harddrive. Only affects extraction of tar.gz files if kepptar == TRUE.
-#' #' @author Simon Frey
-#' #' @import R.utils
-#' #' @export
-#' #' @seealso \code{\link{unzip}}, \code{\link{untar}}, \code{\link{gunzip}}
-#' unpack <- function (x, keeptar = TRUE, exdir = ".", copyfirst = TRUE, overwrite = FALSE, skip = TRUE, remove = FALSE, ...){
-#'   extention <- unlist(strsplit(x, "[.]"))
-#'   if (tail(extention, n = 1) == "gz") {
-#'     if (tail(extention, n = 2)[1] != "tar") {
-#'       warning("Filetype not recognized")
-#'     } else {
-#'       if(copyfirst){
-#'         if(exdir != "."){
-#'           copy <- paste(TigR::addSlash(exdir), tail(unlist(strsplit(x, "/")), 1), sep = "")
-#'           file.copy(from = x, to = copy)
-#'           x <- copy
-#'         }
-#'       }
-#'       if (keeptar) {
-#'         library(R.utils)
-#'         tarfile <- gunzip(as.character(x), remove = remove, overwrite = overwrite, skip = skip, ...)
-#'         if (exdir != ".") {
-#'           if(!copyfirst){
-#'             file.copy(from = tarfile, to = paste(TigR::addSlash(exdir),
-#'                                                tail(unlist(strsplit(tarfile, "/")), 1),
-#'                                                sep = ""))
-#'             file.remove(tarfile)
-#'           }
-#'         }
-#'       } else {
-#'         if(!overwrite){
-#'           # list all files
-#'           tarlist <- untar(x, list = TRUE, exdir = exdir, ...)
-#'           
-#'           #extract only non extisting files
-#'           untar(x, exdir = exdir, files = tarlist[which(!file.exists(tarlist))], ...)
-#'           
-#'         } else {
-#'           untar(x, exdir = exdir, ...)
-#'         }
-#'       }
-#'     }
-#'   }
-#'   else if (tail(extention, n = 1) == "zip") {
-#'     if(copyfirst){
-#'       if(exdir != "."){
-#'         copy <- paste(TigR::addSlash(exdir), tail(unlist(strsplit(x, "/")), 1), sep = "")
-#'         file.copy(from = x, to = copy)
-#'         x <- copy
-#'       }
-#'     }
-#'     unzip(x, exdir = exdir, overwrite = overwrite, ...)
-#'   }
-#'   else {
-#'     warning("Filetype not recognized")
-#'   }
-#'   # delete any existing archive
-#'   if(remove){
-#'     if(file.exists(x)){
-#'       file.remove(x)
-#'     }
-#'   }
-#' }
+# #' unpack an archive (zip or tar)
+# #' @param x character sting. file to be unpacked
+# #' @param keeptar logical. If TRUE only decompresses the .tar.gz archive, otherwise fully unpack it?
+# #' @param exdir character string. The directory to extract files to.
+# #' @param copyfirst logical. Should the tar.gz file first be copied to the exdir directory?
+# #' @param overwrite logical. Should any existing files be overwritten?
+# #' @param skip logical. Skip existing files if overwrite == FALSE.
+# #' @param remove logical. Should the archive be deleted after extraction? Also deletes skipped archives.
+# #' @param ... arguments passed from other method
+# #' @return The default of unzip/untar/gunzip will be returned
+# #' @description This funtcion tries to unpack a tar.gz or zip file
+# #' @details If keeptar == TRUE, the .tar.gz archive is only beeing decompressed using the \code{\link{gunzip}}-function from the R.utils-package (to the .tar-file). Note that remove is set to FALSE, unlike the default of gunzip.
+# #'
+# #'    If keeptar == FALSE, the archive is fully unpacked using the \code{\link{untar}} function.
+# #'
+# #'    If copyfirst == TRUE (the default), the tar.gz file is copied to the exdir directory befor it is unpacked. Might be faster when unpacking from a slow source, e.g. an external harddrive. Only affects extraction of tar.gz files if kepptar == TRUE.
+# #' @author Simon Frey
+# #' @import R.utils
+# #' @export
+# #' @seealso \code{\link{unzip}}, \code{\link{untar}}, \code{\link{gunzip}}
+# unpack <- function (x, keeptar = TRUE, exdir = ".", copyfirst = TRUE, overwrite = FALSE, skip = TRUE, remove = FALSE, ...){
+#   extention <- unlist(strsplit(x, "[.]"))
+#   if (tail(extention, n = 1) == "gz") {
+#     if (tail(extention, n = 2)[1] != "tar") {
+#       warning("Filetype not recognized")
+#     } else {
+#       if(copyfirst){
+#         if(exdir != "."){
+#           copy <- paste(TigR::addSlash(exdir), tail(unlist(strsplit(x, "/")), 1), sep = "")
+#           file.copy(from = x, to = copy)
+#           x <- copy
+#         }
+#       }
+#       if (keeptar) {
+#         library(R.utils)
+#         tarfile <- gunzip(as.character(x), remove = remove, overwrite = overwrite, skip = skip, ...)
+#         if (exdir != ".") {
+#           if(!copyfirst){
+#             file.copy(from = tarfile, to = paste(TigR::addSlash(exdir),
+#                                                tail(unlist(strsplit(tarfile, "/")), 1),
+#                                                sep = ""))
+#             file.remove(tarfile)
+#           }
+#         }
+#       } else {
+#         if(!overwrite){
+#           # list all files
+#           tarlist <- untar(x, list = TRUE, exdir = exdir, ...)
+#           
+#           #extract only non extisting files
+#           untar(x, exdir = exdir, files = tarlist[which(!file.exists(tarlist))], ...)
+#           
+#         } else {
+#           untar(x, exdir = exdir, ...)
+#         }
+#       }
+#     }
+#   }
+#   else if (tail(extention, n = 1) == "zip") {
+#     if(copyfirst){
+#       if(exdir != "."){
+#         copy <- paste(TigR::addSlash(exdir), tail(unlist(strsplit(x, "/")), 1), sep = "")
+#         file.copy(from = x, to = copy)
+#         x <- copy
+#       }
+#     }
+#     unzip(x, exdir = exdir, overwrite = overwrite, ...)
+#   }
+#   else {
+#     warning("Filetype not recognized")
+#   }
+#   # delete any existing archive
+#   if(remove){
+#     if(file.exists(x)){
+#       file.remove(x)
+#     }
+#   }
+# }
 
 #' unpack a set of files
 #' @param x vector of filenames

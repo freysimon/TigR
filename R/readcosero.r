@@ -57,7 +57,7 @@
 #'    For reading qobs_qsim.txt see \code{\link{read.qobsqsim}}
 #' @examples
 #' data(area)
-#' fpath <- system.file("extdata","Q_output.txt", package = "TigeR")
+#' fpath <- system.file("extdata","Q_output.txt", package = "TigR")
 #' x <- readCosero(qoutput = fpath, area = area)
 #' x <- readCosero(qoutput = fpath)
 #' @seealso \code{\link{m3s2mm}}
