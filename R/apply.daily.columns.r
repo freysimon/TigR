@@ -66,7 +66,7 @@ apply.daily.columns <- function(x, FUN, PB = "n", ...){
   }
   
   # formatting index of out
-  index(out) <- format(index(out), format = "%Y-%m-%d")
+  index(out) <- as.Date(index(out))
   
   return(out)
   
