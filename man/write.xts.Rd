@@ -4,10 +4,12 @@
 \alias{write.xts}
 \title{Write an xts object using the date format as rownames}
 \usage{
-write.xts(x, format = NULL, fmt = NULL, quote = FALSE, ...)
+write.xts(x, file = "", format = NULL, fmt = NULL, quote = FALSE, ...)
 }
 \arguments{
 \item{x}{xts object}
+
+\item{file}{either a character string naming a file or a \code{\link{connection}} open for writing. "" indicates output to the console.}
 
 \item{format}{format-style argument for formatting the date/time}
 

@@ -342,6 +342,7 @@ colMin <- function (colData,na.rm=TRUE) {
 
 #' Write an xts object using the date format as rownames
 #' @param x xts object
+#' @param file either a character string naming a file or a \code{\link{connection}} open for writing. "" indicates output to the console.
 #' @param format format-style argument for formatting the date/time
 #' @param FMT character string passed on to \code{\link{sprintf}} for formatting numerical values. If NULL, no special format is used.
 #' @param quote logical. Should characterers be encapsulated in ""?
@@ -355,7 +356,7 @@ colMin <- function (colData,na.rm=TRUE) {
 #' write.xts(runoff, file = tempfile())
 #' write.xts(runoff, format = "%d.%m.%Y %H:%M")
 #' write.xts(runoff, fmt = "%5.1f")
-write.xts <- function(x,format = NULL, fmt = NULL, quote = FALSE, ...){
+write.xts <- function(x, file = "", format = NULL, fmt = NULL, quote = FALSE, ...){
   if(!is.xts(x)){
     stop("x must be an xts object")
   }
@@ -375,7 +376,7 @@ write.xts <- function(x,format = NULL, fmt = NULL, quote = FALSE, ...){
   }
   
   rownames(xx) <- times
-  write.table(xx,row.names=TRUE, quote = quote, ...)
+  write.table(xx, file = file, row.names=TRUE, quote = quote, ...)
 }
 
 #' Define a mfrow object out of a number of plots
