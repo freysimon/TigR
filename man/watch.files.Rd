@@ -4,7 +4,7 @@
 \alias{watch.files}
 \title{Check for changes and append changed textfiles}
 \usage{
-watch.files(f, af, sleep.time = 2, skipLines = 0)
+watch.files(f, af, sleep.time = 5, skipLines = 0)
 }
 \arguments{
 \item{f}{character or character vector of files to be checked}

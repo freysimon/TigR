@@ -11,16 +11,16 @@
 #'     Note that the function needs to be killed using esc. It doesn't exit on it own.
 #' @author Simon Frey
 #' @return a message is printed if a file is appended. Nothing gets returned. 
+#' @export
 
-watch.files <- function(f, af, sleep.time = 2, skipLines = 0){
-  
-  library(tools)
+watch.files <- function(f, af, sleep.time = 5, skipLines = 0){
   
   skipLines <- skipLines + 1
   
   repeat{
     
     if(all(file.exists(f))){
+      Sys.sleep(sleep.time)
       for(j in 1:length(f)){
         temp <- readLines(con = f[j])
         temp <- temp[skipLines:length(temp)]
