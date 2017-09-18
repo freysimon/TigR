@@ -4,8 +4,8 @@
 #' @param agg character string 'day' or 'hour' to specifiy whether to receive daily or hourly values, respectivly
 #' @param PB a character indicating whether and what kind of progress bar should be drawn. See details.
 #' @param ... additional arguments to FUN
-#' @description Apply a specified function to each column of an xts object creating daily values
-#' @details A simple mechanism to use \code{\link{apply.daily}} to each column of an xts object. 
+#' @description Apply a specified function to each column of an xts object creating hourly or daily values
+#' @details A simple mechanism to use \code{\link{apply.daily}} or \code{\link{apply.hourly}} to each column of an xts object. 
 #'     
 #'     By setting PB, an optional progressbar can be drawn: "w" or "win" draws a \code{\link{winProgressBar}}, 
 #'     "t" or "txt" draws a \code{\link{txtProgressBar}} and "n" or "none" (the default) suppresses the progressbar.
@@ -14,6 +14,16 @@
 #' @export
 #' @import xts
 #' @return An xts object containing daily values
+#' @seealso \code{\link{apply.daily}}
+#' @seealso \code{\link{apply.hourly}}
+#' @examples  
+#'     # load precipitation input
+#'     data(precipitation)
+#'     head(x)
+#'     
+#'     # aggregate to daily values
+#'     aday <- apply.daily.columns(x, FUN = sum, agg = 'day', PB = 'txt')
+#'     head(aday)
 
 apply.daily.columns <- function(x, FUN, agg = 'day', PB = "n", ...){
   library(xts)
@@ -46,7 +56,7 @@ apply.daily.columns <- function(x, FUN, agg = 'day', PB = "n", ...){
   
   rm(temp)
   
-  titl <- ifesle(agg == 'day', "Aggregating to daily data", "Aggregating to hourly data")
+  titl <- ifelse(agg == 'day', "Aggregating to daily data", "Aggregating to hourly data")
   
   if(!PB %in% c("n", "none")){
     if(PB %in% c("win", "w")){

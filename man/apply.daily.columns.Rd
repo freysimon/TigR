@@ -21,13 +21,28 @@ apply.daily.columns(x, FUN, agg = "day", PB = "n", ...)
 An xts object containing daily values
 }
 \description{
-Apply a specified function to each column of an xts object creating daily values
+Apply a specified function to each column of an xts object creating hourly or daily values
 }
 \details{
-A simple mechanism to use \code{\link{apply.daily}} to each column of an xts object. 
+A simple mechanism to use \code{\link{apply.daily}} or \code{\link{apply.hourly}} to each column of an xts object. 
     
     By setting PB, an optional progressbar can be drawn: "w" or "win" draws a \code{\link{winProgressBar}}, 
     "t" or "txt" draws a \code{\link{txtProgressBar}} and "n" or "none" (the default) suppresses the progressbar.
+}
+\examples{
+ 
+    # load precipitation input
+    data(precipitation)
+    head(x)
+    
+    # aggregate to daily values
+    aday <- apply.daily.columns(x, FUN = sum, agg = 'day', PB = 'txt')
+    head(aday)
+}
+\seealso{
+\code{\link{apply.daily}}
+
+\code{\link{apply.hourly}}
 }
 \author{
 Simon Frey
