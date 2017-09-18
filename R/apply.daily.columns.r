@@ -1,6 +1,7 @@
-#' Columnwise apply a function to receive daily agreggated values
+#' Columnwise apply a function to receive hourly or daily agreggated values
 #' @param x an xts object
 #' @param FUN an R function
+#' @param agg character string 'day' or 'hour' to specifiy whether to receive daily or hourly values, respectivly
 #' @param PB a character indicating whether and what kind of progress bar should be drawn. See details.
 #' @param ... additional arguments to FUN
 #' @description Apply a specified function to each column of an xts object creating daily values
@@ -14,7 +15,7 @@
 #' @import xts
 #' @return An xts object containing daily values
 
-apply.daily.columns <- function(x, FUN, PB = "n", ...){
+apply.daily.columns <- function(x, FUN, agg = 'day', PB = "n", ...){
   library(xts)
   if(class(x)[1] != "xts"){
     stop("x must be an xts object")
@@ -23,12 +24,20 @@ apply.daily.columns <- function(x, FUN, PB = "n", ...){
     warning("PB not recognized.")
     PB <- "n"
   }
+  if(!agg %in% c('day', 'hour')){
+    stop("agg must be one of 'day' or 'hour'")
+  }
   
   # get dimensions of x
   dim.in <- dim(x)
   
   # get dimensions of processed time series
-  temp <- apply.daily(x[,1], FUN = FUN)
+  if(agg == 'day'){
+    temp <- apply.daily(x[,1], FUN = FUN)
+  } else {
+    temp <- TigR::apply.hourly(x[,1], FUN = FUN)
+  }
+  
   dim.out <- dim(temp)
   
   # create new aggregated xts object with dim.out
@@ -37,9 +46,11 @@ apply.daily.columns <- function(x, FUN, PB = "n", ...){
   
   rm(temp)
   
+  titl <- ifesle(agg == 'day', "Aggregating to daily data", "Aggregating to hourly data")
+  
   if(!PB %in% c("n", "none")){
     if(PB %in% c("win", "w")){
-      pb <- winProgressBar(title = "Aggregating to daily data", label = "",
+      pb <- winProgressBar(title = titl, label = "",
                            min = 0, max = dim.in[2], initial = 0, width = 400)
     }  
     if(PB %in% c("txt", "t")){
@@ -50,7 +61,12 @@ apply.daily.columns <- function(x, FUN, PB = "n", ...){
   # fill out with data
   for(j in 1:dim.in[2]){
     
-    out[,j] <- apply.daily(x[,j], FUN = FUN, ...)
+    if(agg == 'day'){
+      out[,j] <- apply.daily(x[,j], FUN = FUN, ...)
+    } else {
+      out[,j] <- apply.hourly(x[,j], FUN = FUN, ...)
+    }
+    
     
     if(PB %in% c("win", "w")){
       setWinProgressBar(pb, j, label =  round((j / dim.in[2]),2))
@@ -66,7 +82,12 @@ apply.daily.columns <- function(x, FUN, PB = "n", ...){
   }
   
   # formatting index of out
-  index(out) <- as.Date(index(out))
+  if(agg == 'day'){
+    index(out) <- as.Date(index(out))
+  } else {
+    index(out) <- format(as.POSIXct(index(out)), format = "%Y-%m-%d %H:00")
+  }
+  
   
   return(out)
   

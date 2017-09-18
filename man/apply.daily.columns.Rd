@@ -2,14 +2,16 @@
 % Please edit documentation in R/apply.daily.columns.r
 \name{apply.daily.columns}
 \alias{apply.daily.columns}
-\title{Columnwise apply a function to receive daily agreggated values}
+\title{Columnwise apply a function to receive hourly or daily agreggated values}
 \usage{
-apply.daily.columns(x, FUN, PB = "n", ...)
+apply.daily.columns(x, FUN, agg = "day", PB = "n", ...)
 }
 \arguments{
 \item{x}{an xts object}
 
 \item{FUN}{an R function}
+
+\item{agg}{character string 'day' or 'hour' to specifiy whether to receive daily or hourly values, respectivly}
 
 \item{PB}{a character indicating whether and what kind of progress bar should be drawn. See details.}
 
