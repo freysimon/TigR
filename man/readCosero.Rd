@@ -11,15 +11,15 @@ readCosero(qoutput = "./Q_output.txt", prec = FALSE, comp = FALSE,
 \arguments{
 \item{qoutput}{character string. Pointing towards the file "Q_output.txt"}
 
-\item{prec}{logical. Should precipitation data be read in?}
+\item{prec}{logical or character string. Should precipitation data be read in? Maybe a path to the corresponding file.}
 
-\item{comp}{logical. Should data about the composition of runoff be read in?}
+\item{comp}{logical or character string. Should data about the composition of runoff be read in? Maybe a path to the corresponding file.}
 
-\item{eta}{logical. Should data about evapotranspiration be read in?}
+\item{eta}{logical or character string. Should data about evapotranspiration be read in? Maybe a path to the corresponding file.}
 
-\item{storage}{logical. Should storage data be read in?}
+\item{storage}{logical or character string. Should storage data be read in? Maybe a path to the corresponding file.}
 
-\item{snowmelt}{logical. Should snow data be read in?}
+\item{snowmelt}{logical or character string. Should snow data be read in? Maybe a path to the corresponding file.}
 
 \item{area}{numeric. Area of the subbasin(s).}
 
@@ -33,7 +33,11 @@ Read COSERO outputfiles and store them into a list.
 \details{
 Reading the file Q_output.txt.
 
-   The function automatically searches for the file containing data about precipitation, runoff composition, eta, storage or snowmelt if the respective arguments are set TRUE. Note that those file are NOT written by COSERO by default. Use OUTCONTROL = 1 or 2 in the defaults file of COSERO to activate writing of them. They are given in mm. To compare them to runoff, be adviced that runoff should be transformed into mm, too. This, however, can only be done if area is given. It is done via \code{\link{m3s2mm}}. The argument timestep may be provided. If NULL the function will try to gather it from the data.
+   The function automatically searches for the file containing data about precipitation, runoff composition, eta, storage or snowmelt if the respective arguments are set TRUE.
+   It is also possible to specify the path to the respective file directly. If the file cannot be found, it is skipped an a warning is returned. 
+   Note that those file are NOT written by COSERO by default. Use OUTCONTROL = 1 or 2 in the defaults file of COSERO to activate writing of them. They are given in mm. 
+   To compare them to runoff, be adviced that runoff should be transformed into mm, too. This, however, can only be done if area is given. 
+   It is done via \code{\link{m3s2mm}}. The argument timestep may be provided. If NULL the function will try to gather it from the data.
 
    For reading qobs_qsim.txt see \code{\link{read.qobsqsim}}
 }

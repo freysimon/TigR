@@ -38,11 +38,11 @@
 
 #' Reading COSERO output files
 #' @param qoutput character string. Pointing towards the file "Q_output.txt"
-#' @param prec logical. Should precipitation data be read in?
-#' @param comp logical. Should data about the composition of runoff be read in?
-#' @param storage logical. Should storage data be read in?
-#' @param snowmelt logical. Should snow data be read in?
-#' @param eta logical. Should data about evapotranspiration be read in?
+#' @param prec logical or character string. Should precipitation data be read in? Maybe a path to the corresponding file.
+#' @param comp logical or character string. Should data about the composition of runoff be read in? Maybe a path to the corresponding file.
+#' @param storage logical or character string. Should storage data be read in? Maybe a path to the corresponding file.
+#' @param snowmelt logical or character string. Should snow data be read in? Maybe a path to the corresponding file.
+#' @param eta logical or character string. Should data about evapotranspiration be read in? Maybe a path to the corresponding file.
 #' @param area numeric. Area of the subbasin(s).
 #' @param timestep numeric. Timestep of the data.
 #' @param ... Additional arguments passed to read.table from other methods.
@@ -52,7 +52,11 @@
 #' @description Read COSERO outputfiles and store them into a list.
 #' @details Reading the file Q_output.txt.
 #'
-#'    The function automatically searches for the file containing data about precipitation, runoff composition, eta, storage or snowmelt if the respective arguments are set TRUE. Note that those file are NOT written by COSERO by default. Use OUTCONTROL = 1 or 2 in the defaults file of COSERO to activate writing of them. They are given in mm. To compare them to runoff, be adviced that runoff should be transformed into mm, too. This, however, can only be done if area is given. It is done via \code{\link{m3s2mm}}. The argument timestep may be provided. If NULL the function will try to gather it from the data.
+#'    The function automatically searches for the file containing data about precipitation, runoff composition, eta, storage or snowmelt if the respective arguments are set TRUE.
+#'    It is also possible to specify the path to the respective file directly. If the file cannot be found, it is skipped an a warning is returned. 
+#'    Note that those file are NOT written by COSERO by default. Use OUTCONTROL = 1 or 2 in the defaults file of COSERO to activate writing of them. They are given in mm. 
+#'    To compare them to runoff, be adviced that runoff should be transformed into mm, too. This, however, can only be done if area is given. 
+#'    It is done via \code{\link{m3s2mm}}. The argument timestep may be provided. If NULL the function will try to gather it from the data.
 #'
 #'    For reading qobs_qsim.txt see \code{\link{read.qobsqsim}}
 #' @examples
@@ -76,57 +80,113 @@ readCosero <- function(qoutput = "./Q_output.txt", prec=FALSE, comp=FALSE, eta=F
   xx <- read.table(qoutput,header=TRUE,skip=22,colClasses=c(rep("character",5),rep("numeric",ncol(xx)-5)),
                    stringsAsFactors = FALSE,...)
 
-  print("qobs eingelesen")
+  print("runoff read")
+  
+  # Checking if other results should be read in and if their respective filenames are given and the files exist
+  checkfiles <- list(prec, comp, eta, storage, snowmelt)
+  readfiles <- checkfiles
+  for(k in 1:5){
+    if(is.character(checkfiles[[k]])){
+      if(file.exists(checkfiles[[k]])){
+        checkfiles[[k]] = TRUE
+      } else {
+        warning(paste("Cannot find ", readfiles[[k]], ". Will be ignored", sep = ""))
+        checkfiles[[k]] = FALSE
+        readfiles[[k]] = FALSE
+      }
+    } else {
+      readfiles[[k]] = FALSE
+    }
+  }
+  
+  prec <- checkfiles[[1]]
+  comp <- checkfiles[[2]]
+  eta <- checkfiles[[3]]
+  storage <- checkfiles[[4]]
+  snowmelt <- checkfiles[[5]]
+  
+
 
   # Einlesen von Niederschlag
   if(prec){
-    readfile <- dir()[which(substrRight(dir(),4) == "prec")]
+    if(is.character(readfiles[[1]])){
+      readfile <- readfiles[[1]]
+    } else {
+      readfile <- dir()[which(substrRight(dir(),4) == "prec")]
+    }
     pr <- read.table(readfile,header=TRUE,nrow=1,...)
     pr <- read.table(readfile,header=TRUE,colClasses=c(rep("character",5),rep("numeric",ncol(pr)-5)),
                    stringsAsFactors = FALSE,...)
 
-    print("Niederschlag eingelesen")
+    print("Precipitation read")
   }
 
   # Einlesen von Speicherständen (enns.plus1)
   if(storage){
-    readfile <- dir()[which(substrRight(dir(),5) == "plus1")]
+    if(is.character(readfiles[[4]])){
+      readfile <- readfiles[[4]]
+    } else {
+      readfile <- dir()[which(substrRight(dir(),5) == "plus1")]
+    }
     storages <- read.table(readfile, header=TRUE, nrow=1, skip = 1,...)
     storages <- read.table(readfile,skip=1,header=TRUE,colClasses=c(rep("character",5),rep("numeric",ncol(storages)-5)),
                        stringsAsFactors = FALSE,...)
 
-    print("Speicherstaende eingelesen")
+    print("Storages read")
   }
 
   # Einlesen von enns.plus (Abflusskomponenten)
   if(comp){
-    readfile <- dir()[which(substrRight(dir(),4) == "plus")]
+    if(is.character(readfiles[[2]])){
+      readfile <- readfiles[[2]]
+    } else {
+      readfile <- dir()[which(substrRight(dir(),4) == "plus")]
+    }
     comps <- read.table(readfile,skip=1,header=TRUE,nrow=1,...)
     comps <- read.table(readfile,skip=1,header=TRUE,colClasses=c(rep("character",5),rep("numeric",ncol(comps)-5)),
                      stringsAsFactors = FALSE,...)
 
-    print("Komponenten eingelesen")
+    print("Components read")
   }
 
   # Einlesen von ETA_PGEB.txt (Abflusskomponenten)
   if(eta){
-    readfile <- "ETA_PGEB.txt"
+    if(is.character(readfiles[[3]])){
+      readfile <- readfiles[[3]]
+    } else {
+      readfile <- "ETA_PGEB.txt"
+    }
     et <- read.table(readfile,header=TRUE,nrow=1,...)
     et <- read.table(readfile,header=TRUE,colClasses=c(rep("character",5),rep("numeric",ncol(et)-5)),
                    stringsAsFactors = FALSE,...)
 
-    print("Verdunstung eingelesen")
+    print("ETA read")
   }
 
 
   # Einlesen von varSnow.txt (Schneeschmelze etc), falls dies gewünscht ist
   if(snowmelt){
-    readfile <- "varSnow.txt"
+    if(is.character(readfiles[[5]])){
+      readfile <- readfiles[[5]]
+    } else {
+      readfile <- NULL
+      possible_files <- c("SNOW","snow","Snow")
+      for(k in 1:3){
+        temp <- dir(pattern = possible_files[k])
+        if(length(temp) == 1){
+          readfile <- temp
+          break
+        }
+      }
+      if(is.null(readfile)){
+        stop("File with snow information could not be found.")
+      }
+    }
     snw <- read.table(readfile,header=TRUE,nrow=1,...)
     snw <- read.table(readfile,header=TRUE,
                       colClasses=c(rep("character",5),rep("numeric",ncol(snw)-5)),stringsAsFactors = FALSE, ...)
 
-    print("Schnee eingelesen")
+    print("Snow read")
   }
 
   datum <- as.POSIXct(paste(xx[,1],"-",xx[,2],"-",xx[,3]," ",xx[,4],":",xx[,5],sep=""),format="%Y-%m-%d %H:%M",tz="utc")
