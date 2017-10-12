@@ -92,10 +92,11 @@ apply.daily.columns <- function(x, FUN, agg = 'day', PB = "n", ...){
   }
   
   # formatting index of out
+  tz <- indexTZ(out)
   if(agg == 'day'){
-    index(out) <- as.Date(index(out))
+    index(out) <- as.Date(index(out), tz = tz)
   } else {
-    index(out) <- as.POSIXct(format(index(out), format = "%Y-%m-%d %H:00"))
+    index(out) <- as.POSIXct(format(index(out), format = "%Y-%m-%d %H:00"), tz = tz)
   }
   
   
