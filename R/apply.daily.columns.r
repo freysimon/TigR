@@ -25,7 +25,7 @@
 #'     aday <- apply.daily.columns(x, FUN = sum, agg = 'day', PB = 'txt')
 #'     head(aday)
 
-apply.daily.columns <- function(x, FUN, agg = 'day', PB = "n", ...){
+apply.daily.columns <- function(x, FUN, agg = 'day', PB = "n", debug = FALSE, ...){
   library(xts)
   if(class(x)[1] != "xts"){
     stop("x must be an xts object")
@@ -71,11 +71,20 @@ apply.daily.columns <- function(x, FUN, agg = 'day', PB = "n", ...){
   # fill out with data
   for(j in 1:dim.in[2]){
     
-    if(agg == 'day'){
-      out[,j] <- apply.daily(x[,j], FUN = FUN, ...)
+    if(debug){
+      if(agg == 'day'){
+        out[,j] <- apply.daily(x[,j], FUN = FUN)
+      } else {
+        out[,j] <- apply.hourly(x[,j], FUN = FUN)
+      }
     } else {
-      out[,j] <- apply.hourly(x[,j], FUN = FUN, ...)
+      if(agg == 'day'){
+        out[,j] <- apply.daily(x[,j], FUN = FUN, ...)
+      } else {
+        out[,j] <- apply.hourly(x[,j], FUN = FUN, ...)
+      }
     }
+    
     
     
     if(PB %in% c("win", "w")){

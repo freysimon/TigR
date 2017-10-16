@@ -4,7 +4,7 @@
 \alias{apply.daily.columns}
 \title{Columnwise apply a function to receive hourly or daily agreggated values}
 \usage{
-apply.daily.columns(x, FUN, agg = "day", PB = "n", ...)
+apply.daily.columns(x, FUN, agg = "day", PB = "n", debug = FALSE, ...)
 }
 \arguments{
 \item{x}{an xts object}
