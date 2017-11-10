@@ -3,29 +3,36 @@
 #' @param obs xts object. The observed hydrograph.
 #' @param sim xts object. The simulated hydrograph.
 #' @param timesteps numeric. How many timesteps should be considered (equal distributed around the observed peak)?
-#' @param nop numeric. How many peaks should be analysed?
+#' @param width numeric. Number of timesteps on eighter side of the peak that must be smaller than the peak. Corresponds to paramteter m in \code{\link{find_peaks}}
 #' @param FUN function. Objective function to be calculated whitin the region of the peak(s).
+#' @param nop integer. Number of peaks being evaluated.
 #' @param ... additional arguments passed to FUN
 #' @author Simon Frey
 #' @export
 #' @import xts
 #' @import hydroGOF
 #' @return a vector with the results of the objective function
-#' @details FUN should be a function that can operate with sim and obs values and returns one single value. 
+#' @details FUN should be a function that can operate with sim and obs values and returns one single value.
+#'     
+#'     For detecting peaks \code{\link{find_peaks}} is used. Peaks are detected in obs only!
+#' @seealso \code{\link{find_peaks}}
 
-peakdiff <- function(sim, obs, timesteps, nop = 1, FUN = me, ...){
+peakdiff <- function(sim, obs, timesteps, width = 12, FUN = me, nop = 5, ...){
   # check for xts
   library(hydroGOF)
   library(xts)
-  
+
   if(!is.xts(obs)){
     stop("obs must be of type xts")
   }
   if(!is.xts(sim)){
     stop("sim must be of type xts")
   }
-  
+
   # locate peaks
+  peaks <- find_peaks(as.numeric(obs), m = width, order = "d")
+
+
   obstemp <- obs
   peakregion <- list()
   of <- vector(length = nop, mode = "numeric")
@@ -36,12 +43,12 @@ peakdiff <- function(sim, obs, timesteps, nop = 1, FUN = me, ...){
     peakregion[[k]] <- cbind(peakregion[[k]], sim[index(peakregion[[k]])])
     colnames(peakregion[[k]]) <- c("OBS","SIM")
     peakregion[[k]] <- peakregion[[k]][,c("SIM","OBS")]
-    
+
     obstemp[index(peakregion[[k]])] <- NA
-    
+
     # calculate objective function
     of[k] <- FUN(sim = peakregion[[k]][,1], obs = peakregion[[k]][,2], ...)
   }
-  
+
   return(of)
 }

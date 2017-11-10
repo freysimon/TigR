@@ -4,7 +4,7 @@
 \alias{peakdiff}
 \title{Calculate the peak difference of two hydrographs}
 \usage{
-peakdiff(sim, obs, timesteps, nop = 1, FUN = me, ...)
+peakdiff(sim, obs, timesteps, width = 12, FUN = me, nop = 5, ...)
 }
 \arguments{
 \item{sim}{xts object. The simulated hydrograph.}
@@ -13,9 +13,11 @@ peakdiff(sim, obs, timesteps, nop = 1, FUN = me, ...)
 
 \item{timesteps}{numeric. How many timesteps should be considered (equal distributed around the observed peak)?}
 
-\item{nop}{numeric. How many peaks should be analysed?}
+\item{width}{numeric. Number of timesteps on eighter side of the peak that must be smaller than the peak. Corresponds to paramteter m in \code{\link{find_peaks}}}
 
 \item{FUN}{function. Objective function to be calculated whitin the region of the peak(s).}
+
+\item{nop}{integer. Number of peaks being evaluated.}
 
 \item{...}{additional arguments passed to FUN}
 }
@@ -27,6 +29,11 @@ Calculate the peak difference of two hydrographs.
 }
 \details{
 FUN should be a function that can operate with sim and obs values and returns one single value.
+    
+    For detecting peaks \code{\link{find_peaks}} is used. Peaks are detected in obs only!
+}
+\seealso{
+\code{\link{find_peaks}}
 }
 \author{
 Simon Frey
