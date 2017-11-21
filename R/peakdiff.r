@@ -14,7 +14,7 @@
 #' @return a vector with the results of the objective function
 #' @details FUN should be a function that can operate with sim and obs values and returns one single value.
 #'     
-#'     For detecting peaks \code{\link{find_peaks}} is used. Peaks are detected in obs only!
+#'     Peaks are detected in obs only!
 #' @seealso \code{\link{find_peaks}}
 
 peakdiff <- function(sim, obs, timesteps, width = 12, FUN = me, nop = 5, ...){
@@ -30,7 +30,7 @@ peakdiff <- function(sim, obs, timesteps, width = 12, FUN = me, nop = 5, ...){
   }
 
   # locate peaks
-  peaks <- find_peaks(as.numeric(obs), m = width, order = "d")
+  #peaks <- find_peaks(as.numeric(obs), m = width, order = "d")
 
 
   obstemp <- obs
@@ -50,5 +50,5 @@ peakdiff <- function(sim, obs, timesteps, width = 12, FUN = me, nop = 5, ...){
     of[k] <- FUN(sim = peakregion[[k]][,1], obs = peakregion[[k]][,2], ...)
   }
 
-  return(of)
+  return(list("peaks" = peakregion,"of" = of))
 }

@@ -30,7 +30,7 @@ Calculate the peak difference of two hydrographs.
 \details{
 FUN should be a function that can operate with sim and obs values and returns one single value.
     
-    For detecting peaks \code{\link{find_peaks}} is used. Peaks are detected in obs only!
+    Peaks are detected in obs only!
 }
 \seealso{
 \code{\link{find_peaks}}
