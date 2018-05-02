@@ -11,7 +11,7 @@ apply.hourly(x, FUN, roundtime = "round", ...)
 
 \item{FUN}{function to apply to x}
 
-\item{roundtime}{character. Valid are "round", and "trunc", See details}
+\item{roundtime}{character. Valid are "NA", "round", and "trunc", See details}
 
 \item{...}{additonal arguments passed to apply}
 }
@@ -20,7 +20,7 @@ Aggregate an xts object to hourly values. It is a wrapper of \code{\link{period.
 }
 \details{
 An xts object is aggregated to hourly values. Using the parameter roundtime, the timestamp of the xts object can be 
-    round to full hours. This can be done by rounding to the nearest full hour, or by going to the last full hour (trunc).
+    round to full hours. This can be done by rounding to the nearest full hour, or by going to the last full hour (trunc). NA skips rounding.
 }
 \examples{
     library(TigR)
