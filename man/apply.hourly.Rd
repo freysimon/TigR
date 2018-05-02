@@ -4,17 +4,29 @@
 \alias{apply.hourly}
 \title{aggregate xts object to hourly values}
 \usage{
-apply.hourly(x, FUN, ...)
+apply.hourly(x, FUN, roundtime = "round", ...)
 }
 \arguments{
 \item{x}{xts object}
 
 \item{FUN}{function to apply to x}
 
+\item{roundtime}{character. Valid are "round", and "trunc", See details}
+
 \item{...}{additonal arguments passed to apply}
 }
 \description{
 Aggregate an xts object to hourly values. It is a wrapper of \code{\link{period.apply}} with endpoints = "hours"
+}
+\details{
+An xts object is aggregated to hourly values. Using the parameter roundtime, the timestamp of the xts object can be 
+    round to full hours. This can be done by rounding to the nearest full hour, or by going to the last full hour (trunc).
+}
+\examples{
+    library(TigR)
+    library(xts)
+    x <- xts(runif(6,1,100), order.by = as.POSIXct(c("2000-01-20 10:55","2000-01-20 10:59","2000-01-20 11:20","2000-01-20 12:35", "2000-01-20 12:45", "2000-01-20 13:45")))
+    apply.hourly(x, FUN = mean, roundtime = "round")
 }
 \seealso{
 \code{\link{period.apply}}

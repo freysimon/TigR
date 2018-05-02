@@ -168,12 +168,30 @@ is.leapyear=function(year){
 #' aggregate xts object to hourly values
 #' @param x xts object
 #' @param FUN function to apply to x
+#' @param roundtime character. Valid are "round", and "trunc", See details
 #' @param ... additonal arguments passed to apply
 #' @author Simon Frey
 #' @export
 #' @description Aggregate an xts object to hourly values. It is a wrapper of \code{\link{period.apply}} with endpoints = "hours"
+#' @details An xts object is aggregated to hourly values. Using the parameter roundtime, the timestamp of the xts object can be 
+#'     round to full hours. This can be done by rounding to the nearest full hour, or by going to the last full hour (trunc).
+#' @examples 
+#'     library(TigR)
+#'     library(xts)
+#'     x <- xts(runif(6,1,100), order.by = as.POSIXct(c("2000-01-20 10:55","2000-01-20 10:59","2000-01-20 11:20","2000-01-20 12:35", "2000-01-20 12:45", "2000-01-20 13:45")))
+#'     apply.hourly(x, FUN = mean, roundtime = "round")
 #' @seealso \code{\link{period.apply}}
-apply.hourly <- function(x, FUN, ...){
+apply.hourly <- function(x, FUN, roundtime = "round", ...){
+  if(!is.xts(x)){
+    stop("x must be an xts object")
+  }
+  if(roundtime == "round"){
+    time(x) <- round.POSIXt(time(x), "hours")
+  } else if(roundtime == "trunc"){
+    time(x) <- trunc.POSIXt(time(x), "hours")
+  } else {
+    stop("roundtime must be either round or trunc")
+  }
   ap <- endpoints(x,'hours')
   period.apply(x,ap,FUN,...)
 }
