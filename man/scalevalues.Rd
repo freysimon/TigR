@@ -11,6 +11,9 @@ scalevalues(x, ...)
 
 \item{...}{further arguements passed to the functtions min and max e.g. na.rm}
 }
+\value{
+depending on x a normalized vector, matrix or dataframe is returned
+}
 \description{
 Normalize values of a vector, matrix or data.frame between 0 and 1
 }

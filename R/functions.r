@@ -690,6 +690,7 @@ nalocf <- function(x, loop = FALSE, ...){
 #' @param x numeric (vector, matrix or data.frame) that will be scaled
 #' @param ... further arguements passed to the functtions min and max e.g. na.rm
 #' @description Normalize values of a vector, matrix or data.frame between 0 and 1
+#' @return depending on x a normalized vector, matrix or dataframe is returned
 #' @export
 #' @examples 
 #'     ex <- c(3,5,10,2,9,20)

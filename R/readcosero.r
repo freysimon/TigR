@@ -285,7 +285,7 @@ readCosero <- function(qoutput = "./Q_output.txt", prec=FALSE, comp=FALSE, eta=F
     output$ETA <- list("ETA" = ETA)
   }
   if(snowmelt){
-    output$snowmelt <- list("snowmelt" <- SNWMLT, "snowaccumulation" <- SNWACC)
+    output$snowmelt <- list("snowmelt" = SNWMLT, "snowaccumulation" = SNWACC)
   }
 
   return(output)
