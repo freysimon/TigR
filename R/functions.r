@@ -685,6 +685,24 @@ nalocf <- function(x, loop = FALSE, ...){
   return(x)
 }
 
+#' Normalize values between 0 and 1
+#' @author Simon Frey
+#' @param x numeric (vector, matrix or data.frame) that will be scaled
+#' @param ... further arguements passed to the functtions min and max e.g. na.rm
+#' @description Normalize values of a vector, matrix or data.frame between 0 and 1
+#' @export
+#' @examples 
+#'     ex <- c(3,5,10,2,9,20)
+#'     scalevalues(ex)
+scalevalues <- function(x, ...){
+  if(!class(x) %in% c("numeric", "matrix", "data.frame")){
+    stop("x must be a numeric vector, matrix or data.frame")
+  }
+  
+  extr <- c(min(x, ...), max(x, ...))
+  x <- (x-extr[1])/(extr[2]-extr[1])
+  return(x)
+}
 
 
 
