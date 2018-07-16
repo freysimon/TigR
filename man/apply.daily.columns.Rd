@@ -4,7 +4,7 @@
 \alias{apply.daily.columns}
 \title{Columnwise apply a function to receive hourly or daily agreggated values}
 \usage{
-apply.daily.columns(x, FUN, agg = "day", PB = "n", debug = FALSE, ...)
+apply.daily.columns(x, FUN, agg = "day", PB = "n", tz = NULL, ...)
 }
 \arguments{
 \item{x}{an xts object}
@@ -14,6 +14,8 @@ apply.daily.columns(x, FUN, agg = "day", PB = "n", debug = FALSE, ...)
 \item{agg}{character string 'day' or 'hour' to specifiy whether to receive daily or hourly values, respectivly}
 
 \item{PB}{a character indicating whether and what kind of progress bar should be drawn. See details.}
+
+\item{tz}{character specifying the time zone or NULL (the standard). If the latter, the time zone of x is used}
 
 \item{...}{additional arguments to FUN}
 }

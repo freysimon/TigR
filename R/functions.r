@@ -169,7 +169,7 @@ is.leapyear=function(year){
 #' @param x xts object
 #' @param FUN function to apply to x
 #' @param roundtime character. Valid are "NA", "round", and "trunc", See details
-#' @param ... additonal arguments passed to apply
+#' @param na.rm loggical. Should ne values be removed?
 #' @author Simon Frey
 #' @export
 #' @description Aggregate an xts object to hourly values. It is a wrapper of \code{\link{period.apply}} with endpoints = "hours"
@@ -181,7 +181,7 @@ is.leapyear=function(year){
 #'     x <- xts(runif(6,1,100), order.by = as.POSIXct(c("2000-01-20 10:55","2000-01-20 10:59","2000-01-20 11:20","2000-01-20 12:35", "2000-01-20 12:45", "2000-01-20 13:45")))
 #'     apply.hourly(x, FUN = mean, roundtime = "round")
 #' @seealso \code{\link{period.apply}}
-apply.hourly <- function(x, FUN, roundtime = "round", ...){
+apply.hourly <- function(x, FUN, roundtime = "round", na.rm = TRUE){
   if(!is.xts(x)){
     stop("x must be an xts object")
   }
@@ -197,7 +197,12 @@ apply.hourly <- function(x, FUN, roundtime = "round", ...){
   }
   
   ap <- endpoints(x,'hours')
-  period.apply(x,ap,FUN,...)
+  if(na.rm){
+    period.apply(x,ap,FUN, na.rm = TRUE)
+  } else {
+    period.apply(x,ap,FUN)
+  }
+  
 }
 
 # qobs_qsim von COSERO lesen und als getrennte Zeitreihen in einer Liste zurückgeben

@@ -3,6 +3,7 @@
 #' @param FUN an R function
 #' @param agg character string 'day' or 'hour' to specifiy whether to receive daily or hourly values, respectivly
 #' @param PB a character indicating whether and what kind of progress bar should be drawn. See details.
+#' @param tz character specifying the time zone or NULL (the standard). If the latter, the time zone of x is used
 #' @param ... additional arguments to FUN
 #' @description Apply a specified function to each column of an xts object creating hourly or daily values
 #' @details A simple mechanism to use \code{\link{apply.daily}} or \code{\link{apply.hourly}} to each column of an xts object. 
@@ -25,7 +26,7 @@
 #'     aday <- apply.daily.columns(x, FUN = sum, agg = 'day', PB = 'txt')
 #'     head(aday)
 
-apply.daily.columns <- function(x, FUN, agg = 'day', PB = "n", debug = FALSE, ...){
+apply.daily.columns <- function(x, FUN, agg = 'day', PB = "n", tz = NULL, ...){
   library(xts)
   if(class(x)[1] != "xts"){
     stop("x must be an xts object")
@@ -36,6 +37,9 @@ apply.daily.columns <- function(x, FUN, agg = 'day', PB = "n", debug = FALSE, ..
   }
   if(!agg %in% c('day', 'hour')){
     stop("agg must be one of 'day' or 'hour'")
+  }
+  if(is.null(tz)){
+    tz = indexTZ(x)
   }
   
   # get dimensions of x
@@ -71,20 +75,12 @@ apply.daily.columns <- function(x, FUN, agg = 'day', PB = "n", debug = FALSE, ..
   # fill out with data
   for(j in 1:dim.in[2]){
     
-    if(debug){
-      if(agg == 'day'){
-        out[,j] <- apply.daily(x[,j], FUN = FUN)
-      } else {
-        out[,j] <- apply.hourly(x[,j], FUN = FUN)
-      }
-    } else {
-      if(agg == 'day'){
-        out[,j] <- apply.daily(x[,j], FUN = FUN, ...)
-      } else {
-        out[,j] <- apply.hourly(x[,j], FUN = FUN, ...)
-      }
-    }
     
+    if(agg == 'day'){
+      out[,j] <- apply.daily(x[,j], FUN = FUN, ...)
+    } else {
+      out[,j] <- apply.hourly(x[,j], FUN = FUN, ...)
+    }
     
     
     if(PB %in% c("win", "w")){
@@ -101,7 +97,7 @@ apply.daily.columns <- function(x, FUN, agg = 'day', PB = "n", debug = FALSE, ..
   }
   
   # formatting index of out
-  tz <- indexTZ(out)
+  #tz <- indexTZ(out)
   if(agg == 'day'){
     index(out) <- as.Date(index(out), tz = tz)
   } else {

@@ -4,7 +4,7 @@
 \alias{apply.hourly}
 \title{aggregate xts object to hourly values}
 \usage{
-apply.hourly(x, FUN, roundtime = "round", ...)
+apply.hourly(x, FUN, roundtime = "round", na.rm = TRUE)
 }
 \arguments{
 \item{x}{xts object}
@@ -13,7 +13,7 @@ apply.hourly(x, FUN, roundtime = "round", ...)
 
 \item{roundtime}{character. Valid are "NA", "round", and "trunc", See details}
 
-\item{...}{additonal arguments passed to apply}
+\item{na.rm}{loggical. Should ne values be removed?}
 }
 \description{
 Aggregate an xts object to hourly values. It is a wrapper of \code{\link{period.apply}} with endpoints = "hours"
