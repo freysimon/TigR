@@ -55,6 +55,12 @@ readHZB <- function(file, name=TRUE, keyword = "Messstelle", format = "%d.%m.%Y 
   x <- read.xts(file, header = FALSE, datecolumns = 1, sep = ";",
                 format = format, tz = tz, skip = end.of.header, 
                 dec = ",", na.strings = "Lücke", ...)
+  
+  # Falls (versehentlich) mehrere Spalten eingelesen werden, wähle die aus, die weniger NA-Werte enthält
+  if(ncol(x) > 1){
+    nr.of.nas <- apply(x,2,FUN = function(y){sum(is.na(y))})
+    x <- x[,which(nr.of.nas == min(nr.of.nas))]
+  }
 
   
   if(name){

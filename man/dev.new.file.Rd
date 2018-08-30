@@ -4,7 +4,8 @@
 \alias{dev.new.file}
 \title{Open new graphical device}
 \usage{
-dev.new.file(device = "dev", return.device = TRUE, filename = NULL, ...)
+dev.new.file(device = "dev", return.device = TRUE, filename = NULL,
+  ...)
 }
 \arguments{
 \item{device}{character string. See details.}
