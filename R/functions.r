@@ -359,6 +359,7 @@ colMax <- function (colData,na.rm=TRUE) {
 #' @param na.rm logical. Should NA values be removed?
 #' @return numerical vector
 #' @author Simon Frey
+#' @export
 #' @examples
 #' data("runoff")
 #' colMin(runoff)
