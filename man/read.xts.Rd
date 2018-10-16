@@ -20,17 +20,20 @@ read.xts(x, datecolumns = c(1:5), format = "\%Y \%m \%d \%H \%M",
 
 \item{skip}{integer: the number of lines of the data file to skip before beginning to read data}
 
-\item{...}{additional arguments from other methods passed to read.table}
+\item{...}{additional arguments from other methods passed to \code{\link{fread}}}
 }
 \value{
 an xts object.
 }
 \description{
-Read a text file and directly save it as xts object.
+Read a text file using \code{\link{fread}} and directly save it as \code{\link{xts}} object.
 }
 \examples{
 fpath <- system.file("extdata","qobs_qsim.txt", package = "TigR")
 out <- read.xts(x = fpath)
+}
+\seealso{
+\code{\link{write.xts}}
 }
 \author{
 Simon Frey

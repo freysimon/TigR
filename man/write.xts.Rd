@@ -16,7 +16,7 @@ write.xts(x, file = "", format = NULL, fmt = NULL, quote = FALSE,
 
 \item{quote}{logical. Should characterers be encapsulated in ""?}
 
-\item{...}{Additonal arguments passed to write.table}
+\item{...}{Additonal arguments passed to \code{\link{write.table}}}
 
 \item{FMT}{character string passed on to \code{\link{sprintf}} for formatting numerical values. If NULL, no special format is used.}
 }
@@ -29,6 +29,9 @@ data("runoff")
 write.xts(runoff, file = tempfile())
 write.xts(runoff, format = "\%d.\%m.\%Y \%H:\%M")
 write.xts(runoff, fmt = "\%5.1f")
+}
+\seealso{
+\code{\link{read.xts}}
 }
 \author{
 Simon Frey

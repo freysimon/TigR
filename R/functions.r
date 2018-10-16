@@ -244,22 +244,31 @@ read.qobsqsim <- function(x){
 #' @param header logical. Does the data have a header?
 #' @param tz character string. Time zone of the data
 #' @param skip integer: the number of lines of the data file to skip before beginning to read data
-#' @param ... additional arguments from other methods passed to read.table
+#' @param ... additional arguments from other methods passed to \code{\link{fread}}
 #' @return an xts object.
 #' @import xts
+#' @import data.table
 #' @export
-#' @description Read a text file and directly save it as xts object.
+#' @description Read a text file using \code{\link{fread}} and directly save it as \code{\link{xts}} object.
 #' @author Simon Frey
+#' @seealso \code{\link{write.xts}}
 #' @examples
 #' fpath <- system.file("extdata","qobs_qsim.txt", package = "TigR")
 #' out <- read.xts(x = fpath)
 read.xts <- function(x, datecolumns=c(1:5), format="%Y %m %d %H %M", header=TRUE, tz = "utc", skip = 0, ...){
   library(xts)
-  temp <- read.table(x,nrow = 1,header=header, skip = skip, ...)
+  library(data.table)
+  
+  # new method
+  temp <- data.table::fread(file = x, header = header, skip = skip, ...)
+  temp <- as.data.frame(temp)
   nc <- ncol(temp)
-  temp <- read.table(x,colClasses=c(rep("character",max(datecolumns)),
-                                    rep("numeric",nc-max(datecolumns))),
-                     header=header, skip = skip, ...)
+  # depracated
+  #temp <- read.table(x,nrow = 1,header=header, skip = skip, ...)
+  #nc <- ncol(temp)
+  #temp <- read.table(x,colClasses=c(rep("character",max(datecolumns)),
+  #                                  rep("numeric",nc-max(datecolumns))),
+  #                   header=header, skip = skip, ...)
   for(k in datecolumns){
     if(k == datecolumns[1]){
       datum <- temp[,k]
@@ -374,9 +383,10 @@ colMin <- function (colData,na.rm=TRUE) {
 #' @param format format-style argument for formatting the date/time
 #' @param FMT character string passed on to \code{\link{sprintf}} for formatting numerical values. If NULL, no special format is used.
 #' @param quote logical. Should characterers be encapsulated in ""?
-#' @param ... Additonal arguments passed to write.table
+#' @param ... Additonal arguments passed to \code{\link{write.table}}
 #' @author Simon Frey
 #' @export
+#' @seealso \code{\link{read.xts}}
 #' @description Writing an xts object to a file using its date format as rownames instead of the numerical values of the date
 #' @examples
 #' ### do not run
