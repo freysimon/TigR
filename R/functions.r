@@ -664,6 +664,7 @@ libraries <- function(x, ...){
 #' @author Simon Frey
 #' @description This is basically a wrapper around \code{\link{na.locf}} from the xts package. It avoids the column-by-column copying. Usefull if there are many columns in the xts object.
 #' @export
+#' @import xts
 #' @examples 
 #' data(runoff)
 #' # add some NAs
