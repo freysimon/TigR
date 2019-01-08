@@ -4,12 +4,12 @@
 #' @description Get dimensions (NB, IZ, NZ) from COSERO parameters.
 #' @param x character string pointing towards a COSERO parameter file or giving an object derived from read_COSERO_par
 #' @return a matrix giving the dimensions NB, IZ, NZ
-#' @example 
-#'    ### do not run ###
-#'    get.dimensions("path/to/parameter_COSERO.par")
-#'    
-#'    x <- read_COSERO_par("path/to/parameter_COSERO.par")
-#'    get.dimensions(x)
+#' @examples 
+#'     ### do not run ###
+#'     get.dimensions("path/to/parameter_COSERO.par")
+#'     
+#'     x <- read_COSERO_par("path/to/parameter_COSERO.par")
+#'     get.dimensions(x)
 #' @seealso \code{\link{read_COSERO_par}}
 
 get.dimensions <- function(x){

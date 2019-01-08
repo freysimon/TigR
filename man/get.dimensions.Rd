@@ -2,7 +2,7 @@
 % Please edit documentation in R/get.dimensions.r
 \name{get.dimensions}
 \alias{get.dimensions}
-\title{Get dimensions form COSERO parameters}
+\title{Get dimensions from COSERO parameters}
 \usage{
 get.dimensions(x)
 }
@@ -14,6 +14,13 @@ a matrix giving the dimensions NB, IZ, NZ
 }
 \description{
 Get dimensions (NB, IZ, NZ) from COSERO parameters.
+}
+\examples{
+    ### do not run ###
+    get.dimensions("path/to/parameter_COSERO.par")
+    
+    x <- read_COSERO_par("path/to/parameter_COSERO.par")
+    get.dimensions(x)
 }
 \seealso{
 \code{\link{read_COSERO_par}}

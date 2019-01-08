@@ -8,6 +8,23 @@
 #################################################
 
 
+#' Find missing time steps in an univariate time series
+#' @param x an xts object
+#' @return a numerical vector giving the differences of the time steps of the xts object
+#' @export
+#' @author Simon Frey
+#' @import xts
+#' @description It is essentially a wrapper around \code{\link{diff.POSIXt}} returning a numeric vector. Any irregularities then can be interpreted as missing steps.
+#' 
+missing.steps <- function(x){
+  # check if x is an xts object
+  if(class(x) != "xts"){
+    stop("x must be of xts type")
+  }
+  x <- diff.POSIXt(index(x))
+  return(as.numeric(x))
+}
+
 #' Return last n characters of a string
 #'
 #' @param x character. A character string
