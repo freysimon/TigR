@@ -15,14 +15,51 @@
 #' @author Simon Frey
 #' @import xts
 #' @description It is essentially a wrapper around \code{\link{diff.POSIXt}} returning a numeric vector. Any irregularities then can be interpreted as missing steps.
-#' 
+#' @seealso \code{\link{fill.missing}}
 missing.steps <- function(x){
   # check if x is an xts object
-  if(class(x) != "xts"){
+  if(class(x)[1] != "xts"){
     stop("x must be of xts type")
   }
   x <- diff.POSIXt(index(x))
   return(as.numeric(x))
+}
+
+#' Fill missing values in an xts object
+#' @param x an xts object
+#' @param start NULL or an POSIXct object. If NULL, the first index of x will be used
+#' @param end NULL or an POSIXct object. If NULL, the last index of x will be used
+#' @param steps increment of the sequence. See ‘Details’.
+#' @description Fill missing entries in an xts object using \code{\link{nalocf}}
+#' @export
+#' @import xts
+#' @author Simon Frey
+#' @seealso \code{\link{missing.steps}}
+#' @details steps can be a character string, containing one of "sec", "min", "hour", "day", "DSTday", "week", "month", "quarter" or "year". Default is "hour"
+#' @return an xts object
+fill.missing <- function(x, start=NULL, end=NULL, steps = "hour"){
+  # check if x is an xts object
+  if(class(x)[1] != "xts"){
+    stop("x must be of xts type")
+  }
+  if(is.null(start)){
+    start <- index(x)[1]
+  }
+  if(is.null(end)){
+    end <- index(x)[nrow(x)]
+  }
+  
+  SEQ <- seq.POSIXt(from=start,to=end,by=steps)
+  SEQ <- xts(rep(NA,length(SEQ)), order.by=SEQ)
+  
+  X <- merge(SEQ,x)
+  X <- X[,-1]
+  nas <- sum(is.na(X[,1]))
+  X <- nalocf(X)
+  
+  print(paste(nas, "entries have been filled using nalocf"))
+  
+  return(X)
 }
 
 #' Return last n characters of a string

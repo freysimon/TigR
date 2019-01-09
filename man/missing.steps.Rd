@@ -15,6 +15,9 @@ a numerical vector giving the differences of the time steps of the xts object
 \description{
 It is essentially a wrapper around \code{\link{diff.POSIXt}} returning a numeric vector. Any irregularities then can be interpreted as missing steps.
 }
+\seealso{
+\code{\link{fill.missing}}
+}
 \author{
 Simon Frey
 }
