@@ -15,7 +15,7 @@
 #' data(runoff)
 #' yearplot(sim = runoff[,2], obs = runoff[,1])
 #' @seealso \code{\link{dev.new.file}}
-#' @seealso \code{\link{plot.better.xts}}
+
 yearplot <- function(sim, obs, NB=NULL, plot = TRUE, maxrow = 4, dev = "dev", plotfile = NULL, ...){
 
   library(magrittr)

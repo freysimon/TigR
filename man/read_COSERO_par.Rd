@@ -4,10 +4,12 @@
 \alias{read_COSERO_par}
 \title{Read a COSERO parameterfile}
 \usage{
-read_COSERO_par(x)
+read_COSERO_par(x, NB = NULL)
 }
 \arguments{
 \item{x}{charcater string. A COSERO parameter file}
+
+\item{NB}{numerical. Return only the parameters of a certain subbasin. May be a single number or a numerical vector.}
 }
 \value{
 A list containing three lists: Nr 1 contains the dimensions, Nr 2 contains the headers, and number 3 the values

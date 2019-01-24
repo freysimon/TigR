@@ -48,7 +48,7 @@ Frey, S., and Holzmann, H.: A conceptual, distributed snow redistribution model.
    Kling, H., Stanzel, P., Fuchs, M., and Nachtnebel, H.-P.: Performance of the COSERO precipitation-runoff model under nonstationary conditions in basins with different climates, Hydrolog. Sci. J., 60, 1374–1393, doi:10.1080/02626667.2014.959956, 2015
 }
 \seealso{
-For reading the output of COSERO see \code{\link{readcosero}} and \code{\link{read.qobsqsim}}
+For reading the output of COSERO see \code{\link{readCosero}} and \code{\link{read.qobsqsim}}
 }
 \author{
 Simon Frey

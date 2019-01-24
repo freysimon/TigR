@@ -33,7 +33,7 @@ head.list(a)
 head(a)
 }
 \references{
-\link{https://gist.github.com/pimentel/256fc8c9b5191da63819}
+\code{https://gist.github.com/pimentel/256fc8c9b5191da63819}
 }
 \author{
 pimentel

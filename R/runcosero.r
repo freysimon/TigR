@@ -25,7 +25,7 @@
 #' @examples
 #' runcosero(path = "C:/COSERO/COSERO.exe", saveold = TRUE, which.copy = "all", show.output = TRUE)
 #' @return Returns nothing to R but executes the model COSERO
-#' @seealso For reading the output of COSERO see \code{\link{readcosero}} and \code{\link{read.qobsqsim}}
+#' @seealso For reading the output of COSERO see \code{\link{readCosero}} and \code{\link{read.qobsqsim}}
 #' @export
 
 runcosero <- function(path, saveold=TRUE, batchfile=NA, use.statevar = TRUE,

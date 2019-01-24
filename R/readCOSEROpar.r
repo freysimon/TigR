@@ -3,8 +3,9 @@
 #' @author Simon Frey
 #' @export
 #' @param x charcater string. A COSERO parameter file
+#' @param NB numerical. Return only the parameters of a certain subbasin. May be a single number or a numerical vector.
 #' @return A list containing three lists: Nr 1 contains the dimensions, Nr 2 contains the headers, and number 3 the values
-read_COSERO_par <- function(x){
+read_COSERO_par <- function(x, NB=NULL){
   ll <- readLines(x, encoding = "UTF-8")
   
   dimensions <- ll[1 : (which(ll == "** Parameters **")-1)]
@@ -12,6 +13,11 @@ read_COSERO_par <- function(x){
   
   nr_of_pars <- length(which(parameters == "####"))
   pars <- parameters[which(parameters == "####") + 1]
+  
+  if(!is.null(NB)){
+    NBS <- substrRight(gsub(" 10","",pars),3)
+    pars <- pars[which(NBS %in% sprintf("%03i",NB))]
+  }
   
   #### headers auslesen ####
   
@@ -30,6 +36,7 @@ read_COSERO_par <- function(x){
   }
   names(parheaders) <- pars
   
+ 
   
   #### Parameterwerte auslesen ####
   parvals <- list()
@@ -45,6 +52,7 @@ read_COSERO_par <- function(x){
     setTxtProgressBar(pb, value = k)
   }
   names(parvals) <- pars
+  
   
   return(list(dimensions,parheaders, parvals))
 }

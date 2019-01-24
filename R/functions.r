@@ -789,7 +789,7 @@ scalevalues <- function(x, ...){
 #' n items in the list.
 #' @param ... additional parameters passed on to head()
 #' @author pimentel
-#' @references \link{https://gist.github.com/pimentel/256fc8c9b5191da63819}
+#' @references \code{https://gist.github.com/pimentel/256fc8c9b5191da63819}
 #' @export
 #' @examples 
 #' a <- list()
