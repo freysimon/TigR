@@ -4,10 +4,12 @@
 \alias{read.qobsqsim}
 \title{read qobs_qsim.txt (a COSERO output file)}
 \usage{
-read.qobsqsim(x)
+read.qobsqsim(x, ...)
 }
 \arguments{
 \item{x}{character string pointing towards the file qobs_qsim.txt}
+
+\item{...}{other arguments passed to \code{\link{read.table}}. Already defined are \code{header (TRUE)} and \code{colClasses}}
 }
 \value{
 a list of length 2 with QOBS and QSIM values, respectively

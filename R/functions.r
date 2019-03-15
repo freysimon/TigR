@@ -262,6 +262,7 @@ apply.hourly <- function(x, FUN, roundtime = "round", na.rm = TRUE){
 # qobs_qsim von COSERO lesen und als getrennte Zeitreihen in einer Liste zurückgeben
 #' read qobs_qsim.txt (a COSERO output file)
 #' @param x character string pointing towards the file qobs_qsim.txt
+#' @param ... other arguments passed to \code{\link{read.table}}. Already defined are \code{header (TRUE)} and \code{colClasses}
 #' @author Simon Frey
 #' @return a list of length 2 with QOBS and QSIM values, respectively
 #' @import xts
@@ -275,13 +276,13 @@ apply.hourly <- function(x, FUN, roundtime = "round", na.rm = TRUE){
 #' out <- read.qobsqsim(fpath)
 #' summary(out)
 #' @seealso \code{\link{readCosero}}
-read.qobsqsim <- function(x){
+read.qobsqsim <- function(x, ...){
   output <- list()
   library(xts)
-  out <- read.table(x,nrow=1,header=TRUE)
+  out <- read.table(x,nrow=1,header=TRUE, ...)
   nc <- ncol(out)
   out <- read.table(x,header=TRUE,colClasses=
-                      c(rep("character",5),rep("numeric",nc-5)))
+                      c(rep("character",5),rep("numeric",nc-5)), ...)
   datum <- as.POSIXct(paste(out[,1],out[,2],out[,3],out[,4],out[,5],sep=" "),
                       format="%Y %m %d %H %M",tz="utc")
   out <- xts(out[,6:nc],order.by=datum)
