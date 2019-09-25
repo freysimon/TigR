@@ -111,7 +111,7 @@ smoothdaily <- function(x, upperbound=NULL){
   }
 
   if(is.null(upperbound)){
-    upperbound <- max(x)
+    upperbound <- max(x,na.rm = TRUE)
   }
 
   days <- difftime(max(index(x)),min(index(x)),units="days")
@@ -124,8 +124,8 @@ smoothdaily <- function(x, upperbound=NULL){
     xx <- x[as.character(index(meanday[day]))]
 
     if(any(!is.na(xx))){
-      if(!any(xx > upperbound)){
-      meanday[day] <- (max(xx) + min(xx)) / 2
+      if(!any(xx > upperbound, na.rm = TRUE)){
+      meanday[day] <- (max(xx, na.rm = TRUE) + min(xx,na.rm = TRUE)) / 2
       }
     }
 

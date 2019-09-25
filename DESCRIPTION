@@ -1,9 +1,9 @@
 Package: TigR
 Type: Package
 Title: A collection of more or less usefull R functions
-Version: 0.1.9.5
-IMPORTS: xts, magrittr, R.utils, parallel, pbapply, rgdal, tools, data.table, hydroGOF, sp
-DEPENDS: xts, magrittr, R.utils, parallel, pbapply, rgdal, tools, data.table, hydroGOF, sp
+Version: 0.1.9.7
+IMPORTS: xts, magrittr, R.utils, parallel, pbapply, rgdal, tools, data.table, hydroGOF, sp, plyr
+DEPENDS: xts, magrittr, R.utils, parallel, pbapply, rgdal, tools, data.table, hydroGOF, sp, plyr
 Author: Simon Frey
 Maintainer: Simon Frey <simon.frey@verbund.com>
 Description: More about what it does (maybe more than one line)
