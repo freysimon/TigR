@@ -12,17 +12,24 @@ readogr(x, ...)
 \item{...}{further arguments passed on to \code{\link{readOGR}}}
 }
 \description{
-Read a shapefile using the RGDAL library. Essentially this is just a wrapper around \code{\link{readOGR}} from the rgdal package
+Read a shapefile using the RGDAL library. Essentially this is just a wrapper around \code{\link{readOGR}} from the rgdal package.
 }
 \details{
 This wrapper splits a path to a shapfile into the \code{\link{dirname}} and the \code{\link{basename}}. The latter is passed
-as dsn agrument the first as layer argument to \code{\link{readOGR}}.
+as dsn argument the first as layer argument to \code{\link{readOGR}}.
 }
 \examples{
     #### not run ####
     x <- "C:/TEMP/someshapefile.shp"
     readogr(x)
     
+    #### end not run ####
+
+}
+\seealso{
+\code{\link{writeogr}}
+
+\code{\link{writeOGR}}
 }
 \author{
 Simon Frey
