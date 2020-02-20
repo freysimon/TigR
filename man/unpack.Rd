@@ -4,9 +4,17 @@
 \alias{unpack}
 \title{unpack a set of files}
 \usage{
-unpack(x, keeptar = TRUE, exdir = ".", overwrite = TRUE,
-  remove = FALSE, cores = NULL, barstyle = "win", debug = FALSE,
-  ...)
+unpack(
+  x,
+  keeptar = TRUE,
+  exdir = ".",
+  overwrite = TRUE,
+  remove = FALSE,
+  cores = NULL,
+  barstyle = "win",
+  debug = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{vector of filenames}

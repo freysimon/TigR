@@ -4,8 +4,16 @@
 \alias{yearplot}
 \title{Plots an xts object splitted in hydrological years}
 \usage{
-yearplot(sim, obs, NB = NULL, plot = TRUE, maxrow = 4, dev = "dev",
-  plotfile = NULL, ...)
+yearplot(
+  sim,
+  obs,
+  NB = NULL,
+  plot = TRUE,
+  maxrow = 4,
+  dev = "dev",
+  plotfile = NULL,
+  ...
+)
 }
 \arguments{
 \item{sim}{xts object with simulated data from COSERO}

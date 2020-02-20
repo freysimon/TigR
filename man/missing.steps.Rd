@@ -11,9 +11,13 @@ missing.steps(x)
 }
 \value{
 a numerical vector giving the differences of the time steps of the xts object
+
+a numeric vector
 }
 \description{
-It is essentially a wrapper around \code{\link{diff.POSIXt}} returning a numeric vector. Any irregularities then can be interpreted as missing steps.
+Irregularities are found by \code{\link{diff.POSIXt}}. A majority vote using \code{\link{which.max}} from the package \code{table} determines the most common time step. 
+Any differing timesteps are interpreted as missing. A vector containing the locations of those missing time steps is returned.
+Note that only the location but not how many time steps per gap are missing is returned.
 }
 \seealso{
 \code{\link{fill.missing}}

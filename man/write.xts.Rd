@@ -4,8 +4,7 @@
 \alias{write.xts}
 \title{Write an xts object using the date format as rownames}
 \usage{
-write.xts(x, file = "", format = NULL, fmt = NULL, quote = FALSE,
-  ...)
+write.xts(x, file = "", format = NULL, fmt = NULL, quote = FALSE, ...)
 }
 \arguments{
 \item{x}{xts object}

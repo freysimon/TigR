@@ -14,7 +14,11 @@
 #' @export
 #' @author Simon Frey
 #' @import xts
-#' @description It is essentially a wrapper around \code{\link{diff.POSIXt}} returning a numeric vector. Any irregularities then can be interpreted as missing steps.
+#' @import table
+#' @return a numeric vector
+#' @description Irregularities are found by \code{\link{diff.POSIXt}}. A majority vote using \code{\link{which.max}} from the package \code{table} determines the most common time step. 
+#' Any differing timesteps are interpreted as missing. A vector containing the locations of those missing time steps is returned.
+#' Note that only the location but not how many time steps per gap are missing is returned.
 #' @seealso \code{\link{fill.missing}}
 missing.steps <- function(x){
   # check if x is an xts object
@@ -22,7 +26,13 @@ missing.steps <- function(x){
     stop("x must be of xts type")
   }
   x <- diff.POSIXt(index(x))
-  return(as.numeric(x))
+  
+  # find majority of indices
+  m <- which.max(table(x))
+  # check, which index does not match m
+  x.not.m <- which(x != as.numeric(m))
+  
+  return(as.numeric(x.not.m))
 }
 
 #' Fill missing values in an xts object
@@ -37,6 +47,12 @@ missing.steps <- function(x){
 #' @seealso \code{\link{missing.steps}}
 #' @details steps can be a character string, containing one of "sec", "min", "hour", "day", "DSTday", "week", "month", "quarter" or "year". Default is "hour"
 #' @return an xts object
+#' @example 
+#' data("runoff")
+#' # delete a row to make the time series irregulat
+#' runoff.missing <- runoff[-4,]
+#' # fill missing timesteps
+#' runoff.filled <- fill.missing(runoff,missing)
 fill.missing <- function(x, start=NULL, end=NULL, steps = "hour"){
   # check if x is an xts object
   if(class(x)[1] != "xts"){

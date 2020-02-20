@@ -4,8 +4,15 @@
 \alias{runcosero}
 \title{Run the hydrological model COSERO}
 \usage{
-runcosero(path, saveold = TRUE, batchfile = NA, use.statevar = TRUE,
-  which.copy = "all", show.output = FALSE, ...)
+runcosero(
+  path,
+  saveold = TRUE,
+  batchfile = NA,
+  use.statevar = TRUE,
+  which.copy = "all",
+  show.output = FALSE,
+  ...
+)
 }
 \arguments{
 \item{path}{Path to the executable of COSERO.}

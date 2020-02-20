@@ -4,8 +4,15 @@
 \alias{read.xts}
 \title{read a textfile and save it as xts-object}
 \usage{
-read.xts(x, datecolumns = c(1:5), format = "\%Y \%m \%d \%H \%M",
-  header = TRUE, tz = "utc", skip = 0, ...)
+read.xts(
+  x,
+  datecolumns = c(1:5),
+  format = "\%Y \%m \%d \%H \%M",
+  header = TRUE,
+  tz = "utc",
+  skip = 0,
+  ...
+)
 }
 \arguments{
 \item{x}{character string. file to load}

@@ -4,9 +4,17 @@
 \alias{readCosero}
 \title{Reading COSERO output files}
 \usage{
-readCosero(qoutput = "./Q_output.txt", prec = FALSE, comp = FALSE,
-  eta = FALSE, storage = FALSE, snowmelt = FALSE, area = NULL,
-  timestep = NULL, ...)
+readCosero(
+  qoutput = "./Q_output.txt",
+  prec = FALSE,
+  comp = FALSE,
+  eta = FALSE,
+  storage = FALSE,
+  snowmelt = FALSE,
+  area = NULL,
+  timestep = NULL,
+  ...
+)
 }
 \arguments{
 \item{qoutput}{character string. Pointing towards the file "Q_output.txt"}

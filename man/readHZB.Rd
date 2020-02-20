@@ -4,8 +4,14 @@
 \alias{readHZB}
 \title{read a file provides by HZB}
 \usage{
-readHZB(file, name = TRUE, keyword = "Messstelle",
-  format = "\%d.\%m.\%Y \%H:\%M", tz = "UTC", ...)
+readHZB(
+  file,
+  name = TRUE,
+  keyword = "Messstelle",
+  format = "\%d.\%m.\%Y \%H:\%M",
+  tz = "UTC",
+  ...
+)
 }
 \arguments{
 \item{file}{file to read}
