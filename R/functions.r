@@ -14,7 +14,6 @@
 #' @export
 #' @author Simon Frey
 #' @import xts
-#' @import table
 #' @return a numeric vector
 #' @description Irregularities are found by \code{\link{diff.POSIXt}}. A majority vote using \code{\link{which.max}} from the package \code{table} determines the most common time step. 
 #' Any differing timesteps are interpreted as missing. A vector containing the locations of those missing time steps is returned.
@@ -54,6 +53,7 @@ missing.steps <- function(x){
 #' # fill missing timesteps
 #' runoff.filled <- fill.missing(runoff,missing)
 fill.missing <- function(x, start=NULL, end=NULL, steps = "hour"){
+  library(xts)
   # check if x is an xts object
   if(class(x)[1] != "xts"){
     stop("x must be of xts type")
