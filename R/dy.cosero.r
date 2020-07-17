@@ -13,8 +13,11 @@
 #' @param eta logical or character string. Should data about evapotranspiration be read in? Maybe a path to the corresponding file.
 #' @param group character string or NULL. Used to group dygraph plots. See \link{dygraph}
 #' @param height numeric or NULL. Height in pixels (optional, defaults to automatic sizing)
+#' @return Nothing is returned to R. Only the dygraphs are plotted.
 #' @details If read,data == FALSE the results from \code{\link{readCosero}} must be passed on to \code{dy.cosero}.
 #'     In this case the parameters \code{prec},\code{comp},\code{storage},\code{snowmelt}, and \code{eta} may be logical
+#'     
+#'     Note that at this time, this function only works for basins with only one subbasin!
 
 dy.cosero <- function(qoutput = NULL, read.data = TRUE, 
                       prec = FALSE, comp = FALSE, eta = FALSE,
@@ -22,6 +25,7 @@ dy.cosero <- function(qoutput = NULL, read.data = TRUE,
                       area = NULL, height = NULL, ...){
   library(dygraphs)
   library(htmltools)
+  library(hydroGOF)
   
   max0 <- function(x){
     max(0,x,na.rm = TRUE)
@@ -53,8 +57,9 @@ dy.cosero <- function(qoutput = NULL, read.data = TRUE,
   }
   
   runoff.data <- cbind(qoutput$runoff$obs,qoutput$runoff$sim)
+  kge <- KGE(sim=runoff.data[,2],obs=runoff.data[,1])
   dy_graph <- list(
-    dygraph(runoff.data, group = group, main = "runoff", height = height, ...) %>% dyRangeSelector(height = 10)
+    dygraph(runoff.data, group = group, main = paste("runoff (KGE: ",round(kge,3),")",sep=""), height = height, ...) %>% dyRangeSelector(height = 10)
   )
   
   if(prec){

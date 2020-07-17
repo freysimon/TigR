@@ -37,12 +37,17 @@ dy.cosero(
 
 \item{height}{numeric or NULL. Height in pixels (optional, defaults to automatic sizing)}
 }
+\value{
+Nothing is returned to R. Only the dygraphs are plotted.
+}
 \description{
 Plot the results regarding runoff from COSERO using dygraphs. The output may be grouped together with other results.
 }
 \details{
 If read,data == FALSE the results from \code{\link{readCosero}} must be passed on to \code{dy.cosero}.
     In this case the parameters \code{prec},\code{comp},\code{storage},\code{snowmelt}, and \code{eta} may be logical
+    
+    Note that at this time, this function only works for basins with only one subbasin!
 }
 \author{
 Simon Frey
