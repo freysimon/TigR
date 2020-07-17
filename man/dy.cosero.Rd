@@ -8,6 +8,7 @@ dy.cosero(
   qoutput = NULL,
   read.data = TRUE,
   prec = FALSE,
+  wb = FALSE,
   comp = FALSE,
   eta = FALSE,
   storage = FALSE,
@@ -25,6 +26,8 @@ dy.cosero(
 
 \item{prec}{logical or character string. Should precipitation data be read in? Maybe a path to the corresponding file.}
 
+\item{wb}{logical. If TRUE cumsums of waterbalance components are calculated and plotted. Note that if wb == TRUE, area must be given!}
+
 \item{comp}{logical or character string. Should data about the composition of runoff be read in? Maybe a path to the corresponding file.}
 
 \item{eta}{logical or character string. Should data about evapotranspiration be read in? Maybe a path to the corresponding file.}
@@ -35,7 +38,9 @@ dy.cosero(
 
 \item{group}{character string or NULL. Used to group dygraph plots. See \link{dygraph}}
 
-\item{height}{numeric or NULL. Height in pixels (optional, defaults to automatic sizing)}
+\item{height}{numeric, "auto", or NULL. Height in pixels (optional, defaults to automatic sizing). If "auto" a total plot of 1200px is assumed and devided by the amount of plots.}
+
+\item{...}{additional arguments passed on either to \link{readCosero} or to \link{dygraph}}
 }
 \value{
 Nothing is returned to R. Only the dygraphs are plotted.

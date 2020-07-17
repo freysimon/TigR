@@ -7,12 +7,14 @@
 #' @param qoutput Either a path to the file to be read or the result from \link{readCosero}
 #' @param read.data logical. If TRUE, qoutput will be read in using \link{readCosero}
 #' @param prec logical or character string. Should precipitation data be read in? Maybe a path to the corresponding file.
+#' @param wb logical. If TRUE cumsums of waterbalance components are calculated and plotted. Note that if wb == TRUE, area must be given!
 #' @param comp logical or character string. Should data about the composition of runoff be read in? Maybe a path to the corresponding file.
 #' @param storage logical or character string. Should storage data be read in? Maybe a path to the corresponding file.
 #' @param snowmelt logical or character string. Should snow data be read in? Maybe a path to the corresponding file.
 #' @param eta logical or character string. Should data about evapotranspiration be read in? Maybe a path to the corresponding file.
 #' @param group character string or NULL. Used to group dygraph plots. See \link{dygraph}
-#' @param height numeric or NULL. Height in pixels (optional, defaults to automatic sizing)
+#' @param height numeric, "auto", or NULL. Height in pixels (optional, defaults to automatic sizing). If "auto" a total plot of 1200px is assumed and devided by the amount of plots.
+#' @param ... additional arguments passed on either to \link{readCosero} or to \link{dygraph}
 #' @return Nothing is returned to R. Only the dygraphs are plotted.
 #' @details If read,data == FALSE the results from \code{\link{readCosero}} must be passed on to \code{dy.cosero}.
 #'     In this case the parameters \code{prec},\code{comp},\code{storage},\code{snowmelt}, and \code{eta} may be logical
@@ -20,7 +22,7 @@
 #'     Note that at this time, this function only works for basins with only one subbasin!
 
 dy.cosero <- function(qoutput = NULL, read.data = TRUE, 
-                      prec = FALSE, comp = FALSE, eta = FALSE,
+                      prec = FALSE, wb = FALSE, comp = FALSE, eta = FALSE,
                       storage = FALSE, snowmelt = FALSE, group = NULL,
                       area = NULL, height = NULL, ...){
   library(dygraphs)
@@ -29,7 +31,14 @@ dy.cosero <- function(qoutput = NULL, read.data = TRUE,
   
   max0 <- function(x){
     max(0,x,na.rm = TRUE)
-  } 
+  }
+  
+  if(wb){
+    if(!prec){
+      prec <- TRUE
+      print("setting prec == TRUE, because wb == TRUE")
+    }
+  }
   
   if(read.data){
     if(is.null(qoutput)){
@@ -56,7 +65,22 @@ dy.cosero <- function(qoutput = NULL, read.data = TRUE,
     }
   }
   
+  if(!is.null(height)){
+    if(height == "auto"){
+      number.of.plots <- sum(c(prec,comp,eta,storage,snowmelt,wb)) + 1 # for qoutput which will be plotted anyway
+      height <- 1200 / number.of.plots
+    }
+  } 
+    
+
+  
   runoff.data <- cbind(qoutput$runoff$obs,qoutput$runoff$sim)
+  if(wb){
+    if(is.null(area)){
+      stop("area must be given if wb == TRUE")
+    }
+    runoff.mm <- cbind(qoutput$runoff$obs.mm,qoutput$runoff$sim.mm)
+  }
   kge <- KGE(sim=runoff.data[,2],obs=runoff.data[,1])
   dy_graph <- list(
     dygraph(runoff.data, group = group, main = paste("runoff (KGE: ",round(kge,3),")",sep=""), height = height, ...) %>% dyRangeSelector(height = 10)
@@ -65,6 +89,11 @@ dy.cosero <- function(qoutput = NULL, read.data = TRUE,
   if(prec){
       prec.data <- cbind(qoutput$precipitation$rain, qoutput$precipitation$snow)
       dy_graph <- c(dy_graph, list(dygraph(prec.data, group = group, main = "precipitation", height = height, ...)))
+  }
+  
+  if(wb){
+    wb.data <- cumsum(cbind(runoff.mm,prec.data))
+    dy_graph <- c(dy_graph, list(dygraph(wb.data, group = group, main = "water balance", height = height, ...)))
   }
   
   if(comp){
