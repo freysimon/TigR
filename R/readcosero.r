@@ -71,6 +71,9 @@ readCosero <- function(qoutput = "./Q_output.txt", prec=FALSE, comp=FALSE, eta=F
 
 
   if(is.null(area[1])) warning("No information about area provided. Runoff will not be given in mm!")
+  
+  # wd auf das Verzeichnis von Q_output.txt setzen
+  setwd(dirname(qoutput))
 
   # functions.r laden
   library(xts)

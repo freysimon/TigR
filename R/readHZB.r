@@ -1,4 +1,4 @@
-#' read a file provides by HZB
+#' read a file provided by HZB
 #' @description read a file provided by HZB (e.g. from ehyd)
 #' @author Simon Frey
 #' @export

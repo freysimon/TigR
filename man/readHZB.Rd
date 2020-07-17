@@ -2,7 +2,7 @@
 % Please edit documentation in R/readHZB.r
 \name{readHZB}
 \alias{readHZB}
-\title{read a file provides by HZB}
+\title{read a file provided by HZB}
 \usage{
 readHZB(
   file,

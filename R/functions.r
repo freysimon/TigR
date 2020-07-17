@@ -38,21 +38,25 @@ missing.steps <- function(x){
 #' @param x an xts object
 #' @param start NULL or an POSIXct object. If NULL, the first index of x will be used
 #' @param end NULL or an POSIXct object. If NULL, the last index of x will be used
-#' @param steps increment of the sequence. See ‘Details’.
-#' @description Fill missing entries in an xts object using \code{\link{nalocf}}
+#' @param steps increment of the sequence. See ‘Details’
+#' @param fill logical. If TRUE missing entries are filled using \code{\link{nalocf}}, else missing entries are filled with na.value
+#' @param na.value numeric or NA. Used for filling missing entries if fill == FALSE
+#' @description Fill missing entries in an xts object using \code{\link{nalocf}} or, alternatively, with an constant value
 #' @export
 #' @import xts
 #' @author Simon Frey
 #' @seealso \code{\link{missing.steps}}
 #' @details steps can be a character string, containing one of "sec", "min", "hour", "day", "DSTday", "week", "month", "quarter" or "year". Default is "hour"
 #' @return an xts object
-#' @example 
+#' @examples 
 #' data("runoff")
 #' # delete a row to make the time series irregulat
 #' runoff.missing <- runoff[-4,]
 #' # fill missing timesteps
-#' runoff.filled <- fill.missing(runoff,missing)
-fill.missing <- function(x, start=NULL, end=NULL, steps = "hour"){
+#' runoff.filled <- fill.missing(runoff.missing)
+#' ### fill with -0.01
+#' runoff.filled <- fill.missing(runoff.missing, fill = FALSE, na.value = -0.01)
+fill.missing <- function(x, start=NULL, end=NULL, steps = "hour", fill = TRUE, na.value = NA){
   library(xts)
   # check if x is an xts object
   if(class(x)[1] != "xts"){
@@ -71,9 +75,16 @@ fill.missing <- function(x, start=NULL, end=NULL, steps = "hour"){
   X <- merge(SEQ,x)
   X <- X[,-1]
   nas <- sum(is.na(X[,1]))
-  X <- nalocf(X)
-  
-  print(paste(nas, "entries have been filled using nalocf"))
+  if(fill){
+    X <- nalocf(X)
+    print(paste(nas, "entries have been filled using nalocf"))
+  } else {
+    x.missing <- which(is.na(X))
+    xmat <- as.matrix(X)
+    xmat[x.missing] <- na.value
+    X <- xts(xmat, order.by=index(X))
+    print(paste(length(x.missing), "missing entries have been filled by", na.value))
+  }
   
   return(X)
 }
@@ -380,6 +391,19 @@ read.xts <- function(x, datecolumns=c(1:5), format="%Y %m %d %H %M", header=TRUE
 #' dev.new.file(device = "pdf")
 #'
 dev.new.file <- function(device="dev",return.device=TRUE,filename=NULL, ...){
+  #' Open a new device for plotting
+  #' @description Open a new device for plotting and allow some settings
+  #' @author Simon Frey
+  #' @export
+  #' @param device any string of "dev","png","pdf", or "svg"
+  #' @param return.device logical. should the type of device be returned?
+  #' @param filename string. Where should the plot be saved? If no extention is given, it will be added according to the type of the device.
+  #' @param ... additional arguments passed on to the dev fuction (e.g. \link{dev.new}, or \link{png}).
+  #' @examples 
+  #'     d <- dev.new.file(device = "png",filename = "C:/TEMP/test")
+  #'     plot(1)
+  #'     if(d %in% c("png","pdf","svg")) dev.off()
+  #' 
   ##  Erstellen eines neues Plotfensters oder schreiben des Plot in eine Datei
   ##  Kann durch device angegeben werden:
   ##    - device = dev : öffenen eines neuen device (dev.new)

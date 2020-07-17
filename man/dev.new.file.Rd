@@ -7,19 +7,21 @@
 dev.new.file(device = "dev", return.device = TRUE, filename = NULL, ...)
 }
 \arguments{
-\item{device}{character string. See details.}
+\item{device}{any string of "dev","png","pdf", or "svg"}
 
-\item{return.device}{logical. Should the device character string be returned}
+\item{return.device}{logical. should the type of device be returned?}
 
-\item{filename}{character string.}
+\item{filename}{string. Where should the plot be saved? If no extention is given, it will be added according to the type of the device.}
 
-\item{...}{Additional arguments passed from other methods}
+\item{...}{additional arguments passed on to the dev fuction (e.g. \link{dev.new}, or \link{png}).}
 }
 \value{
 If return.device = TRUE, device is retured. Else nothing is returned.
 }
 \description{
 Open a new graphical device on screen or open a pdf/png file for plotting
+
+Open a new device for plotting and allow some settings
 }
 \details{
 Valid arguments for device are "dev", "png", "pdf" and "svg".
@@ -40,7 +42,14 @@ dev.new.file(device = "png", return.device = TRUE, filename = tempfile)
 # do not run
 dev.new.file(device = "pdf")
 
+Open a new device for plotting
+    d <- dev.new.file(device = "png",filename = "C:/TEMP/test")
+    plot(1)
+    if(d \%in\% c("png","pdf","svg")) dev.off()
+
 }
 \author{
+Simon Frey
+
 Simon Frey
 }

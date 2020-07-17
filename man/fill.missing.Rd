@@ -4,7 +4,14 @@
 \alias{fill.missing}
 \title{Fill missing values in an xts object}
 \usage{
-fill.missing(x, start = NULL, end = NULL, steps = "hour")
+fill.missing(
+  x,
+  start = NULL,
+  end = NULL,
+  steps = "hour",
+  fill = TRUE,
+  na.value = NA
+)
 }
 \arguments{
 \item{x}{an xts object}
@@ -13,16 +20,29 @@ fill.missing(x, start = NULL, end = NULL, steps = "hour")
 
 \item{end}{NULL or an POSIXct object. If NULL, the last index of x will be used}
 
-\item{steps}{increment of the sequence. See ‘Details’.}
+\item{steps}{increment of the sequence. See ‘Details’}
+
+\item{fill}{logical. If TRUE missing entries are filled using \code{\link{nalocf}}, else missing entries are filled with na.value}
+
+\item{na.value}{numeric or NA. Used for filling missing entries if fill == FALSE}
 }
 \value{
 an xts object
 }
 \description{
-Fill missing entries in an xts object using \code{\link{nalocf}}
+Fill missing entries in an xts object using \code{\link{nalocf}} or, alternatively, with an constant value
 }
 \details{
 steps can be a character string, containing one of "sec", "min", "hour", "day", "DSTday", "week", "month", "quarter" or "year". Default is "hour"
+}
+\examples{
+data("runoff")
+# delete a row to make the time series irregulat
+runoff.missing <- runoff[-4,]
+# fill missing timesteps
+runoff.filled <- fill.missing(runoff.missing)
+### fill with -0.01
+runoff.filled <- fill.missing(runoff.missing, fill = FALSE, na.value = -0.01)
 }
 \seealso{
 \code{\link{missing.steps}}
