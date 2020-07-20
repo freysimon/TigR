@@ -85,3 +85,52 @@ write_COSERO_par <- function(x, file = "parameter_COSERO.par"){
                 fileEncoding = "UTF-8")
   }
 }
+
+#' Write a COSERO NBIZ Parameterfile
+#' @author Simon Frey
+#' @description write a COSERO NBIZ Parameterfile
+#' @param x output from \link{read_COSERO_par}
+#' @param file character string. Filename of the output file. If NULL the output will be returned to R.
+#' @param pars character vector or "ALL". Names of parameters that will be exported. See Details
+#' @details If pars == ALL the following parameters will be exported:
+#' 
+#'   BAREGR, BETA, CTMAX, CTMIN, CTNEG, ETSLPCOR, FKFAK, FK, H1, H2, KBF, M, NC, NZ , NVAR, PWP, RAINTRT, SNOWCOR, 
+#'   SNOWTRT, TAB1, TAB2, TAB4, THRT, TVS1, TVS2, WATERBODY
+#' @export
+#' 
+write_COSERO_table <- function(x, file = "para.txt", pars = "ALL"){
+  options("encoding" = "UTF-8")
+  
+  if(pars == "ALL"){
+    pars <- c(
+          "BAREGR","BETA","CTMAX","CTMIN", "CTNEG", "ETSLPCOR", "FKFAK", "FK", "H1",
+          "H2", "KBF", "M", "NC", "NZ","NVAR", "PWP", "RAINTRT", "SNOWCOR", "SNOWTRT",
+          "TAB1", "TAB2", "TAB4", "THRT", "TVS1", "TVS2", "WATERBODY")
+  }
+  
+  Strpl <- function(x){
+    strsplit(x, "_", fixed = TRUE)[[1]][1]
+  }
+  
+  namesx <- sapply(names(x[[2]]),Strpl)
+  
+  wnames <- which(namesx %in% pars)
+  
+  paras <- NULL
+  for(k in 1:length(pars)){
+    paras <- cbind(paras,unlist(x[[3]][wnames[k][[1]]]))
+  }
+  
+  NBIZNZ <- TigR::get.dimensions(x)
+  
+  paras <- cbind(NBIZNZ, paras)
+  
+  colnames(paras) <- c("NB","IZ","NZ",namesx[wnames])
+  
+  if(is.null(file)){
+    return(paras)
+  } else {
+    write.table(paras, file = file, quote =F, sep = "\t", row.names = F, col.names = T, dec = ".")
+  }
+  
+}

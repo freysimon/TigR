@@ -48,10 +48,13 @@ get.dimensions <- function(x){
   IZ <- c(1:IZS[1])
   NB <- rep(1,IZS[1])
   
-  for(k in 2:maxNB){
-    IZ <- c(IZ, c(1:IZS[k]))
-    NB <- c(NB, rep(k,IZS[k]))
+  if(maxNB > 1){
+    for(k in 2:maxNB){
+      IZ <- c(IZ, c(1:IZS[k]))
+      NB <- c(NB, rep(k,IZS[k]))
+    }
   }
+  
   
   NBIZNZ <- cbind(NB,IZ,NZ)
   colnames(NBIZNZ) <- c("NB","IZ","NZ")
