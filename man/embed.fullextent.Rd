@@ -24,6 +24,9 @@ By adding the last timesteps-1 entries at the end of the result of embed, the le
 x <- 1:10
 embed.fullextent(x,3)
 }
+\seealso{
+\code{\link{embed}}
+}
 \author{
 Simon Frey
 }

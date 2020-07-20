@@ -12,7 +12,7 @@ smoothdaily(x, upperbound = NULL)
 \item{upperbound}{(Optional) A numeric value giving the threshold below which smoothing is performed.}
 }
 \value{
-A smoothed xts.
+A smoothed xts with daily time steps.
 }
 \description{
 Smoothes an time series x on daily basis
