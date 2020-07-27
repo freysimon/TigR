@@ -4,10 +4,10 @@
 \alias{writeogr}
 \title{Write a shapefile using RGDAL}
 \usage{
-writeogr(x, shp, driver = "ESRI Shapefile", ...)
+writeogr(filename, shp, driver = "ESRI Shapefile", ...)
 }
 \arguments{
-\item{x}{character string. Filename (including path) of the shapefile to be written.}
+\item{filename}{character string. Filename (including path) of the shapefile to be written.}
 
 \item{shp}{a SpatialPointsDataFrame, SpatialLinesDataFrame, or a SpatialPolygonsDataFrame object to be written as shapefile x.}
 
@@ -28,7 +28,7 @@ as dsn argument the first as layer argument to \code{\link{writeOGR}}.
     shapefile <- "EXAMPLE"
     writeogr(x = shapefilename, shp = shapefile)
     
-    #### ned not run ####
+    #### end not run ####
 
 }
 \seealso{

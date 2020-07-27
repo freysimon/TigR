@@ -16,6 +16,7 @@ dy.cosero(
   group = NULL,
   area = NULL,
   height = NULL,
+  NB = 1,
   ...
 )
 }
@@ -38,7 +39,11 @@ dy.cosero(
 
 \item{group}{character string or NULL. Used to group dygraph plots. See \link{dygraph}}
 
+\item{area}{numeric. Vector with the length of subbasins modelled in qoutput. The area of each subbasin in square meters (m^2).}
+
 \item{height}{numeric, "auto", or NULL. Height in pixels (optional, defaults to automatic sizing). If "auto" a total plot of 1200px is assumed and devided by the amount of plots.}
+
+\item{NB}{numeric. Number of subbasin that will be analysed. Note that if NB is a vector, only the first element will be used.}
 
 \item{...}{additional arguments passed on either to \link{readCosero} or to \link{dygraph}}
 }

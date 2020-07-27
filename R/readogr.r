@@ -35,7 +35,7 @@ readogr <- function(x, ...){
 #' @import tools
 #' @details This wrapper splits a path to a shapfile into the \code{\link{dirname}} and the \code{\link{basename}}. The latter is passed
 #' as dsn argument the first as layer argument to \code{\link{writeOGR}}.
-#' @param x character string. Filename (including path) of the shapefile to be written.
+#' @param filename character string. Filename (including path) of the shapefile to be written.
 #' @param shp a SpatialPointsDataFrame, SpatialLinesDataFrame, or a SpatialPolygonsDataFrame object to be written as shapefile x.
 #' @param driver chracter string. driver used to write x. Per default this is ESRI Shapefile.
 #' @param ... further arguments passed on to \code{\link{writeOGR}}
@@ -47,11 +47,11 @@ readogr <- function(x, ...){
 #'     shapefile <- "EXAMPLE"
 #'     writeogr(x = shapefilename, shp = shapefile)
 #'     
-#'     #### ned not run ####
+#'     #### end not run ####
 #' 
-writeogr <- function(x, shp, driver = "ESRI Shapefile", ...){
-  xb <- basename(x)
-  xn <- dirname(x)
+writeogr <- function(filename, shp, driver = "ESRI Shapefile", ...){
+  xb <- basename(filename)
+  xn <- dirname(filename)
   
   writeOGR(obj = shp, dsn = xn, layer = file_path_sans_ext(xb), driver = driver, ...)
 }

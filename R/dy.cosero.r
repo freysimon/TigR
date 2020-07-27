@@ -1,3 +1,4 @@
+
 #' Plot results regarding runoff from COSERO using dygraphs
 #' @author Simon Frey
 #' @export
@@ -13,7 +14,9 @@
 #' @param snowmelt logical or character string. Should snow data be read in? Maybe a path to the corresponding file.
 #' @param eta logical or character string. Should data about evapotranspiration be read in? Maybe a path to the corresponding file.
 #' @param group character string or NULL. Used to group dygraph plots. See \link{dygraph}
+#' @param area numeric. Vector with the length of subbasins modelled in qoutput. The area of each subbasin in square meters (m^2).
 #' @param height numeric, "auto", or NULL. Height in pixels (optional, defaults to automatic sizing). If "auto" a total plot of 1200px is assumed and devided by the amount of plots.
+#' @param NB numeric. Number of subbasin that will be analysed. Note that if NB is a vector, only the first element will be used.
 #' @param ... additional arguments passed on either to \link{readCosero} or to \link{dygraph}
 #' @return Nothing is returned to R. Only the dygraphs are plotted.
 #' @details If read,data == FALSE the results from \code{\link{readCosero}} must be passed on to \code{dy.cosero}.
@@ -24,13 +27,18 @@
 dy.cosero <- function(qoutput = NULL, read.data = TRUE, 
                       prec = FALSE, wb = FALSE, comp = FALSE, eta = FALSE,
                       storage = FALSE, snowmelt = FALSE, group = NULL,
-                      area = NULL, height = NULL, ...){
+                      area = NULL, height = NULL, NB = 1, ...){
   library(dygraphs)
   library(htmltools)
   library(hydroGOF)
   
   max0 <- function(x){
     max(0,x,na.rm = TRUE)
+  }
+  
+  if(length(NB) > 1){
+    NB <- NB[1]
+    warning("Only the first element of NB will be used.")
   }
   
   if(wb){
@@ -74,12 +82,12 @@ dy.cosero <- function(qoutput = NULL, read.data = TRUE,
     
 
   
-  runoff.data <- cbind(qoutput$runoff$obs,qoutput$runoff$sim)
+  runoff.data <- cbind(qoutput$runoff$obs[,NB],qoutput$runoff$sim[,NB])
   if(wb){
     if(is.null(area)){
       stop("area must be given if wb == TRUE")
     }
-    runoff.mm <- cbind(qoutput$runoff$obs.mm,qoutput$runoff$sim.mm)
+    runoff.mm <- cbind(qoutput$runoff$obs.mm[,NB],qoutput$runoff$sim.mm[,NB])
   }
   kge <- KGE(sim=runoff.data[,2],obs=runoff.data[,1])
   dy_graph <- list(
@@ -87,7 +95,7 @@ dy.cosero <- function(qoutput = NULL, read.data = TRUE,
   )
   
   if(prec){
-      prec.data <- cbind(qoutput$precipitation$rain, qoutput$precipitation$snow)
+      prec.data <- cbind(qoutput$precipitation$rain[,NB], qoutput$precipitation$snow[,NB])
       dy_graph <- c(dy_graph, list(dygraph(prec.data, group = group, main = "precipitation", height = height, ...)))
   }
   
@@ -97,9 +105,9 @@ dy.cosero <- function(qoutput = NULL, read.data = TRUE,
   }
   
   if(comp){
-    comp.data <- xts(cbind(apply(qoutput$components$HOF,1,FUN=max0),
-                           apply(qoutput$components$SOF,1,FUN=max0),
-                           apply(qoutput$components$GWF,1,FUN=max0)),
+    comp.data <- xts(cbind(apply(qoutput$components$HOF[,NB],1,FUN=max0),
+                           apply(qoutput$components$SOF[,NB],1,FUN=max0),
+                           apply(qoutput$components$GWF[,NB],1,FUN=max0)),
                      order.by = as.POSIXct(names(apply(qoutput$components$HOF,1,FUN=max0)),
                                            format = "%Y-%m-%d %H:%M:%S", tz = "utc"))
     comp.data <- cbind(rowSums(comp.data),
@@ -110,18 +118,18 @@ dy.cosero <- function(qoutput = NULL, read.data = TRUE,
   }
   
   if(storage){
-    storage.data <- cbind(qoutput$storages$BW0, qoutput$storages$BW1, qoutput$storages$BW2,
-                          qoutput$storages$BW3,qoutput$storages$BW4)
+    storage.data <- cbind(qoutput$storages$BW0[,NB], qoutput$storages$BW1[,NB], qoutput$storages$BW2[,NB],
+                          qoutput$storages$BW3[,NB],qoutput$storages$BW4[,NB])
     dy_graph <- c(dy_graph, list(dygraph(storage.data, group = group, main = "storage levels", height = height, ...)))
   }
   
   if(eta){
-    eta.data <- qoutput$ETA$ETA
+    eta.data <- qoutput$ETA$ETA[,NB]
     dy_graph <- c(dy_graph, list(dygraph(eta.data, group = group, main = "evapotranspiration", height = height, ...)))
   }
   
   if(snowmelt){
-    snowmelt.data <- cbind(qoutput$snowmelt$snowmelt,qoutput$snowmelt$snowaccumulation)
+    snowmelt.data <- cbind(qoutput$snowmelt$snowmelt[,NB],qoutput$snowmelt$snowaccumulation[,NB])
     colnames(snowmelt.data) <- c("snowmelt","SWE")
     dy_graph <- c(dy_graph, list(
       dygraph(snowmelt.data, group = group, main = "snow", height = height, ...) %>%
