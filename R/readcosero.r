@@ -45,6 +45,7 @@
 #' @param eta logical or character string. Should data about evapotranspiration be read in? Maybe a path to the corresponding file.
 #' @param area numeric. Area of the subbasin(s).
 #' @param timestep numeric. Timestep of the data.
+#' @param treat.neg.as.na logical. Should negative observed runoff values be treated as NA? 
 #' @param ... Additional arguments passed to read.table from other methods.
 #' @author Simon Frey
 #' @export
@@ -67,7 +68,7 @@
 #' @seealso \code{\link{m3s2mm}}
 #' @seealso \code{\link{read.qobsqsim}}
 readCosero <- function(qoutput = "./Q_output.txt", prec=FALSE, comp=FALSE, eta=FALSE, storage = FALSE,
-                       snowmelt=FALSE, area = NULL, timestep=NULL, ...){
+                       snowmelt=FALSE, area = NULL, timestep=NULL, treat.neg.as.na = TRUE, ...){
 
 
   if(is.null(area[1])) warning("No information about area provided. Runoff will not be given in mm!")
@@ -81,7 +82,11 @@ readCosero <- function(qoutput = "./Q_output.txt", prec=FALSE, comp=FALSE, eta=F
   # Einlesen von qobqsim
   xx <- read.table(qoutput,header=TRUE,nrow=1,skip=22,...)
   xx <- read.table(qoutput,header=TRUE,skip=22,colClasses=c(rep("character",5),rep("numeric",ncol(xx)-5)),
-                   stringsAsFactors = FALSE,...)
+                   stringsAsFactors = FALSE, ...)
+  
+  if(treat.neg.as.na){
+    xx[xx < 0] <- NA
+  }
 
   print("runoff read")
   

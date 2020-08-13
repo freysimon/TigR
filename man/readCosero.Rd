@@ -13,6 +13,7 @@ readCosero(
   snowmelt = FALSE,
   area = NULL,
   timestep = NULL,
+  treat.neg.as.na = TRUE,
   ...
 )
 }
@@ -32,6 +33,8 @@ readCosero(
 \item{area}{numeric. Area of the subbasin(s).}
 
 \item{timestep}{numeric. Timestep of the data.}
+
+\item{treat.neg.as.na}{logical. Should negative observed runoff values be treated as NA?}
 
 \item{...}{Additional arguments passed to read.table from other methods.}
 }
