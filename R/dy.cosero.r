@@ -4,6 +4,7 @@
 #' @export
 #' @import dygraphs
 #' @import htmltools
+#' @import hydroGOF
 #' @description Plot the results regarding runoff from COSERO using dygraphs. The output may be grouped together with other results.
 #' @param qoutput Either a path to the file to be read or the result from \link{readCosero}
 #' @param read.data logical. If TRUE, qoutput will be read in using \link{readCosero}
@@ -100,7 +101,10 @@ dy.cosero <- function(qoutput = NULL, read.data = TRUE,
   }
   
   if(wb){
-    wb.data <- cumsum(cbind(runoff.mm,prec.data))
+    wb.data <- cbind(runoff.mm,prec.data)
+    miss <- is.na(wb.data)
+    wb.data[miss] <- 0.0 
+    wb.data <- cumsum(wb.data)
     dy_graph <- c(dy_graph, list(dygraph(wb.data, group = group, main = "water balance", height = height, ...)))
   }
   
