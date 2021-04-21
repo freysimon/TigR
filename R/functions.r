@@ -325,7 +325,8 @@ read.qobsqsim <- function(x, ...){
 #' @param format character string. Specify the format of the date
 #' @param header logical. Does the data have a header?
 #' @param tz character string. Time zone of the data
-#' @param skip integer: the number of lines of the data file to skip before beginning to read data
+#' @param skip integer: the number of lines of the data file to skip before beginning to read data.
+#' @param cut.prefix integer. Amount of leading characters that will be ignored in formatting hte POSIXct object
 #' @param ... additional arguments from other methods passed to \code{\link{fread}}
 #' @return an xts object.
 #' @import xts
@@ -337,7 +338,7 @@ read.qobsqsim <- function(x, ...){
 #' @examples
 #' fpath <- system.file("extdata","qobs_qsim.txt", package = "TigR")
 #' out <- read.xts(x = fpath)
-read.xts <- function(x, datecolumns=c(1:5), format="%Y %m %d %H %M", header=TRUE, tz = "utc", skip = 0, ...){
+read.xts <- function(x, datecolumns=c(1:5), format="%Y %m %d %H %M", header=TRUE, tz = "utc", skip = 0, cut.prefix = 0, ...){
   library(xts)
   library(data.table)
   
@@ -358,6 +359,7 @@ read.xts <- function(x, datecolumns=c(1:5), format="%Y %m %d %H %M", header=TRUE
       datum <- paste(datum,temp[,k],sep=" ")
     }
   }
+  datum <- substring(datum, cut.prefix+1)
   datum <- as.POSIXct(datum, format=format,tz=tz)
   output <- xts(temp[,(max(datecolumns)+1):nc], order.by=datum)
   return(output)

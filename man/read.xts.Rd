@@ -11,6 +11,7 @@ read.xts(
   header = TRUE,
   tz = "utc",
   skip = 0,
+  cut.prefix = 0,
   ...
 )
 }
@@ -25,7 +26,9 @@ read.xts(
 
 \item{tz}{character string. Time zone of the data}
 
-\item{skip}{integer: the number of lines of the data file to skip before beginning to read data}
+\item{skip}{integer: the number of lines of the data file to skip before beginning to read data.}
+
+\item{cut.prefix}{integer. Amount of leading characters that will be ignored in formatting hte POSIXct object}
 
 \item{...}{additional arguments from other methods passed to \code{\link{fread}}}
 }
