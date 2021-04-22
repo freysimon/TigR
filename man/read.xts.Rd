@@ -28,7 +28,7 @@ read.xts(
 
 \item{skip}{integer: the number of lines of the data file to skip before beginning to read data.}
 
-\item{cut.prefix}{integer. Amount of leading characters that will be ignored in formatting hte POSIXct object}
+\item{cut.prefix}{integer. Amount of leading characters that will be ignored in formatting the POSIXct object}
 
 \item{...}{additional arguments from other methods passed to \code{\link{fread}}}
 }

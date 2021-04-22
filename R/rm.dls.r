@@ -16,11 +16,15 @@ rm.dls <- function(x){
   # extract the time index
   ti <- index(x)
   
+  # conserve colnames
+  cn <- colnames(x)
+  
   # create an utc time series (no dst) with the same start and length as ti
   sq <- seq.POSIXt(from = ti[1], to = ti[1]+length(ti)*3600, by = "hour", tz = "UTC")
   sq <- sq[1:(length(sq)-1)]
   
-  x <- as.xts(as.vector(x), order.by = sq)
+  x <- as.xts(as.matrix(x), order.by = sq)
+  colnames(x) <- cn
   
   return(x)
   

@@ -326,7 +326,7 @@ read.qobsqsim <- function(x, ...){
 #' @param header logical. Does the data have a header?
 #' @param tz character string. Time zone of the data
 #' @param skip integer: the number of lines of the data file to skip before beginning to read data.
-#' @param cut.prefix integer. Amount of leading characters that will be ignored in formatting hte POSIXct object
+#' @param cut.prefix integer. Amount of leading characters that will be ignored in formatting the POSIXct object
 #' @param ... additional arguments from other methods passed to \code{\link{fread}}
 #' @return an xts object.
 #' @import xts
