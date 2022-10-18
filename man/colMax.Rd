@@ -4,10 +4,10 @@
 \alias{colMax}
 \title{Find the max value of a (set of) column(s)}
 \usage{
-colMax(colData, na.rm = TRUE)
+colMax(x, na.rm = TRUE)
 }
 \arguments{
-\item{colData}{numerical matrix}
+\item{x}{numerical matrix}
 
 \item{na.rm}{logical. Should NA values be removed?}
 }
@@ -23,6 +23,12 @@ colMax(runoff)
 }
 \seealso{
 \code{\link{colMin}}
+
+\code{\link{rowMin}}
+
+\code{\link{rowMax}}
+
+\code{\link{rowMedian}}
 }
 \author{
 Simon Frey

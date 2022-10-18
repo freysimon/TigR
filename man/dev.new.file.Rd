@@ -50,6 +50,4 @@ Open a new device for plotting
 }
 \author{
 Simon Frey
-
-Simon Frey
 }

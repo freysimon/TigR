@@ -447,7 +447,7 @@ dev.new.file <- function(device="dev",return.device=TRUE,filename=NULL, ...){
 }
 
 #' Find the max value of a (set of) column(s)
-#' @param colData numerical matrix
+#' @param x numerical matrix
 #' @param na.rm logical. Should NA values be removed?
 #' @return numerical vector
 #' @author Simon Frey
@@ -456,12 +456,15 @@ dev.new.file <- function(device="dev",return.device=TRUE,filename=NULL, ...){
 #' data("runoff")
 #' colMax(runoff)
 #' @seealso \code{\link{colMin}}
-colMax <- function (colData,na.rm=TRUE) {
-  apply(colData, MARGIN=c(2), max,na.rm=na.rm)
+#' @seealso \code{\link{rowMin}}
+#' @seealso \code{\link{rowMax}}
+#' @seealso \code{\link{rowMedian}}
+colMax <- function (x,na.rm=TRUE) {
+  apply(x, MARGIN=c(2), max,na.rm=na.rm)
 }
 
 #' Find the min value of a (set of) column(s)
-#' @param colData numerical matrix
+#' @param x numerical matrix
 #' @param na.rm logical. Should NA values be removed?
 #' @return numerical vector
 #' @author Simon Frey
@@ -470,8 +473,62 @@ colMax <- function (colData,na.rm=TRUE) {
 #' data("runoff")
 #' colMin(runoff)
 #' @seealso \code{\link{colMax}}
-colMin <- function (colData,na.rm=TRUE) {
-  apply(colData, MARGIN=c(2), min,na.rm=na.rm)
+#' @seealso \code{\link{rowMin}}
+#' @seealso \code{\link{rowMax}}
+#' @seealso \code{\link{rowMedian}}
+colMin <- function (x,na.rm=TRUE) {
+  apply(x, MARGIN=c(2), min,na.rm=na.rm)
+}
+
+#' Find the max value of a (set of) row(s)
+#' @param x numerical matrix
+#' @param na.rm logical. Should NA values be removed?
+#' @return numerical vector
+#' @author Simon Frey
+#' @export
+#' @examples
+#' data("runoff")
+#' rowMax(runoff)
+#' @seealso \code{\link{colMin}}
+#' @seealso \code{\link{rowMin}}
+#' @seealso \code{\link{colMax}}
+#' @seealso \code{\link{rowMedian}}
+rowMax <- function (x,na.rm=TRUE) {
+  apply(x, MARGIN=c(1), max,na.rm=na.rm)
+}
+
+#' Find the min value of a (set of) row(s)
+#' @param x numerical matrix
+#' @param na.rm logical. Should NA values be removed?
+#' @return numerical vector
+#' @author Simon Frey
+#' @export
+#' @examples
+#' data("runoff")
+#' rowMin(runoff)
+#' @seealso \code{\link{colMin}}
+#' @seealso \code{\link{colMax}}
+#' @seealso \code{\link{rowMax}}
+#' @seealso \code{\link{rowMedian}}
+rowMin <- function (x,na.rm=TRUE) {
+  apply(x, MARGIN=c(1), min,na.rm=na.rm)
+}
+
+#' Calculate the median of a (set of) row(s)
+#' @param x numerical matrix
+#' @param na.rm logical. Should NA values be removed?
+#' @return numerical vector
+#' @author Simon Frey
+#' @export
+#' @examples
+#' data("runoff")
+#' rowMedian(runoff)
+#' @seealso \code{\link{colMin}}
+#' @seealso \code{\link{rowMin}}
+#' @seealso \code{\link{rowMax}}
+#' @seealso \code{\link{colMax}}
+rowMedian <- function (x,na.rm=TRUE) {
+  apply(x, MARGIN=c(1), median,na.rm=na.rm)
 }
 
 #' Write an xts object using the date format as rownames

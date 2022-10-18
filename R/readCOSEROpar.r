@@ -94,7 +94,7 @@ write_COSERO_par <- function(x, file = "parameter_COSERO.par"){
 #' @param pars character vector or "ALL". Names of parameters that will be exported. See Details
 #' @details If pars == ALL the following parameters will be exported:
 #' 
-#'   BAREGR, BETA, CTMAX, CTMIN, CTNEG, ETSLPCOR, FKFAK, FK, H1, H2, KBF, M, NC, NZ , NVAR, PWP, RAINTRT, SNOWCOR, 
+#'   BAREGR, BETA, CTMAX, CTMIN, ETSLPCOR, FKFAK, FK, H1, H2, KBF, M, NC, NZ , NVAR, PWP, RAINTRT, SNOWCOR, 
 #'   SNOWTRT, TAB1, TAB2, TAB4, THRT, TVS1, TVS2, WATERBODY
 #' @export
 #' 
@@ -103,7 +103,7 @@ write_COSERO_table <- function(x, file = "para.txt", pars = "ALL"){
   
   if(pars == "ALL"){
     pars <- c(
-          "BAREGR","BETA","CTMAX","CTMIN", "CTNEG", "ETSLPCOR", "FKFAK", "FK", "H1",
+          "BAREGR","BETA","CTMAX","CTMIN", "ETSLPCOR", "FKFAK", "FK", "H1",
           "H2", "KBF", "M", "NC", "NZ","NVAR", "PWP", "RAINTRT", "SNOWCOR", "SNOWTRT",
           "TAB1", "TAB2", "TAB4", "THRT", "TVS1", "TVS2", "WATERBODY")
   }
@@ -114,18 +114,19 @@ write_COSERO_table <- function(x, file = "para.txt", pars = "ALL"){
   
   namesx <- sapply(names(x[[2]]),Strpl)
   
-  wnames <- which(namesx %in% pars)
+  
   
   paras <- NULL
   for(k in 1:length(pars)){
-    paras <- cbind(paras,unlist(x[[3]][wnames[k][[1]]]))
+    wnames <- which(namesx %in% pars[k])
+    paras <- cbind(paras,unlist(x[[3]][wnames]))
   }
   
   NBIZNZ <- TigR::get.dimensions(x)
   
   paras <- cbind(NBIZNZ, paras)
   
-  colnames(paras) <- c("NB","IZ","NZ",namesx[wnames])
+  colnames(paras) <- c("NB","IZ","NZ",pars)
   
   if(is.null(file)){
     return(paras)

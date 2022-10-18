@@ -4,10 +4,10 @@
 \alias{colMin}
 \title{Find the min value of a (set of) column(s)}
 \usage{
-colMin(colData, na.rm = TRUE)
+colMin(x, na.rm = TRUE)
 }
 \arguments{
-\item{colData}{numerical matrix}
+\item{x}{numerical matrix}
 
 \item{na.rm}{logical. Should NA values be removed?}
 }
@@ -23,6 +23,12 @@ colMin(runoff)
 }
 \seealso{
 \code{\link{colMax}}
+
+\code{\link{rowMin}}
+
+\code{\link{rowMax}}
+
+\code{\link{rowMedian}}
 }
 \author{
 Simon Frey
