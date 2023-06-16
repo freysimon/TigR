@@ -2,7 +2,7 @@
 #' @description Read a COSERO parameter file and return the values as list.
 #' @author Simon Frey
 #' @export
-#' @param x charcater string. A COSERO parameter file
+#' @param x character string. A COSERO parameter file
 #' @param NB numerical. Return only the parameters of a certain subbasin. May be a single number or a numerical vector.
 #' @return A list containing three lists: Nr 1 contains the dimensions, Nr 2 contains the headers, and number 3 the values
 read_COSERO_par <- function(x, NB=NULL){
@@ -97,6 +97,7 @@ write_COSERO_par <- function(x, file = "parameter_COSERO.par"){
 #'   BAREGR, BETA, CTMAX, CTMIN, ETSLPCOR, FKFAK, FK, H1, H2, KBF, M, NC, NZ , NVAR, PWP, RAINTRT, SNOWCOR, 
 #'   SNOWTRT, TAB1, TAB2, TAB4, THRT, TVS1, TVS2, WATERBODY
 #' @export
+#' @seealso \link{write_COSEROreg_par} for writing new COSEROreg parameter files
 #' 
 write_COSERO_table <- function(x, file = "para.txt", pars = "ALL"){
   options("encoding" = "UTF-8")

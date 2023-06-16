@@ -22,6 +22,9 @@ If pars == ALL the following parameters will be exported:
   BAREGR, BETA, CTMAX, CTMIN, ETSLPCOR, FKFAK, FK, H1, H2, KBF, M, NC, NZ , NVAR, PWP, RAINTRT, SNOWCOR, 
   SNOWTRT, TAB1, TAB2, TAB4, THRT, TVS1, TVS2, WATERBODY
 }
+\seealso{
+\link{write_COSEROreg_par} for writing new COSEROreg parameter files
+}
 \author{
 Simon Frey
 }

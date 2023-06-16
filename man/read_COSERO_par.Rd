@@ -7,7 +7,7 @@
 read_COSERO_par(x, NB = NULL)
 }
 \arguments{
-\item{x}{charcater string. A COSERO parameter file}
+\item{x}{character string. A COSERO parameter file}
 
 \item{NB}{numerical. Return only the parameters of a certain subbasin. May be a single number or a numerical vector.}
 }

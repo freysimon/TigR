@@ -39,11 +39,14 @@ An xts object is plotted
 Plots an xts object splitted in hydrological years
 }
 \examples{
-data(runoff)
-yearplot(sim = runoff[,2], obs = runoff[,1])
+    # load runoff data
+    data(runoff)
+    yearplot(sim = runoff[,2], obs = runoff[,1])
 }
 \seealso{
 \code{\link{dev.new.file}}
+
+\code{\link{splityears}}
 }
 \author{
 Simon Frey

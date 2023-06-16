@@ -11,7 +11,7 @@
 #' 
 is.unique <- function(x, ...){
   library(plyr)
-  countx <- count(x, ...length())
+  countx <- count(x, ...)
   
   cx <- as.data.frame(matrix(data=NA, nrow = nrow(countx), ncol = 2))
   colnames(cx) <- c("x","freq")

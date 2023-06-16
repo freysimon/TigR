@@ -2,7 +2,7 @@
 % Please edit documentation in R/apply.daily.columns.r
 \name{apply.daily.columns}
 \alias{apply.daily.columns}
-\title{Columnwise apply a function to receive hourly or daily agreggated values}
+\title{Columnwise apply a function to receive hourly or daily aggregated values}
 \usage{
 apply.daily.columns(x, FUN, agg = "day", PB = "n", tz = NULL, ...)
 }
@@ -11,7 +11,7 @@ apply.daily.columns(x, FUN, agg = "day", PB = "n", tz = NULL, ...)
 
 \item{FUN}{an R function}
 
-\item{agg}{character string 'day' or 'hour' to specifiy whether to receive daily or hourly values, respectivly}
+\item{agg}{character string to specify whether to receive monthly, weekly, daily or hourly values, respectively. See details.}
 
 \item{PB}{a character indicating whether and what kind of progress bar should be drawn. See details.}
 
@@ -20,16 +20,16 @@ apply.daily.columns(x, FUN, agg = "day", PB = "n", tz = NULL, ...)
 \item{...}{additional arguments to FUN}
 }
 \value{
-An xts object containing daily values
+An xts object containing hourly, daily, ... values
 }
 \description{
-Apply a specified function to each column of an xts object creating hourly or daily values
+Apply a specified function to each column of an xts object creating hourly, daily or monthly values
 }
 \details{
-A simple mechanism to use \code{\link{apply.daily}} or \code{\link{apply.hourly}} to each column of an xts object. 
+A simple mechanism to use \code{\link{apply.daily}}, \code{\link{apply.hourly}},  \code{\link{apply.weekly}} or \code{\link{apply.monthly}} to each column of an xts object. 
     
     By setting PB, an optional progressbar can be drawn: "w" or "win" draws a \code{\link{winProgressBar}}, 
-    "t" or "txt" draws a \code{\link{txtProgressBar}} and "n" or "none" (the default) suppresses the progressbar.
+    "t" or "txt" draws a \code{\link{txtProgressBar}} and "n" or "none" (the default) suppresses the progress bar.
 }
 \examples{
  
@@ -45,6 +45,10 @@ A simple mechanism to use \code{\link{apply.daily}} or \code{\link{apply.hourly}
 \code{\link{apply.daily}}
 
 \code{\link{apply.hourly}}
+
+\code{\link{apply.monthly}}
+
+\code{\link{apply.weekly}}
 }
 \author{
 Simon Frey

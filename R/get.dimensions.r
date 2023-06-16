@@ -3,7 +3,8 @@
 #' @export
 #' @description Get dimensions (NB, IZ, NZ) from COSERO parameters.
 #' @param x character string pointing towards a COSERO parameter file or giving an object derived from read_COSERO_par
-#' @return a matrix giving the dimensions NB, IZ, NZ
+#' @param full logical. See details in return.
+#' @return If full == TURE a matrix giving the dimensions NB, IZ, NZ will be returned. If full == FALSE only the summary (NB, maxIZ per NB) will be returned.
 #' @examples 
 #'     ### do not run ###
 #'     get.dimensions("path/to/parameter_COSERO.par")
@@ -12,7 +13,7 @@
 #'     get.dimensions(x)
 #' @seealso \code{\link{read_COSERO_par}}
 
-get.dimensions <- function(x){
+get.dimensions <- function(x, full=TRUE){
   
   if(is.character(x)){
     if(!file.exists(x)){
@@ -43,21 +44,28 @@ get.dimensions <- function(x){
     IZS[k] <- as.numeric(x[which(x == paste("IZONE_",NBSchar[k],sep=""))+1])
   }
   
-  # Disaggregating IZS and building NZ
-  NZ <- c(1:sum(IZS))
-  IZ <- c(1:IZS[1])
-  NB <- rep(1,IZS[1])
+  if(full){
+    # Disaggregating IZS and building NZ
+    NZ <- c(1:sum(IZS))
+    IZ <- c(1:IZS[1])
+    NB <- rep(1,IZS[1])
   
-  if(maxNB > 1){
-    for(k in 2:maxNB){
-      IZ <- c(IZ, c(1:IZS[k]))
-      NB <- c(NB, rep(k,IZS[k]))
+    if(maxNB > 1){
+      for(k in 2:maxNB){
+        IZ <- c(IZ, c(1:IZS[k]))
+        NB <- c(NB, rep(k,IZS[k]))
+      }
     }
-  }
   
   
-  NBIZNZ <- cbind(NB,IZ,NZ)
-  colnames(NBIZNZ) <- c("NB","IZ","NZ")
+    NBIZNZ <- cbind(NB,IZ,NZ)
+    colnames(NBIZNZ) <- c("NB","IZ","NZ")
   
-  return(NBIZNZ)
+    return(NBIZNZ)
+  
+  } else {
+    
+    return(data.frame(NB=NBS,maxIZ=IZS))
+    
+    }
 }

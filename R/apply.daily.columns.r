@@ -1,22 +1,24 @@
-#' Columnwise apply a function to receive hourly or daily agreggated values
+#' Columnwise apply a function to receive hourly or daily aggregated values
 #' @param x an xts object
 #' @param FUN an R function
-#' @param agg character string 'day' or 'hour' to specifiy whether to receive daily or hourly values, respectivly
+#' @param agg character string to specify whether to receive monthly, weekly, daily or hourly values, respectively. See details.
 #' @param PB a character indicating whether and what kind of progress bar should be drawn. See details.
 #' @param tz character specifying the time zone or NULL (the standard). If the latter, the time zone of x is used
 #' @param ... additional arguments to FUN
-#' @description Apply a specified function to each column of an xts object creating hourly or daily values
-#' @details A simple mechanism to use \code{\link{apply.daily}} or \code{\link{apply.hourly}} to each column of an xts object. 
+#' @description Apply a specified function to each column of an xts object creating hourly, daily or monthly values
+#' @details A simple mechanism to use \code{\link{apply.daily}}, \code{\link{apply.hourly}},  \code{\link{apply.weekly}} or \code{\link{apply.monthly}} to each column of an xts object. 
 #'     
 #'     By setting PB, an optional progressbar can be drawn: "w" or "win" draws a \code{\link{winProgressBar}}, 
-#'     "t" or "txt" draws a \code{\link{txtProgressBar}} and "n" or "none" (the default) suppresses the progressbar.
+#'     "t" or "txt" draws a \code{\link{txtProgressBar}} and "n" or "none" (the default) suppresses the progress bar.
 #'     
 #' @author Simon Frey
 #' @export
 #' @import xts
-#' @return An xts object containing daily values
+#' @return An xts object containing hourly, daily, ... values
 #' @seealso \code{\link{apply.daily}}
 #' @seealso \code{\link{apply.hourly}}
+#' @seealso \code{\link{apply.monthly}}
+#' @seealso \code{\link{apply.weekly}}
 #' @examples  
 #'     # load precipitation input
 #'     data(precipitation)
@@ -35,11 +37,11 @@ apply.daily.columns <- function(x, FUN, agg = 'day', PB = "n", tz = NULL, ...){
     warning("PB not recognized.")
     PB <- "n"
   }
-  if(!agg %in% c('day', 'hour')){
-    stop("agg must be one of 'day' or 'hour'")
+  if(!agg %in% c('day', 'hour', "week", "month")){
+    stop("agg must be one of 'month', 'day' or 'hour'")
   }
   if(is.null(tz)){
-    tz = indexTZ(x)
+    tz = tzone(x)
   }
   
   # get dimensions of x
@@ -48,8 +50,12 @@ apply.daily.columns <- function(x, FUN, agg = 'day', PB = "n", tz = NULL, ...){
   # get dimensions of processed time series
   if(agg == 'day'){
     temp <- apply.daily(x[,1], FUN = FUN)
-  } else {
+  } else if(agg == "hour") {
     temp <- TigR::apply.hourly(x[,1], FUN = FUN)
+  } else if (agg == "week") {
+    temp <- apply.weekly(x[,1], FUN = FUN)
+  } else {
+    temp <- apply.monthly(x[,1], FUN = FUN)
   }
   
   dim.out <- dim(temp)
@@ -60,7 +66,18 @@ apply.daily.columns <- function(x, FUN, agg = 'day', PB = "n", tz = NULL, ...){
   
   rm(temp)
   
-  titl <- ifelse(agg == 'day', "Aggregating to daily data", "Aggregating to hourly data")
+  if(agg == 'day'){
+    titl <- "Aggregating to daily data"
+  }
+  if(agg == "hour"){
+    titl <- "Aggregating to hourly data"
+  }
+  if(agg == "week"){
+    titl <- "Aggregating to weekly data"
+  }
+  if(agg == "month"){
+    titl <- "Aggregating to monthly data"
+  }
   
   if(!PB %in% c("n", "none")){
     if(PB %in% c("win", "w")){
@@ -78,8 +95,15 @@ apply.daily.columns <- function(x, FUN, agg = 'day', PB = "n", tz = NULL, ...){
     
     if(agg == 'day'){
       out[,j] <- apply.daily(x[,j], FUN = FUN, ...)
-    } else {
+    }
+    if(agg == "hour"){
       out[,j] <- apply.hourly(x[,j], FUN = FUN, ...)
+    }
+    if(agg == "month"){
+      out[,j] <- apply.monthly(x[,j],FUN = FUN, ...)
+    }
+    if(agg == "week"){
+      out[,j] <- apply.weekly(x[,j],FUN = FUN, ...)
     }
     
     
@@ -100,8 +124,15 @@ apply.daily.columns <- function(x, FUN, agg = 'day', PB = "n", tz = NULL, ...){
   #tz <- indexTZ(out)
   if(agg == 'day'){
     index(out) <- as.Date(index(out), tz = tz)
-  } else {
+  }
+  if(agg == 'week'){
+    index(out) <- as.Date(index(out), tz = tz)
+  }
+  if(agg == "hour"){
     index(out) <- as.POSIXct(format(index(out), format = "%Y-%m-%d %H:00"), tz = tz)
+  }
+  if(agg == "month"){
+    index(out) <- as.POSIXct(format(index(out), fomat = "%Y-%m"), tz = tz)
   }
   
   
