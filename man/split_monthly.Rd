@@ -4,12 +4,14 @@
 \alias{split_monthly}
 \title{Disaggregate monthly parameters from a COSERO parameter file}
 \usage{
-split_monthly(x, parameter)
+split_monthly(x, parameter, wnames)
 }
 \arguments{
 \item{x}{the output from \link{read_COSERO_par}}
 
 \item{parameter}{character. Name of the parameter that will be split and returned. Note the the parameter name must not contain numbers indicating the month. E.g. PCOR instead of PCOR1}
+
+\item{wnames}{integer or integer vector. Position(s) of names in vector holding all COSERO Parameter names.}
 }
 \value{
 a matrix containing 12 columns

@@ -2,7 +2,7 @@
 % Please edit documentation in R/readogr.r
 \name{writeogr}
 \alias{writeogr}
-\title{Write a shapefile using RGDAL}
+\title{Write a shapefile using terra}
 \usage{
 writeogr(filename, shp, driver = "ESRI Shapefile", ...)
 }
@@ -16,11 +16,13 @@ writeogr(filename, shp, driver = "ESRI Shapefile", ...)
 \item{...}{further arguments passed on to \code{\link{writeOGR}}}
 }
 \description{
-Write an ESRI Shapefile using the RGDAL library Essentially this is just a wrapper around \code{\link{writeOGR}} from the rgdal package.
+Write an ESRI Shapefile using the RGDAL library Essentially this is just a wrapper around \code{\link{writeVector}} from the terra package.
 }
 \details{
-This wrapper splits a path to a shapfile into the \code{\link{dirname}} and the \code{\link{basename}}. The latter is passed
-as dsn argument the first as layer argument to \code{\link{writeOGR}}.
+DEPRECATED! This wrapper splits a path to a shapefile into the \code{\link{dirname}} and the \code{\link{basename}}. The latter is passed
+    as dsn argument the first as layer argument to \code{writeOGR}.
+    
+    This now ist just a wrapper around \code{\link{writeVector}} from the \code{terra} package and kept for compability issues.
 }
 \examples{
     #### not run ####

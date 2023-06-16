@@ -2,21 +2,24 @@
 % Please edit documentation in R/readogr.r
 \name{readogr}
 \alias{readogr}
-\title{Read a shapefile using RGDAL}
+\title{Read a shapefile using vect}
 \usage{
 readogr(x, ...)
 }
 \arguments{
 \item{x}{character string. Path to the shapefile to be read in.}
 
-\item{...}{further arguments passed on to \code{\link{readOGR}}}
+\item{...}{further arguments passed on to \code{\link{vect}}}
 }
 \description{
-Read a shapefile using the RGDAL library. Essentially this is just a wrapper around \code{\link{readOGR}} from the rgdal package.
+Read a shapefile using the RGDAL library. Essentially this is just a wrapper around \code{\link{vect}} from the terra package.
 }
 \details{
-This wrapper splits a path to a shapfile into the \code{\link{dirname}} and the \code{\link{basename}}. The latter is passed
-as dsn argument the first as layer argument to \code{\link{readOGR}}.
+DEPRECATED!!! 
+    This wrapper splits a path to a shapfile into the \code{\link{dirname}} and the \code{\link{basename}}. The latter is passed
+    as dsn argument the first as layer argument to \code{readOGR}.
+    
+    This now is just a wrapper of \code{\link{vect}} from the \code{\link{terra}} package and kept for compability issues.
 }
 \examples{
     #### not run ####

@@ -1,13 +1,17 @@
-#' Read a shapefile using RGDAL
-#' @description Read a shapefile using the RGDAL library. Essentially this is just a wrapper around \code{\link{readOGR}} from the rgdal package.
+#' Read a shapefile using vect
+#' @description Read a shapefile using the RGDAL library. Essentially this is just a wrapper around \code{\link{vect}} from the terra package.
 #' @author Simon Frey
 #' @export
-#' @import rgdal
+#' @import terra
 #' @import tools
-#' @details This wrapper splits a path to a shapfile into the \code{\link{dirname}} and the \code{\link{basename}}. The latter is passed
-#' as dsn argument the first as layer argument to \code{\link{readOGR}}.
+#' @details 
+#'     DEPRECATED!!! 
+#'     This wrapper splits a path to a shapfile into the \code{\link{dirname}} and the \code{\link{basename}}. The latter is passed
+#'     as dsn argument the first as layer argument to \code{readOGR}.
+#'     
+#'     This now is just a wrapper of \code{\link{vect}} from the \code{\link{terra}} package and kept for compability issues.
 #' @param x character string. Path to the shapefile to be read in.
-#' @param ... further arguments passed on to \code{\link{readOGR}}
+#' @param ... further arguments passed on to \code{\link{vect}}
 #' @examples 
 #'     #### not run ####
 #'     x <- "C:/TEMP/someshapefile.shp"
@@ -19,22 +23,22 @@
 #' @seealso \code{\link{writeOGR}}
 
 readogr <- function(x, ...){
-  xb <- basename(x)
-  xn <- dirname(x)
-  
-  temp <- readOGR(dsn = xn, layer = file_path_sans_ext(xb), ...)
+  temp <- terra::vect(x, ...)
   
   return(temp)
 }
 
-#' Write a shapefile using RGDAL
-#' @description Write an ESRI Shapefile using the RGDAL library Essentially this is just a wrapper around \code{\link{writeOGR}} from the rgdal package.
+#' Write a shapefile using terra
+#' @description Write an ESRI Shapefile using the RGDAL library Essentially this is just a wrapper around \code{\link{writeVector}} from the terra package.
 #' @author Simon Frey
 #' @export
-#' @import rgdal
+#' @import terra
 #' @import tools
-#' @details This wrapper splits a path to a shapfile into the \code{\link{dirname}} and the \code{\link{basename}}. The latter is passed
-#' as dsn argument the first as layer argument to \code{\link{writeOGR}}.
+#' @details 
+#'     DEPRECATED! This wrapper splits a path to a shapefile into the \code{\link{dirname}} and the \code{\link{basename}}. The latter is passed
+#'     as dsn argument the first as layer argument to \code{writeOGR}.
+#'     
+#'     This now ist just a wrapper around \code{\link{writeVector}} from the \code{terra} package and kept for compability issues.
 #' @param filename character string. Filename (including path) of the shapefile to be written.
 #' @param shp a SpatialPointsDataFrame, SpatialLinesDataFrame, or a SpatialPolygonsDataFrame object to be written as shapefile x.
 #' @param driver chracter string. driver used to write x. Per default this is ESRI Shapefile.
@@ -50,8 +54,6 @@ readogr <- function(x, ...){
 #'     #### end not run ####
 #' 
 writeogr <- function(filename, shp, driver = "ESRI Shapefile", ...){
-  xb <- basename(filename)
-  xn <- dirname(filename)
-  
-  writeOGR(obj = shp, dsn = xn, layer = file_path_sans_ext(xb), driver = driver, ...)
+
+  writeOGR(x = shp,  filename = filename, filetype = driver, ...)
 }
