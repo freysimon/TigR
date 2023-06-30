@@ -4,7 +4,7 @@
 \alias{update.parameters}
 \title{Run the hydrological model COSERO}
 \usage{
-\method{update}{parameters}(
+update.parameters(
   path,
   saveold = TRUE,
   batchfile = NA,

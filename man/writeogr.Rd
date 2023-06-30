@@ -36,7 +36,7 @@ DEPRECATED! This wrapper splits a path to a shapefile into the \code{\link{dirna
 \seealso{
 \code{\link{readogr}}
 
-\code{\link{readOGR}}
+\code{\link{terra::vect}}
 }
 \author{
 Simon Frey

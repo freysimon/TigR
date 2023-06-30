@@ -253,6 +253,7 @@ is.leapyear=function(year){
 #' @param na.rm loggical. Should ne values be removed?
 #' @author Simon Frey
 #' @export
+#' @import xts
 #' @description Aggregate an xts object to hourly values. It is a wrapper of \code{\link{period.apply}} with endpoints = "hours"
 #' @details An xts object is aggregated to hourly values. Using the parameter roundtime, the timestamp of the xts object can be 
 #'     round to full hours. This can be done by rounding to the nearest full hour, or by going to the last full hour (trunc). NA skips rounding.
@@ -335,10 +336,11 @@ read.qobsqsim <- function(x, ...){
 #' @description Read a text file using \code{\link{fread}} and directly save it as \code{\link{xts}} object.
 #' @author Simon Frey
 #' @seealso \code{\link{write.xts}}
+#' @details Other than in older versions, where the standard arguments of this function were designed to read COSERO input and output files, this function by default reads tab-separated files using the time format Y-m-d H:M.
 #' @examples
 #' fpath <- system.file("extdata","qobs_qsim.txt", package = "TigR")
 #' out <- read.xts(x = fpath)
-read.xts <- function(x, datecolumns=c(1:5), format="%Y %m %d %H %M", header=TRUE, tz = "utc", skip = 0, cut.prefix = 0, ...){
+read.xts <- function(x, datecolumns=1, format="%Y-%m-%d %H:%M", header=TRUE, tz = "utc", skip = 0, cut.prefix = 0, ...){
   library(xts)
   library(data.table)
   
@@ -346,7 +348,7 @@ read.xts <- function(x, datecolumns=c(1:5), format="%Y %m %d %H %M", header=TRUE
   options(xts_check_TZ = FALSE)
   
   # new method
-  temp <- data.table::fread(file = x, header = header, skip = skip, ...)
+  temp <- data.table::fread(file = x, header = TRUE, skip = skip, ...)
   temp <- as.data.frame(temp)
   nc <- ncol(temp)
 
@@ -360,36 +362,12 @@ read.xts <- function(x, datecolumns=c(1:5), format="%Y %m %d %H %M", header=TRUE
   datum <- substring(datum, cut.prefix+1)
   datum <- as.POSIXct(datum, format=format,tz=tz)
   output <- xts(temp[,(max(datecolumns)+1):nc], order.by=datum)
+  
+  
   return(output)
 }
 
 
-#' Open new graphical device
-#' @param device character string. See details.
-#' @param return.device logical. Should the device character string be returned
-#' @param filename character string.
-#' @param ... Additional arguments passed from other methods
-#' @return If return.device = TRUE, device is retured. Else nothing is returned.
-#' @description Open a new graphical device on screen or open a pdf/png file for plotting
-#' @author Simon Frey
-#' @export
-#' @details Valid arguments for device are "dev", "png", "pdf" and "svg".
-#'
-#'     If device = "dev", the standard, then a new graphical deive is opened by calling dev.new()
-#'
-#'     If device = "png", "pdf" or "svg" the respective file specified by filename is opend for writing. Note that it is not automatically closed.
-#'
-#'     Filename doesn't need to end with an ending. It will be concatenated if missing.
-#'
-#'     Units of the devices is inches.
-#'     A png will have the resolution of 300 dpi
-#' @examples
-#' dev.new.file()
-#' dev.new.file(width=7, height=2)
-#' dev.new.file(device = "png", return.device = TRUE, filename = tempfile)
-#' # do not run
-#' dev.new.file(device = "pdf")
-#'
 dev.new.file <- function(device="dev",return.device=TRUE,filename=NULL, ...){
   #' Open a new device for plotting
   #' @description Open a new device for plotting and allow some settings
@@ -404,15 +382,6 @@ dev.new.file <- function(device="dev",return.device=TRUE,filename=NULL, ...){
   #'     plot(1)
   #'     if(d %in% c("png","pdf","svg")) dev.off()
   #' 
-  ##  Erstellen eines neues Plotfensters oder schreiben des Plot in eine Datei
-  ##  Kann durch device angegeben werden:
-  ##    - device = dev : öffenen eines neuen device (dev.new)
-  ##    - device = png : öffenen einer neuen PNG Datei
-  ##    - device = pdf : öffnen einer neuen pdf Datei
-  ##
-  ##    Simon Frey
-  ##    September 2016 - Februar 2017
-  ##############################################################################
 
   if(!device %in% c("dev","png","pdf","svg")){
     stop("ERROR: unknown file format")
@@ -451,8 +420,8 @@ dev.new.file <- function(device="dev",return.device=TRUE,filename=NULL, ...){
 #' @author Simon Frey
 #' @export
 #' @examples
-#' data("runoff")
-#' colMax(runoff)
+#'     data("runoff")
+#'     colMax(runoff)
 #' @seealso \code{\link{colMin}}
 #' @seealso \code{\link{rowMin}}
 #' @seealso \code{\link{rowMax}}
@@ -468,8 +437,8 @@ colMax <- function (x,na.rm=TRUE) {
 #' @author Simon Frey
 #' @export
 #' @examples
-#' data("runoff")
-#' colMin(runoff)
+#'     data("runoff")
+#'     colMin(runoff)
 #' @seealso \code{\link{colMax}}
 #' @seealso \code{\link{rowMin}}
 #' @seealso \code{\link{rowMax}}
@@ -485,8 +454,8 @@ colMin <- function (x,na.rm=TRUE) {
 #' @author Simon Frey
 #' @export
 #' @examples
-#' data("runoff")
-#' rowMax(runoff)
+#'     data("runoff")
+#'     rowMax(runoff)
 #' @seealso \code{\link{colMin}}
 #' @seealso \code{\link{rowMin}}
 #' @seealso \code{\link{colMax}}
@@ -502,8 +471,8 @@ rowMax <- function (x,na.rm=TRUE) {
 #' @author Simon Frey
 #' @export
 #' @examples
-#' data("runoff")
-#' rowMin(runoff)
+#'     data("runoff")
+#'     rowMin(runoff)
 #' @seealso \code{\link{colMin}}
 #' @seealso \code{\link{colMax}}
 #' @seealso \code{\link{rowMax}}
@@ -519,8 +488,8 @@ rowMin <- function (x,na.rm=TRUE) {
 #' @author Simon Frey
 #' @export
 #' @examples
-#' data("runoff")
-#' rowMedian(runoff)
+#'     data("runoff")
+#'     rowMedian(runoff)
 #' @seealso \code{\link{colMin}}
 #' @seealso \code{\link{rowMin}}
 #' @seealso \code{\link{rowMax}}
@@ -537,15 +506,16 @@ rowMedian <- function (x,na.rm=TRUE) {
 #' @param quote logical. Should characterers be encapsulated in ""?
 #' @param ... Additonal arguments passed to \code{\link{write.table}}
 #' @author Simon Frey
+#' @import xts
 #' @export
 #' @seealso \code{\link{read.xts}}
 #' @description Writing an xts object to a file using its date format as rownames instead of the numerical values of the date
 #' @examples
-#' ### do not run
-#' data("runoff")
-#' write.xts(runoff, file = tempfile())
-#' write.xts(runoff, format = "%d.%m.%Y %H:%M")
-#' write.xts(runoff, fmt = "%5.1f")
+#'     ### do not run
+#'     data("runoff")
+#'     write.xts(runoff, file = tempfile())
+#'     write.xts(runoff, format = "%d.%m.%Y %H:%M")
+#'     write.xts(runoff, fmt = "%5.1f")
 write.xts <- function(x, file = "", format = NULL, fmt = NULL, quote = FALSE, ...){
   if(!is.xts(x)){
     stop("x must be an xts object")
@@ -577,8 +547,8 @@ write.xts <- function(x, file = "", format = NULL, fmt = NULL, quote = FALSE, ..
 #'@author Simon Frey
 #'@export
 #'@examples
-#' setcolumns(x = 6)
-#' setcolumns(x = 6, maxrow = 2)
+#'     setcolumns(x = 6)
+#'     setcolumns(x = 6, maxrow = 2)
 setcolumns <- function(x,maxrow = 4){
 
   nrcol <- ceiling(x/maxrow)
@@ -595,9 +565,9 @@ setcolumns <- function(x,maxrow = 4){
 #'@author Simon Frey
 #'@export
 #'@examples
-#' abc(1)
-#' abc(x=7, capitals = TRUE)
-#' abc(x=c(1:3))
+#'     abc(1)
+#'     abc(x=7, capitals = TRUE)
+#'     abc(x=c(1:3))
 abc <- function(x, capitals = FALSE){
   atoz <- c("a","b","c","d","e","f","g","h","i",
             "j","k","l","m","n","o","p","q","r",
@@ -702,9 +672,9 @@ unpack <- function(x, keeptar = TRUE, exdir = ".", overwrite = TRUE,
 #' @description This function tries to load more than one package at once. If any of these packages is not installed it tries to istall them and load them afterward.
 #' @export
 #' @examples
-#' # loading xts 
-#' libraries("xts")
-#' libraries(c("xts","shiny"))
+#'     # loading xts 
+#'     libraries("xts")
+#'     libraries(c("xts","shiny"))
 #' @return Returns nothing but gives a warning if it cannot load/install a library/package
 #' @seealso \code{\link{require}}, \code{\link{library}}, \code{\link{install.packages}} 
 libraries <- function(x, ...){
@@ -734,14 +704,14 @@ libraries <- function(x, ...){
 #' @export
 #' @import xts
 #' @examples 
-#' data(runoff)
-#' # add some NAs
-#' runoff[2,] <- NA
-#' index(runoff)[2] <- NA
+#'     data(runoff)
+#'     # add some NAs
+#'     runoff[2,] <- NA
+#'     index(runoff)[2] <- NA
 #' 
-#' a <- nalocf(runoff)
-#' b <- na.locf(runoff)
-#' identical(a,b)
+#'     a <- nalocf(runoff)
+#'     b <- na.locf(runoff)
+#'     identical(a,b)
 #' @return Returns an xts object
 #' 
 nalocf <- function(x, loop = FALSE, ...){
@@ -773,15 +743,15 @@ nalocf <- function(x, loop = FALSE, ...){
 #' Normalize values between 0 and 1
 #' @author Simon Frey
 #' @param x numeric (vector, matrix or data.frame) that will be scaled
-#' @param ... further arguements passed to the functtions min and max e.g. na.rm
+#' @param ... further arguments passed to the functions min and max e.g. na.rm
 #' @description Normalize values of a vector, matrix or data.frame between 0 and 1
-#' @return depending on x a normalized vector, matrix or dataframe is returned
+#' @return depending on x a normalized vector, matrix or data.frame is returned
 #' @export
 #' @examples 
 #'     ex <- c(3,5,10,2,9,20)
 #'     scalevalues(ex)
 scalevalues <- function(x, ...){
-  if(!class(x) %in% c("numeric", "matrix", "data.frame")){
+  if(!class(x)[1] %in% c("numeric", "matrix", "data.frame")){
     stop("x must be a numeric vector, matrix or data.frame")
   }
   
@@ -806,12 +776,12 @@ scalevalues <- function(x, ...){
 #' @references \code{https://gist.github.com/pimentel/256fc8c9b5191da63819}
 #' @export
 #' @examples 
-#' a <- list()
-#' a[[1]] <- c(1:100)
-#' a[[2]] <- c(500:1000)
-#' head.list(a)
-#' # same result
-#' head(a)
+#'     a <- list()
+#'     a[[1]] <- c(1:100)
+#'     a[[2]] <- c(500:1000)
+#'     head.list(a)
+#'     # same result
+#'     head(a)
 #' @return a list of length n, with items in the list of length n
 head.list <- function(obj, n = 6L, ...)
 {

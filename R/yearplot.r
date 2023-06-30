@@ -10,6 +10,7 @@
 #' @author Simon Frey
 #' @export
 #' @import magrittr
+#' @import xts
 #' @return An xts object is plotted
 #' @examples
 #'     # load runoff data

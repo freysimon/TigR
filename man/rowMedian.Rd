@@ -18,8 +18,8 @@ numerical vector
 Calculate the median of a (set of) row(s)
 }
 \examples{
-data("runoff")
-rowMedian(runoff)
+    data("runoff")
+    rowMedian(runoff)
 }
 \seealso{
 \code{\link{colMin}}

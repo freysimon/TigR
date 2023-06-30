@@ -2,6 +2,7 @@
 #' @description read a file provided by HZB (e.g. from ehyd)
 #' @author Simon Frey
 #' @export
+#' @import xts
 #' @param file file to read
 #' @param name logical. Should the return value contain a name given by the keyword in the file?
 #' @param keyword character. Keyword used for naming the xts object.

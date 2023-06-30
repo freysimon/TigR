@@ -1,6 +1,7 @@
 #' remove influence of turbine activity from a time series
 #' @author Simon Frey
 #' @export
+#' @import xts
 #' @description analyse a xts object and try to remove the activity from turbines from it
 #' @param x an xts object
 #' @param rise numeric. Rise in percent that needs to be exceeded for detecting as turbine influence
@@ -11,6 +12,7 @@
 #'
 
 rm_turbine <- function(x,rise = 300, tolerance = 100, duration = 12, thresQ = NULL){
+  library(xts)
   if(!is.xts(x)){
     stop("x must be an xts object")
   }

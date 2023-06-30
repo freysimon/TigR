@@ -2,6 +2,7 @@
 #' @description read date in the format when copying data from fews to the clipboard
 #' @author Simon Frey
 #' @export
+#' @import xts
 #' @param x character string. path to the file that will be read.
 #' @param dec chracter. decimal seperator
 #' @param param logical. Should the parameter be included in the header?
@@ -16,6 +17,8 @@
 #'    xx <- read.fews(x, dec=",", param = T, loc.name=T)
 
 read.fews <- function(x, dec = ",", param = T, loc.name = T, loc.ID = F, date.t0 = F, time.t0 = F){
+  
+  library(xts)
   # read header first
 
   parameter <- read.table(x, colClasses = "character", nrow=1, sep = "\t")

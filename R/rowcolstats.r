@@ -9,11 +9,11 @@
 #' @return numerical vector
 #' @details 
 #'     This function uses predefined statistical function that can be used:
-#' * min (determine the minimum value)
-#' * max (determine the maximum value)
-#' * mean (estimate the mean value)
-#' * median (estimate the median value)
-#' * quantile (estimate a certain quantile value. Note that values between 0 and 1 are accepted)
+#'     * min (determine the minimum value)
+#'     * max (determine the maximum value)
+#'     * mean (estimate the mean value)
+#'     * median (estimate the median value)
+#'     * quantile (estimate a certain quantile value. Note that values between 0 and 1 are accepted)
 #' @examples 
 #'     # load runoff data
 #'     data(runoff)

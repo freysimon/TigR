@@ -32,7 +32,7 @@ DEPRECATED!!!
 \seealso{
 \code{\link{writeogr}}
 
-\code{\link{writeOGR}}
+\code{\link{terra:writeVector}}
 }
 \author{
 Simon Frey

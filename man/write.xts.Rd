@@ -23,11 +23,11 @@ write.xts(x, file = "", format = NULL, fmt = NULL, quote = FALSE, ...)
 Writing an xts object to a file using its date format as rownames instead of the numerical values of the date
 }
 \examples{
-### do not run
-data("runoff")
-write.xts(runoff, file = tempfile())
-write.xts(runoff, format = "\%d.\%m.\%Y \%H:\%M")
-write.xts(runoff, fmt = "\%5.1f")
+    ### do not run
+    data("runoff")
+    write.xts(runoff, file = tempfile())
+    write.xts(runoff, format = "\%d.\%m.\%Y \%H:\%M")
+    write.xts(runoff, fmt = "\%5.1f")
 }
 \seealso{
 \code{\link{read.xts}}

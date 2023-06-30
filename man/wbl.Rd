@@ -27,13 +27,13 @@ Sim and obs are subsetted into bits given by time. Accepted values are "none", "
    If time = year, sim and obs are subsetted in hydrological years (1st of November until 30th of October).
 }
 \examples{
-data("area")
-fpath <- system.file("extdata", "Q_output.txt", package = "TigeR")
-x <- readCosero(qoutput = fpath, area = area)
-sim <- x$runoff$sim.mm[,1]
-obs <- x$runoff$obs.mm[,1]
+    data("area")
+    fpath <- system.file("extdata", "Q_output.txt", package = "TigeR")
+    x <- readCosero(qoutput = fpath, area = area)
+    sim <- x$runoff$sim.mm[,1]
+    obs <- x$runoff$obs.mm[,1]
 
-wb <- wbl(sim = sim, obs = obs)
+    wb <- wbl(sim = sim, obs = obs)
 }
 \seealso{
 \code{\link{readCosero}}

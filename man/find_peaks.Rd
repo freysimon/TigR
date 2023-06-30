@@ -26,17 +26,17 @@ A (local) peak is defined as a point such that m points either side of it has a 
     larger m will result in fewer peaks, whilst smaller values of m will result in more peaks found.
 }
 \examples{
-set.seed(321)
-w <- abs(rnorm(1000))
-w[sample(1 : 1000, 25)] <- rpois(25, 5)
-w[sample(1 : 1000, 25)] <- rpois(25, 10)
-par(mfrow = c(2, 2))
-for(k in c(10, 20, 50, 250)){
- p <- find_peaks(w, m = k)
- ind <- rep(1, length(w))
- ind[p] <- 2
- plot(w, type = 'l', main = paste0('m = ', k))
- points(p, w[p], col = 'red', pch = 19)
+    set.seed(321)
+    w <- abs(rnorm(1000))
+    w[sample(1 : 1000, 25)] <- rpois(25, 5)
+    w[sample(1 : 1000, 25)] <- rpois(25, 10)
+    par(mfrow = c(2, 2))
+    for(k in c(10, 20, 50, 250)){
+    p <- find_peaks(w, m = k)
+    ind <- rep(1, length(w))
+    ind[p] <- 2
+    plot(w, type = 'l', main = paste0('m = ', k))
+    points(p, w[p], col = 'red', pch = 19)
 }
 }
 \author{

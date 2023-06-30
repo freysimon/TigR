@@ -18,8 +18,8 @@ numerical vector
 Find the min value of a (set of) row(s)
 }
 \examples{
-data("runoff")
-rowMin(runoff)
+    data("runoff")
+    rowMin(runoff)
 }
 \seealso{
 \code{\link{colMin}}

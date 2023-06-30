@@ -14,13 +14,13 @@
 #' @import magrittr
 #' @author Simon Frey
 #' @examples
-#' data("area")
-#' fpath <- system.file("extdata", "Q_output.txt", package = "TigeR")
-#' x <- readCosero(qoutput = fpath, area = area)
-#' sim <- x$runoff$sim.mm[,1]
-#' obs <- x$runoff$obs.mm[,1]
+#'     data("area")
+#'     fpath <- system.file("extdata", "Q_output.txt", package = "TigeR")
+#'     x <- readCosero(qoutput = fpath, area = area)
+#'     sim <- x$runoff$sim.mm[,1]
+#'     obs <- x$runoff$obs.mm[,1]
 #'
-#' wb <- wbl(sim = sim, obs = obs)
+#'     wb <- wbl(sim = sim, obs = obs)
 #' @seealso \code{\link{readCosero}}
 #'
 wbl <- function(sim, obs, time = "year"){

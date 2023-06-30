@@ -1,6 +1,7 @@
 #' Alter the year in a POSIX-Object or Series
 #' @author Simon Frey
 #' @export
+#' @import xts
 #' @description Alter the year in a POSIX object or a vector of such objects
 #' @param x a POSIX object or a vector of such objects
 #' @param year character or character vector. The "new" year that the new POSIX object(s) will be hold

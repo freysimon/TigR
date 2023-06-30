@@ -18,8 +18,8 @@ numerical vector
 Find the min value of a (set of) column(s)
 }
 \examples{
-data("runoff")
-colMin(runoff)
+    data("runoff")
+    colMin(runoff)
 }
 \seealso{
 \code{\link{colMax}}

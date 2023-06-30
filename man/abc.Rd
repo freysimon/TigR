@@ -18,9 +18,9 @@ character.
 return a single letter from alphabet
 }
 \examples{
-abc(1)
-abc(x=7, capitals = TRUE)
-abc(x=c(1:3))
+    abc(1)
+    abc(x=7, capitals = TRUE)
+    abc(x=c(1:3))
 }
 \author{
 Simon Frey

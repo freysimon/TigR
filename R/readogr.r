@@ -3,7 +3,6 @@
 #' @author Simon Frey
 #' @export
 #' @import terra
-#' @import tools
 #' @details 
 #'     DEPRECATED!!! 
 #'     This wrapper splits a path to a shapfile into the \code{\link{dirname}} and the \code{\link{basename}}. The latter is passed
@@ -20,7 +19,7 @@
 #'     #### end not run ####
 #'
 #' @seealso \code{\link{writeogr}}
-#' @seealso \code{\link{writeOGR}}
+#' @seealso \code{\link{terra:writeVector}}
 
 readogr <- function(x, ...){
   temp <- terra::vect(x, ...)
@@ -33,7 +32,6 @@ readogr <- function(x, ...){
 #' @author Simon Frey
 #' @export
 #' @import terra
-#' @import tools
 #' @details 
 #'     DEPRECATED! This wrapper splits a path to a shapefile into the \code{\link{dirname}} and the \code{\link{basename}}. The latter is passed
 #'     as dsn argument the first as layer argument to \code{writeOGR}.
@@ -44,7 +42,7 @@ readogr <- function(x, ...){
 #' @param driver chracter string. driver used to write x. Per default this is ESRI Shapefile.
 #' @param ... further arguments passed on to \code{\link{writeOGR}}
 #' @seealso \code{\link{readogr}}
-#' @seealso \code{\link{readOGR}}
+#' @seealso \code{\link{terra::vect}}
 #' @examples 
 #'     #### not run ####
 #'     shapefilename <- "C:/TEMP/exampleshapefile.shp"
@@ -55,5 +53,5 @@ readogr <- function(x, ...){
 #' 
 writeogr <- function(filename, shp, driver = "ESRI Shapefile", ...){
 
-  writeOGR(x = shp,  filename = filename, filetype = driver, ...)
+  terra::writeVector(x = shp,  filename = filename, filetype = driver, ...)
 }

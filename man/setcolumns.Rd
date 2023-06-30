@@ -18,8 +18,8 @@ integer vector of length 2
 returns an integer vector of length 2 giving the rows and columns
 }
 \examples{
-setcolumns(x = 6)
-setcolumns(x = 6, maxrow = 2)
+    setcolumns(x = 6)
+    setcolumns(x = 6, maxrow = 2)
 }
 \author{
 Simon Frey

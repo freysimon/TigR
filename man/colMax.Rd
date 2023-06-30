@@ -18,8 +18,8 @@ numerical vector
 Find the max value of a (set of) column(s)
 }
 \examples{
-data("runoff")
-colMax(runoff)
+    data("runoff")
+    colMax(runoff)
 }
 \seealso{
 \code{\link{colMin}}

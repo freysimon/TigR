@@ -2,7 +2,7 @@
 % Please edit documentation in R/functions.r
 \name{dev.new.file}
 \alias{dev.new.file}
-\title{Open new graphical device}
+\title{Open a new device for plotting}
 \usage{
 dev.new.file(device = "dev", return.device = TRUE, filename = NULL, ...)
 }
@@ -15,34 +15,10 @@ dev.new.file(device = "dev", return.device = TRUE, filename = NULL, ...)
 
 \item{...}{additional arguments passed on to the dev fuction (e.g. \link{dev.new}, or \link{png}).}
 }
-\value{
-If return.device = TRUE, device is retured. Else nothing is returned.
-}
 \description{
-Open a new graphical device on screen or open a pdf/png file for plotting
-
 Open a new device for plotting and allow some settings
 }
-\details{
-Valid arguments for device are "dev", "png", "pdf" and "svg".
-
-    If device = "dev", the standard, then a new graphical deive is opened by calling dev.new()
-
-    If device = "png", "pdf" or "svg" the respective file specified by filename is opend for writing. Note that it is not automatically closed.
-
-    Filename doesn't need to end with an ending. It will be concatenated if missing.
-
-    Units of the devices is inches.
-    A png will have the resolution of 300 dpi
-}
 \examples{
-dev.new.file()
-dev.new.file(width=7, height=2)
-dev.new.file(device = "png", return.device = TRUE, filename = tempfile)
-# do not run
-dev.new.file(device = "pdf")
-
-Open a new device for plotting
     d <- dev.new.file(device = "png",filename = "C:/TEMP/test")
     plot(1)
     if(d \%in\% c("png","pdf","svg")) dev.off()

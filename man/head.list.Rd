@@ -4,7 +4,7 @@
 \alias{head.list}
 \title{Return the first or last part of a list}
 \usage{
-\method{head}{list}(obj, n = 6L, ...)
+head.list(obj, n = 6L, ...)
 }
 \arguments{
 \item{obj}{a list object}
@@ -25,12 +25,12 @@ recursively on the entries in the list. If it fails, it will return the
 particular entry (standard behavior).
 }
 \examples{
-a <- list()
-a[[1]] <- c(1:100)
-a[[2]] <- c(500:1000)
-head.list(a)
-# same result
-head(a)
+    a <- list()
+    a[[1]] <- c(1:100)
+    a[[2]] <- c(500:1000)
+    head.list(a)
+    # same result
+    head(a)
 }
 \references{
 \code{https://gist.github.com/pimentel/256fc8c9b5191da63819}

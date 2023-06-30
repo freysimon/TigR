@@ -23,14 +23,12 @@ Calculate some simple statistics like median, min, max or quantiles on rows in a
 }
 \details{
 \if{html}{\out{<div class="sourceCode">}}\preformatted{This function uses predefined statistical function that can be used:
+* min (determine the minimum value)
+* max (determine the maximum value)
+* mean (estimate the mean value)
+* median (estimate the median value)
+* quantile (estimate a certain quantile value. Note that values between 0 and 1 are accepted)
 }\if{html}{\out{</div>}}
-\itemize{
-\item min (determine the minimum value)
-\item max (determine the maximum value)
-\item mean (estimate the mean value)
-\item median (estimate the median value)
-\item quantile (estimate a certain quantile value. Note that values between 0 and 1 are accepted)
-}
 }
 \examples{
     # load runoff data

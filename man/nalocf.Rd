@@ -20,14 +20,14 @@ Returns an xts object
 This is basically a wrapper around \code{\link{na.locf}} from the xts package. It avoids the column-by-column copying. Usefull if there are many columns in the xts object.
 }
 \examples{
-data(runoff)
-# add some NAs
-runoff[2,] <- NA
-index(runoff)[2] <- NA
+    data(runoff)
+    # add some NAs
+    runoff[2,] <- NA
+    index(runoff)[2] <- NA
 
-a <- nalocf(runoff)
-b <- na.locf(runoff)
-identical(a,b)
+    a <- nalocf(runoff)
+    b <- na.locf(runoff)
+    identical(a,b)
 }
 \author{
 Simon Frey

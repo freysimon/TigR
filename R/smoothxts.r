@@ -84,7 +84,7 @@ embed.fullextent <- function(x,timesteps=timesteps){
 
   out <- embed(x,timesteps)
   addtail <- matrix(data=NA,ncol=timesteps,nrow=timesteps)
-  krev <- rev(1:timesteps-1)
+  krev <- rev(1:(timesteps-1))
   for(k in 1:timesteps){
     addtail[k,] <- as.numeric(c(rep(NA,k),rep(x[length(x)-(k-1)],krev[k])))
   }

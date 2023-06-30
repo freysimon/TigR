@@ -6,8 +6,8 @@
 \usage{
 read.xts(
   x,
-  datecolumns = c(1:5),
-  format = "\%Y \%m \%d \%H \%M",
+  datecolumns = 1,
+  format = "\%Y-\%m-\%d \%H:\%M",
   header = TRUE,
   tz = "utc",
   skip = 0,
@@ -37,6 +37,9 @@ an xts object.
 }
 \description{
 Read a text file using \code{\link{fread}} and directly save it as \code{\link{xts}} object.
+}
+\details{
+Other than in older versions, where the standard arguments of this function were designed to read COSERO input and output files, this function by default reads tab-separated files using the time format Y-m-d H:M.
 }
 \examples{
 fpath <- system.file("extdata","qobs_qsim.txt", package = "TigR")

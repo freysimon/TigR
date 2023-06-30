@@ -18,8 +18,8 @@ numerical vector
 Find the max value of a (set of) row(s)
 }
 \examples{
-data("runoff")
-rowMax(runoff)
+    data("runoff")
+    rowMax(runoff)
 }
 \seealso{
 \code{\link{colMin}}
