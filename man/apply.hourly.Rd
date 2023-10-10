@@ -11,9 +11,9 @@ apply.hourly(x, FUN, roundtime = "round", na.rm = TRUE)
 
 \item{FUN}{function to apply to x}
 
-\item{roundtime}{character. Valid are "NA", "round", and "trunc", See details}
+\item{roundtime}{character. Valid are \code{NA}, "round", and "trunc", See details}
 
-\item{na.rm}{loggical. Should ne values be removed?}
+\item{na.rm}{logical. Should ne values be removed?}
 }
 \description{
 Aggregate an xts object to hourly values. It is a wrapper of \code{\link{period.apply}} with endpoints = "hours"

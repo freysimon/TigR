@@ -249,8 +249,8 @@ is.leapyear=function(year){
 #' aggregate xts object to hourly values
 #' @param x xts object
 #' @param FUN function to apply to x
-#' @param roundtime character. Valid are "NA", "round", and "trunc", See details
-#' @param na.rm loggical. Should ne values be removed?
+#' @param roundtime character. Valid are \code{NA}, "round", and "trunc", See details
+#' @param na.rm logical. Should ne values be removed?
 #' @author Simon Frey
 #' @export
 #' @import xts
@@ -268,11 +268,11 @@ apply.hourly <- function(x, FUN, roundtime = "round", na.rm = TRUE){
     stop("x must be an xts object")
   }
   
-  if(roundtime != "NA"){
+  if(!is.na(roundtime)){
     if(roundtime == "round"){
-      time(x) <- round.POSIXt(time(x), "hours")
+      time(x) <- round.POSIXt(terra::time(x), "hours")
     } else if(roundtime == "trunc"){
-      time(x) <- trunc.POSIXt(time(x), "hours")
+      terra::time(x) <- terra::trunc.POSIXt(time(x), "hours")
     } else {
       stop("roundtime must be either round or trunc")
     }
