@@ -10,7 +10,6 @@
 #' @author Simon Frey
 #' @export
 #' @import xts
-#' @import hydroGOF
 #' @return a vector with the results of the objective function
 #' @details FUN should be a function that can operate with sim and obs values and returns one single value.
 #'     
@@ -19,7 +18,6 @@
 
 peakdiff <- function(sim, obs, timesteps, width = 12, FUN = me, nop = 5, ...){
   # check for xts
-  library(hydroGOF)
   library(xts)
 
   if(!is.xts(obs)){

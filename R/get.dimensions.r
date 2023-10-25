@@ -40,6 +40,14 @@ get.dimensions <- function(x, full=TRUE){
     }
   }
   
+  # if finding NBSchar fails, try without leading zeros
+  if(length(x[which(x == paste("IZONE_",NBSchar[k],sep=""))]) == 0){
+    NBSchar <- as.character(c(1:maxNB))
+  }
+  
+  
+  
+  
   for(k in 1:maxNB){
     IZS[k] <- as.numeric(x[which(x == paste("IZONE_",NBSchar[k],sep=""))+1])
   }
