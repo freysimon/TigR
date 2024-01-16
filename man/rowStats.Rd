@@ -4,7 +4,7 @@
 \alias{rowStats}
 \title{Calculate some simple statistic estimators on rows in a matrix or data.frame}
 \usage{
-rowStats(x, fun, na.rm = TRUE, q = 0.1)
+rowStats(x, fun, na.rm = TRUE, q = 0.1, weights = NULL)
 }
 \arguments{
 \item{x}{numerical matrix or data.frame.}
@@ -13,7 +13,9 @@ rowStats(x, fun, na.rm = TRUE, q = 0.1)
 
 \item{na.rm}{logical. Should NA values be removed?}
 
-\item{q}{numerical. Quantile that will be estimated. Used only if fun == quantile}
+\item{q}{numerical. Quantile that will be estimated. Used only if fun == quantile.}
+
+\item{weights}{numerical vector. Used if fun == weighted.quantile only. See details.}
 }
 \value{
 numerical vector
@@ -28,18 +30,11 @@ Calculate some simple statistics like median, min, max or quantiles on rows in a
 * mean (estimate the mean value)
 * median (estimate the median value)
 * quantile (estimate a certain quantile value. Note that values between 0 and 1 are accepted)
+* weighted.quantile (calculation of quantiles using individual weights. \link{Quantile} from \code{DescTools} is used.)
 }\if{html}{\out{</div>}}
 }
-\examples{
-    # load runoff data
-    data(runoff)
-    
-    rowStats(runoff, fun = "mean")
-    rowStats(runoff, fun = "max")
-    rowStats(runoff, fun = "quantile", q = 0.33)
-}
 \seealso{
-\code{\link{rowStats}}
+\code{\link{colStats}}
 
 \code{\link{colMin}}
 

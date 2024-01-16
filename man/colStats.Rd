@@ -4,7 +4,7 @@
 \alias{colStats}
 \title{Calculate some simple statistic estimators on cols in a matrix or data.frame}
 \usage{
-colStats(x, fun, na.rm = TRUE, q = 0.1)
+colStats(x, fun, na.rm = TRUE, q = 0.1, weights = NULL)
 }
 \arguments{
 \item{x}{numerical matrix or data.frame.}
@@ -13,7 +13,8 @@ colStats(x, fun, na.rm = TRUE, q = 0.1)
 
 \item{na.rm}{logical. Should NA values be removed?}
 
-\item{q}{numerical. Quantile that will be estimated. Used only if fun == quantile}
+\item{q}{numerical. Quantile that will be estimated. Used only if fun == quantile.
+#' @param weights numerical vector. Used if fun == weighted.quantile only. See details.}
 }
 \value{
 numerical vector
@@ -29,6 +30,7 @@ This function uses predefined statistical function that can be used:
 \item mean (estimate the mean value)
 \item median (estimate the median value)
 \item quantile (estimate a certain quantile value. Note that values between 0 and 1 are accepted)
+\item weighted.quantile (calculation of quantiles using individual weights. \link{Quantile} from \code{DescTools} is used.)
 }
 }
 \examples{
@@ -40,7 +42,7 @@ This function uses predefined statistical function that can be used:
     colStats(runoff, fun = "quantile", q = 0.33)
 }
 \seealso{
-\code{\link{colStats}}
+\code{\link{rowStats}}
 
 \code{\link{colMin}}
 
