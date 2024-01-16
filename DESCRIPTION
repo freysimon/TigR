@@ -1,7 +1,7 @@
 Package: TigR
 Type: Package
 Title: A collection of more or less usefull R functions
-Version: 0.4.0.5
+Version: 0.4.0.7
 IMPORTS: 
     xts,
     magrittr,
@@ -15,6 +15,7 @@ IMPORTS:
     plyr,
     dygraphs,
     htmltools
+    DescTools
 Author: Simon Frey
 Maintainer: Simon Frey <simon.frey@verbund.com>
 Description: No description available.

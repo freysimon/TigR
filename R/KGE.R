@@ -1,4 +1,4 @@
-# This is part of the package hydroGOF, which is archivec by cran because
+# This is part of the package hydroGOF, which is archived by cran because
 # of the dependency of maptools.
 #
 # Date: 24-Oct-20223
@@ -48,6 +48,14 @@
 # 's'   : scaling factors.
 
 # 'Result': Kling-Gupta Efficiency between 'sim' and 'obs'
+
+#' @export
+#' @param sim simulated values
+#' @param obs observed values
+#' @param ... other parameters passed on to KGE
+#' @description
+#' A copy of Mauricio Zambrano-Bigiarini's KGE function from hydroGOF, which is depracated due to the use of maptools
+#' 
 
 KGE <- function(sim, obs, ...) UseMethod("KGE")
 
@@ -184,6 +192,7 @@ KGE.default <- function(sim, obs, s=c(1,1,1), na.rm=TRUE,
 #          12-Jul-2022 ; 13-Jul-2022                                           #
 #          11-Jul-2023                                                         #
 ################################################################################
+#' @export
 KGE.matrix <- function (sim, obs, s=c(1,1,1), na.rm=TRUE, 
                         method=c("2009", "2012", "2021"), out.type=c("single", "full"), 
                         fun=NULL, ...,
@@ -248,6 +257,7 @@ KGE.matrix <- function (sim, obs, s=c(1,1,1), na.rm=TRUE,
 #          12-Jul-2022 ; 13-Jul-2022                                           #
 #          11-Jul-2023                                                         #
 ################################################################################
+#' @export
 KGE.data.frame <- function (sim, obs, s=c(1,1,1), na.rm=TRUE, 
                             method=c("2009", "2012", "2021"), out.type=c("single", "full"), 
                             fun=NULL, ...,
@@ -274,6 +284,7 @@ KGE.data.frame <- function (sim, obs, s=c(1,1,1), na.rm=TRUE,
 #          12-Jul-2022 ; 13-Jul-2022                                           #
 #          11-Jul-2023                                                         #
 ################################################################################
+#'@export
 KGE.zoo <- function(sim, obs, s=c(1,1,1), na.rm=TRUE, 
                     method=c("2009", "2012", "2021"), out.type=c("single", "full"), 
                     fun=NULL, ...,
@@ -312,6 +323,7 @@ KGE.zoo <- function(sim, obs, s=c(1,1,1), na.rm=TRUE,
 # 'Result': index containing the position in 'x' and 'y' where both vectors 
 #           have valid elements (NON- NA)
 
+#'@exort
 valindex <- function(sim, obs, ...) UseMethod("valindex")
 
 valindex.default <- function(sim, obs, ...) {  
@@ -333,6 +345,7 @@ valindex.default <- function(sim, obs, ...) {
 # Started: 25-Jul-2011                                                         #
 # Updates: 08-May-2012                                                         #
 ################################################################################
+#'@export
 valindex.matrix <- function(sim, obs, ...) { 
   
   # Checking that 'sim' and 'obs' have the same dimensions
@@ -371,6 +384,9 @@ valindex.matrix <- function(sim, obs, ...) {
 # Updates: 17-Jul-2016                                                         #
 #          16-Jan-2023                                                         #
 ################################################################################
+
+#' Pearson's correlation coeffficient
+#' @export
 rPearson <-function(sim, obs, ...) UseMethod("rPearson")
 
 rPearson.default <- function(sim, obs, fun=NULL, ..., 
@@ -422,6 +438,7 @@ rPearson.default <- function(sim, obs, fun=NULL, ...,
 # Updates: 17-Jul-2016                                                         #
 #          16-Jan-2023                                                         #
 ################################################################################
+#' @export
 rPearson.matrix <- function(sim, obs, na.rm=TRUE, fun=NULL, ..., 
                             epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
                             epsilon.value=NA){
@@ -444,7 +461,8 @@ rPearson.matrix <- function(sim, obs, na.rm=TRUE, fun=NULL, ...,
 # Started: 27-Oct-2009                                                         #
 # Updates: 17-Jul-2016                                                         #
 #          16-Jan-2023                                                         #
-################################################################################  
+################################################################################
+#' @export
 rPearson.data.frame <- function(sim, obs, na.rm=TRUE, fun=NULL, ..., 
                                 epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
                                 epsilon.value=NA){
@@ -465,6 +483,7 @@ rPearson.data.frame <- function(sim, obs, na.rm=TRUE, fun=NULL, ...,
 # Updates: 17-Jul-2016                                                         #
 #          16-Jan-2023                                                         #
 ################################################################################
+#' @export
 rPearson.zoo <- function(sim, obs, na.rm=TRUE, fun=NULL, ..., 
                          epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
                          epsilon.value=NA){
@@ -487,4 +506,5 @@ rPearson.zoo <- function(sim, obs, na.rm=TRUE, fun=NULL, ...,
 # Started: 17-Jul-2016                                                         #
 # Updates:                                                                     #
 ################################################################################
+#'@export
 .rPearson <-function(sim, obs, ...) UseMethod("rPearson")
