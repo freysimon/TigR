@@ -4,7 +4,15 @@
 \alias{rowStats}
 \title{Calculate some simple statistic estimators on rows in a matrix or data.frame}
 \usage{
-rowStats(x, fun, na.rm = TRUE, q = 0.1, weights = NULL)
+rowStats(
+  x,
+  fun,
+  na.rm = TRUE,
+  q = 0.1,
+  weights = NULL,
+  run.parallel = FALSE,
+  keep.plan = FALSE
+)
 }
 \arguments{
 \item{x}{numerical matrix or data.frame.}
@@ -16,6 +24,10 @@ rowStats(x, fun, na.rm = TRUE, q = 0.1, weights = NULL)
 \item{q}{numerical. Quantile that will be estimated. Used only if fun == quantile.}
 
 \item{weights}{numerical vector. Used if fun == weighted.quantile only. See details.}
+
+\item{run.parallel}{logical. Should the operation be run in parallel? If TRUE, \link{future_apply} with the plan "multisession" is used.}
+
+\item{keep.plan}{logical. Should the plan "multisession" be kept or changed back to "sequential" by quitting the function?}
 }
 \value{
 numerical vector

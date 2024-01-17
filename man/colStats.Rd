@@ -4,7 +4,7 @@
 \alias{colStats}
 \title{Calculate some simple statistic estimators on cols in a matrix or data.frame}
 \usage{
-colStats(x, fun, na.rm = TRUE, q = 0.1, weights = NULL)
+colStats(x, fun, na.rm = TRUE, q = 0.1, weights = NULL, run.parallel = FALSE)
 }
 \arguments{
 \item{x}{numerical matrix or data.frame.}
@@ -13,8 +13,11 @@ colStats(x, fun, na.rm = TRUE, q = 0.1, weights = NULL)
 
 \item{na.rm}{logical. Should NA values be removed?}
 
-\item{q}{numerical. Quantile that will be estimated. Used only if fun == quantile.
-#' @param weights numerical vector. Used if fun == weighted.quantile only. See details.}
+\item{q}{numerical. Quantile that will be estimated. Used only if fun == quantile.}
+
+\item{weights}{numerical vector. Used if fun == weighted.quantile only. See details.}
+
+\item{run.parallel}{logical. Should the operation be run in parallel? If TRUE, \link{future_apply} with the plan "multisession" is used.}
 }
 \value{
 numerical vector
