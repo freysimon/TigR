@@ -323,7 +323,7 @@ KGE.zoo <- function(sim, obs, s=c(1,1,1), na.rm=TRUE,
 # 'Result': index containing the position in 'x' and 'y' where both vectors 
 #           have valid elements (NON- NA)
 
-#'@exort
+#'@export
 valindex <- function(sim, obs, ...) UseMethod("valindex")
 
 valindex.default <- function(sim, obs, ...) {  

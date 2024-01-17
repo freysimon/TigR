@@ -7,6 +7,8 @@
 #' @param na.rm logical. Should NA values be removed?
 #' @param q numerical. Quantile that will be estimated. Used only if fun == quantile.
 #' @param weights numerical vector. Used if fun == weighted.quantile only. See details.
+#' @param run.parallel logical. Should the operation be run in parallel? If TRUE, \link{future_apply} with the plan "multisession" is used.
+#' @param keep.plan logical. Should the plan "multisession" be kept or changed back to "sequential" by quitting the function?
 #' @return numerical vector
 #' @details 
 #'     This function uses predefined statistical function that can be used:
@@ -31,7 +33,7 @@
 #' @seealso \code{\link{colMax}}
 #' @md
 
-rowStats <- function(x, fun, na.rm=TRUE, q = 0.1, weights = NULL){
+rowStats <- function(x, fun, na.rm=TRUE, q = 0.1, weights = NULL, run.parallel=FALSE, keep.plan = FALSE){
   if(!fun %in% c("min","max","median","mean","quantile", "weighted.quantile")){
     stop("fun must be a statistical funtion. See details in the help site.")
   }
@@ -42,26 +44,50 @@ rowStats <- function(x, fun, na.rm=TRUE, q = 0.1, weights = NULL){
     stop("q must be between 0 and 1")
   }
   
+  if(isTRUE(run.parallel)){
+    library(future.apply)
+    plan(multisession)
+  }
+  
   if(fun %in% c("min","max","median","mean")){
-    result <- apply(x, MARGIN=c(1), FUN = fun ,na.rm=na.rm)
+    if(isTRUE(run.parallel)){
+      result <- future_apply(x, MARGIN=c(1), FUN = fun ,na.rm=na.rm)
+    } else {
+      result <- apply(x, MARGIN=c(1), FUN = fun ,na.rm=na.rm)
+    }
   }
   
   if(fun == "quantile"){
-    # ff <- function(){
-    #   quantile(x, probs = q, na.rm = na.rm)
-    # }
-    result <- apply(x, MARGIN=c(1), FUN = function(x){
-      quantile(x, probs=q, na.rm=na.rm)
-    })
+    if(isTRUE(run.parallel)){
+      result <- future_apply(x, MARGIN=c(1), FUN = function(x){
+        quantile(x, probs=q, na.rm=na.rm)
+      })
+    } else {
+      result <- apply(x, MARGIN=c(1), FUN = function(x){
+        quantile(x, probs=q, na.rm=na.rm)
+      })
+    }
   }
   
   if(fun == "weighted.quantile"){
     if(ncol(x) != length(weights)){
       stop("Error weights must be the same length as columns in x.")
     }
-    result <- apply(x, MARGIN=c(1), FUN = 
-                      DescTools::Quantile(x, weights = weights, probs = q, na.rm = na.rm, digits = 2)
-    )
+    if(isTRUE(run.parallel)){
+      result <- future_apply(x, MARGIN=c(1), FUN = function(x){
+        DescTools::Quantile(x, weights = weights, probs = q, na.rm = na.rm, digits = 2)
+      })
+    } else {
+      result <- apply(x, MARGIN=c(1), FUN = function(x){
+        DescTools::Quantile(x, weights = weights, probs = q, na.rm = na.rm, digits = 2)
+      })
+    }
+  }
+  
+  if(isTRUE(run.parallel)){
+    if(!isTRUE(keep.plan)){
+      plan(sequential)
+    }
   }
   
   return(result)
@@ -76,7 +102,8 @@ rowStats <- function(x, fun, na.rm=TRUE, q = 0.1, weights = NULL){
 #' @param fun statistical function that will be calculated. See details.
 #' @param na.rm logical. Should NA values be removed?
 #' @param q numerical. Quantile that will be estimated. Used only if fun == quantile.
-#' #' @param weights numerical vector. Used if fun == weighted.quantile only. See details.
+#' @param weights numerical vector. Used if fun == weighted.quantile only. See details.
+#' @param run.parallel logical. Should the operation be run in parallel? If TRUE, \link{future_apply} with the plan "multisession" is used.
 #' @return numerical vector
 #' @details This function uses predefined statistical function that can be used:
 #' * min (determine the minimum value)
@@ -99,7 +126,7 @@ rowStats <- function(x, fun, na.rm=TRUE, q = 0.1, weights = NULL){
 #' @seealso \code{\link{colMax}}
 #' @md
 
-colStats <- function(x, fun, na.rm=TRUE, q = 0.1, weights = NULL){
+colStats <- function(x, fun, na.rm=TRUE, q = 0.1, weights = NULL, run.parallel=FALSE){
   if(!fun %in% c("min","max","median","mean","quantile", "weighted.quantile")){
     stop("fun must be a statistical funtion. See details in the help site")
   }
@@ -109,27 +136,50 @@ colStats <- function(x, fun, na.rm=TRUE, q = 0.1, weights = NULL){
   if(q < 0 | q > 1){
     stop("q must be between 0 and 1")
   }
+  if(isTRUE(run.parallel)){
+    library(future.apply)
+    plan(multisession)
+  }
   
   if(fun %in% c("min","max","median","mean")){
-    result <- apply(x, MARGIN=c(2), FUN = fun ,na.rm=na.rm)
+    if(isTRUE(run.parallel)){
+      result <- future_apply(x, MARGIN=c(2), FUN = fun ,na.rm=na.rm)
+    } else {
+      result <- apply(x, MARGIN=c(2), FUN = fun ,na.rm=na.rm)
+    }
   }
   
   if(fun == "quantile"){
-    # ff <- function(){
-    #   quantile(x, probs = q, na.rm = na.rm)
-    # }
-    result <- apply(x, MARGIN=c(2), FUN = function(x){
-      quantile(x, probs=q, na.rm=na.rm)
-    })
+    if(isTRUE(run.parallel)){
+      result <- future_apply(x, MARGIN=c(2), FUN = function(x){
+        quantile(x, probs=q, na.rm=na.rm)
+      })
+    } else {
+      result <- apply(x, MARGIN=c(2), FUN = function(x){
+        quantile(x, probs=q, na.rm=na.rm)
+      })
+    }
   }
   
   if(fun == "weighted.quantile"){
-    if(nrow(x) != length(weights)){
+    if(nrows(x) != length(weights)){
       stop("Error weights must be the same length as rows in x.")
     }
-    result <- apply(x, MARGIN=c(2), FUN = 
-                      DescTools::Quantile(x, weights = weights, probs = q, na.rm = na.rm, digits = 2)
-    )
+    if(isTRUE(run.parallel)){
+      result <- future_apply(x, MARGIN=c(2), FUN = function(x){
+        DescTools::Quantile(x, weights = weights, probs = q, na.rm = na.rm, digits = 2)
+      })
+    } else {
+      result <- apply(x, MARGIN=c(2), FUN = function(x){
+        DescTools::Quantile(x, weights = weights, probs = q, na.rm = na.rm, digits = 2)
+      })
+    }
+  }
+  
+  if(isTRUE(run.parallel)){
+    if(!isTRUE(keep.plan)){
+      plan(sequential)
+    }
   }
   
   return(result)
