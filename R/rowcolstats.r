@@ -2,6 +2,7 @@
 #' @description Calculate some simple statistics like median, min, max or quantiles on rows in a matrix or data.frame object
 #' @author Simon Frey
 #' @export
+#' @import future.apply
 #' @param x numerical matrix or data.frame.
 #' @param fun statistical function that will be calculated. See details.
 #' @param na.rm logical. Should NA values be removed?
@@ -75,11 +76,20 @@ rowStats <- function(x, fun, na.rm=TRUE, q = 0.1, weights = NULL, run.parallel=F
     }
     if(isTRUE(run.parallel)){
       result <- future_apply(x, MARGIN=c(1), FUN = function(x){
-        DescTools::Quantile(x, weights = weights, probs = q, na.rm = na.rm, digits = 2)
+        if(any(!is.na(x))){
+          DescTools::Quantile(x, weights = weights, probs = q, na.rm = na.rm, digits = 2)
+        } else {
+          NA
+        }
+        
       })
     } else {
       result <- apply(x, MARGIN=c(1), FUN = function(x){
-        DescTools::Quantile(x, weights = weights, probs = q, na.rm = na.rm, digits = 2)
+        if(any(!is.na(x))){
+          DescTools::Quantile(x, weights = weights, probs = q, na.rm = na.rm, digits = 2)
+        } else {
+          NA
+        }
       })
     }
   }
@@ -98,6 +108,7 @@ rowStats <- function(x, fun, na.rm=TRUE, q = 0.1, weights = NULL, run.parallel=F
 #' @description Calculate some simple statistics like median, min, max or quantiles on columns in a matrix or data.frame object
 #' @author Simon Frey
 #' @export
+#' @import future.apply
 #' @param x numerical matrix or data.frame.
 #' @param fun statistical function that will be calculated. See details.
 #' @param na.rm logical. Should NA values be removed?
@@ -167,11 +178,19 @@ colStats <- function(x, fun, na.rm=TRUE, q = 0.1, weights = NULL, run.parallel=F
     }
     if(isTRUE(run.parallel)){
       result <- future_apply(x, MARGIN=c(2), FUN = function(x){
-        DescTools::Quantile(x, weights = weights, probs = q, na.rm = na.rm, digits = 2)
+        if(any(!is.na(x))){
+          DescTools::Quantile(x, weights = weights, probs = q, na.rm = na.rm, digits = 2)
+        } else {
+          NA
+        }
       })
     } else {
       result <- apply(x, MARGIN=c(2), FUN = function(x){
-        DescTools::Quantile(x, weights = weights, probs = q, na.rm = na.rm, digits = 2)
+        if(any(!is.na(x))){
+          DescTools::Quantile(x, weights = weights, probs = q, na.rm = na.rm, digits = 2)
+        } else {
+          NA
+        }
       })
     }
   }
