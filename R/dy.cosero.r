@@ -4,6 +4,7 @@
 #' @export
 #' @import dygraphs
 #' @import htmltools
+#' @import hydroGOF
 #' @description Plot the results regarding runoff from COSERO using dygraphs. The output may be grouped together with other results.
 #' @param qoutput Either a path to the file to be read or the result from \link{readCosero}
 #' @param read.data logical. If TRUE, qoutput will be read in using \link{readCosero}
@@ -89,7 +90,7 @@ dy.cosero <- function(qoutput = NULL, read.data = TRUE,
     }
     runoff.mm <- cbind(qoutput$runoff$obs.mm[,NB],qoutput$runoff$sim.mm[,NB])
   }
-  kge <- TigR::KGE(sim=runoff.data[,2],obs=runoff.data[,1])
+  kge <- hydroGOF::KGE(sim=runoff.data[,2],obs=runoff.data[,1])
   dy_graph <- list(
     dygraph(runoff.data, group = group, main = paste("runoff (KGE: ",round(kge,3),")",sep=""), height = height, ...) %>% dyRangeSelector(height = 10)
   )
