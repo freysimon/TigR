@@ -45,6 +45,15 @@ Calculate some simple statistics like median, min, max or quantiles on rows in a
 * weighted.quantile (calculation of quantiles using individual weights. \link{Quantile} from \code{DescTools} is used.)
 }\if{html}{\out{</div>}}
 }
+\examples{
+    # load runoff data
+    data(runoff)
+    
+    rowStats(runoff, fun = "mean")
+    rowStats(runoff, fun = "max")
+    rowStats(runoff, fun = "quantile", q = 0.33)
+    rowStats(runoff, fun = "weighted.quantiles", q = 0.33, weights = c(1,1,1,4,1,1))
+}
 \seealso{
 \code{\link{colStats}}
 
