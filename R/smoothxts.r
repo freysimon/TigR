@@ -36,10 +36,10 @@ smoothXTS <- function(x,timesteps=24,lowerbound=NULL, upperbound=NULL){
   }
 
   if(is.null(lowerbound)){
-    lowerbound <- min(x)
+    lowerbound <- min(x) - 1 # Prevent NA values in orignal ts
   }
   if(is.null(upperbound)){
-    upperbound <- max(x)
+    upperbound <- max(x) + 1 # Prevent NA values in original TS
   }
 
   wnotsmooth_l <- which(x<=lowerbound)
@@ -82,13 +82,14 @@ embed.fullextent <- function(x,timesteps=timesteps){
   # so dass length(embed) == length(x),
   # ansonsten wäre length(embed) == length(x)-(timesteps-1)
 
-  out <- embed(x,timesteps)
-  addtail <- matrix(data=NA,ncol=timesteps,nrow=timesteps)
+  out <- embed(x, timesteps)
+  addtail <- matrix(data = NA, ncol = timesteps, nrow = timesteps)
   krev <- rev(1:(timesteps-1))
-  for(k in 1:timesteps){
-    addtail[k,] <- as.numeric(c(rep(NA,k),rep(x[length(x)-(k-1)],krev[k])))
+  for (k in 1:(timesteps-1)) {
+    addtail[k, ] <- as.numeric(c(rep(NA, k), rep(x[length(x) - 
+                                                     (k - 1)], krev[k])))
   }
-  out <- rbind(out,addtail[1:(timesteps-1),])
+  out <- rbind(out, addtail[1:(timesteps -1), ])
   return(out)
 }
 

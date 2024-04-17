@@ -19,14 +19,14 @@
 #'     * median (estimate the median value)
 #'     * quantile (estimate a certain quantile value. Note that values between 0 and 1 are accepted)
 #'     * weighted.quantile (calculation of quantiles using individual weights. \link{Quantile} from \code{DescTools} is used.)
-#' @examples 
+#' @examples
 #'     # load runoff data
 #'     data(runoff)
 #'     
 #'     rowStats(runoff, fun = "mean")
 #'     rowStats(runoff, fun = "max")
 #'     rowStats(runoff, fun = "quantile", q = 0.33)
-#'     rowStats(runoff, fun = "weighted.quantiles, q = 0.33, weights = c(1,1,1,4,1,1))
+#'     rowStats(runoff, fun = "weighted.quantiles", q = 0.33, weights = c(1,1,1,4,1,1))
 #' @seealso \code{\link{colStats}}
 #' @seealso \code{\link{colMin}}
 #' @seealso \code{\link{rowMin}}
