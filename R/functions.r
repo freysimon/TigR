@@ -327,7 +327,7 @@ read.qobsqsim <- function(x, ...){
 #' @param header logical. Does the data have a header?
 #' @param tz character string. Time zone of the data
 #' @param skip integer: the number of lines of the data file to skip before beginning to read data.
-#' @param cut.prefix integer. Amount of leading characters that will be ignored in formatting the POSIXct object
+#' @param cut.prefix integer. Amount of leading characters that will be ignored in formatting the POSIXct object. Experimental!
 #' @param ... additional arguments from other methods passed to \code{\link{fread}}
 #' @return an xts object.
 #' @import xts
@@ -359,7 +359,11 @@ read.xts <- function(x, datecolumns=1, format="%Y-%m-%d %H:%M", header=TRUE, tz 
       datum <- paste(datum,temp[,k],sep=" ")
     }
   }
-  datum <- substring(datum, cut.prefix+1)
+  
+  if(cut.prefix > 0){  # only substring the date character if necessary
+    datum <- substring(datum, cut.prefix+1)
+  }
+  
   datum <- as.POSIXct(datum, format=format,tz=tz)
   output <- xts(temp[,(max(datecolumns)+1):nc], order.by=datum)
   
