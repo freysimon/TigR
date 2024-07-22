@@ -1,4 +1,4 @@
-#' Purge direcory
+#' Purge directory
 #' @author Simon Frey
 #' @export
 #' @param x character string. Path of the dir to purge.
@@ -10,6 +10,7 @@
 #' @seealso \link{file.remove}
 #' 
 purge.dir <- function(x){
-  file.remove(dir(path=x))
-  unlink(dir(path=x), recursive = TRUE)
+  xx <- dir(path=x, full.names = TRUE)
+  file.remove(xx)
+  unlink(xx, recursive = TRUE)
 }
