@@ -2,7 +2,7 @@
 % Please edit documentation in R/purge.dir.r
 \name{purge.dir}
 \alias{purge.dir}
-\title{Purge direcory}
+\title{Purge directory}
 \usage{
 purge.dir(x)
 }
