@@ -1,5 +1,5 @@
 #' Check for unique values
-#' @description Check whether a variable within a vetcor is unique
+#' @description Check whether a variable within a vector is unique
 #' @author Simon Frey
 #' @param x vector to be analysed.
 #' @param ... additional parameters passed to \code{\link{count}}
@@ -16,10 +16,12 @@ is.unique <- function(x, ...){
   cx <- as.data.frame(matrix(data=NA, nrow = nrow(countx), ncol = 2))
   colnames(cx) <- c("x","freq")
   
-  if(class(x) == "character"){
-    cx[,1] <- as.character(countx[,1])
-  } else if(class(x) %in% c("numeric","integer")){
+  if(any(class(x) %in% c("numeric","integer"))){
     cx[,1] <- as.numeric(countx[,1])
+  } else if(any(class(x) %in% c("POSIXct", "POSIXt"))){
+    cx[,1] <- countx[,1]
+  } else if(class(x) == "character"){
+    cx[,1] <- as.character(countx[,1])
   } else {
     cx[,1] <- as.factor(countx[,1])
   }
@@ -31,7 +33,7 @@ is.unique <- function(x, ...){
 }
 
 #' Check for unique values
-#' @description Check whether a variable within a vetcor is unique
+#' @description Check whether and which, if any, variable within a vector is unique
 #' @author Simon Frey
 #' @param x vector to be analysed.
 #' @param ... additional parameters passed to \code{\link{count}}
@@ -47,11 +49,12 @@ which.is.unique <- function(x, ...){
   
   cx <- as.data.frame(matrix(data=NA, nrow = nrow(countx), ncol = 2))
   colnames(cx) <- c("x","freq")
-  
-  if(class(x) == "character"){
-    cx[,1] <- as.character(countx[,1])
-  } else if(class(x) %in% c("numeric","integer")){
+  if(any(class(x) %in% c("numeric","integer"))){
     cx[,1] <- as.numeric(countx[,1])
+  } else if(any(class(x) %in% c("POSIXct", "POSIXt"))){
+    cx[,1] <- countx[,1]
+  } else if(class(x) == "character"){
+    cx[,1] <- as.character(countx[,1])
   } else {
     cx[,1] <- as.factor(countx[,1])
   }
