@@ -1,7 +1,7 @@
 Package: TigR
 Type: Package
 Title: A collection of more or less usefull R functions
-Version: 0.4.0.12
+Version: 0.4.0.13
 IMPORTS: 
     xts,
     magrittr,
@@ -24,4 +24,4 @@ Description: No description available.
 License: GPLv3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.3
