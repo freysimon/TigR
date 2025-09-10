@@ -15,7 +15,7 @@ which.is.unique(x, ...)
 a vector containing the unique values of x
 }
 \description{
-Check whether a variable within a vetcor is unique
+Check whether and which, if any, variable within a vector is unique
 }
 \details{
 This function uses the \code{\link{count}} function from the plyr package and returns all entries with a frquency greater than one. Works with character and numeric vectors
