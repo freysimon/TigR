@@ -256,7 +256,7 @@ is.leapyear=function(year){
 #' @import xts
 #' @description Aggregate an xts object to hourly values. It is a wrapper of \code{\link{period.apply}} with endpoints = "hours"
 #' @details An xts object is aggregated to hourly values. Using the parameter roundtime, the timestamp of the xts object can be 
-#'     round to full hours. This can be done by rounding to the nearest full hour, or by going to the last full hour (trunc). NA skips rounding.
+#'     round to full hours. This can be done by rounding to the nearest full hour, or by going to the next full hour (trunc). Rounding or truncating is done by \code{\link{shift.time}} and \code{\link{align.time}},  respectively. NA skips rounding.
 #' @examples 
 #'     library(TigR)
 #'     library(xts)
@@ -264,15 +264,26 @@ is.leapyear=function(year){
 #'     apply.hourly(x, FUN = mean, roundtime = "round")
 #' @seealso \code{\link{period.apply}}
 apply.hourly <- function(x, FUN, roundtime = "round", na.rm = TRUE){
+
   if(!is.xts(x)){
     stop("x must be an xts object")
   }
   
   if(!is.na(roundtime)){
     if(roundtime == "round"){
-      time(x) <- round.POSIXt(terra::time(x), "hours")
+      
+      # get time difference to next full hour in min
+      xminutes <- .indexmin(x)
+      xshift <- xminutes
+      xshift[xminutes > 30] <- 60 - xminutes[xminutes > 30]
+      xshift[xminutes <=30] <- xminutes[xminutes <=30] * -1
+      
+      # shift time to last/next full hour
+      x <- shift.time(x, n = xshift * 60)
+
     } else if(roundtime == "trunc"){
-      terra::time(x) <- terra::trunc.POSIXt(time(x), "hours")
+      # align time to next full hour
+      x <- align.time(x, n = 3600)
     } else {
       stop("roundtime must be either round or trunc")
     }
@@ -372,15 +383,23 @@ read.xts <- function(x, datecolumns=1, format="%Y-%m-%d %H:%M", header=TRUE, tz 
 }
 
 
-dev.new.file <- function(device="dev",return.device=TRUE,filename=NULL, ...){
+dev.new.file <- function(device="dev",return.device=TRUE,filename=NULL,
+                         width = 480, height = 480, units = "in",
+                         res = 300, ...){
   #' Open a new device for plotting
   #' @description Open a new device for plotting and allow some settings
   #' @author Simon Frey
   #' @export
   #' @param device any string of "dev","png","pdf", or "svg"
   #' @param return.device logical. should the type of device be returned?
-  #' @param filename string. Where should the plot be saved? If no extention is given, it will be added according to the type of the device.
-  #' @param ... additional arguments passed on to the dev fuction (e.g. \link{dev.new}, or \link{png}).
+  #' @param filename string. Where should the plot be saved? If no extension is given, it will be added according to the type of the device.
+  #' @param width numeric. Width of the graphics device in units.
+  #' @param height numeric. Height of the graphics device in units.
+  #' @param units string. The units in which height and width are given. Can be px (pixels), in (inches), cm or mm. By default it is "in".
+  #' @param res numeric. 	The nominal resolution in ppi which will be recorded in the bitmap file, if a positive integer. Also used for units other than the default.
+  #' @param ... additional arguments passed on to the dev function (e.g. \link{dev.new}, or \link{png}).
+  #' @details
+    #' Note that the default units in inches. This can be changed by defining the 'units' string. However, it only has an effect when the image is printed as png.
   #' @examples 
   #'     d <- dev.new.file(device = "png",filename = "C:/TEMP/test")
   #'     plot(1)
@@ -399,18 +418,58 @@ dev.new.file <- function(device="dev",return.device=TRUE,filename=NULL, ...){
       filename <- paste(filename,".",device,sep="")
     }
   }
+  
 
   if(device == "dev"){
-    dev.new(units="in",...)
+    dev.new(units=units, width = width, height = height, noRStudioGD = TRUE, ...)
   }
   if(device == "png"){
-    png(units="in",res=300,filename, ...)
+    # Calculate width and height based on the resolution 
+    # due to an error opening the device if png was used
+    if(!exists("res")){
+      res = 300
+    }
+    
+    # if(!exists("width")){
+    #   width = 480
+    # }
+    # if(!exists("height")){
+    #   height = 480
+    # }
+    
+    if(units == "in"){
+      width_in <- width * res
+      height_in <- height * res
+      print("in")
+    }
+    if(units == "cm"){
+      width_in <- (width * res)/2.54
+      height_in <- (height * res)/2.54
+      print("cm")
+    }
+    if(units == "mm"){
+      width_in <- (width * res)/25.4
+      height_in <- (height * res)/25.4
+      print("mm")
+    }
+    if(units == "px") {
+      print("px")
+      width_in = width
+      height_in = height
+    }
+    
+    
+    
+    print(width_in)
+    
+    png(filename=filename, res=res, width = width_in, height = height_in, units = "px", ...)
+    
   }
   if(device == "pdf"){
-    pdf(file = filename, ...)
+    pdf(file = filename, width = width, height = height, ...)
   }
   if(device == "svg"){
-    svg(filename, ...)
+    svg(filename, width = width, height = height, ...)
   }
   if(return.device){
     return(device)
