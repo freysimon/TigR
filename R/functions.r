@@ -211,22 +211,29 @@ m3s2mm <- function(input,area,dt){
 }
 
 
-# Suche nach doppelten Zeitflags. Falls welche gefunden werden, wird der Wert beider Einträge gemittelt.
+# Suche nach doppelten Zeitflags. Falls welche gefunden werden, wird der Wert aller Einträge gemittelt.
 #' Remove duplicated entries
 #' @param x xts object
 #' @return xts object
 #' @author Simon Frey
 #' @export
-#' @description Searches duplicated timestamps in an xts object. If some are found, the values of this entry and its neighbours are averaged
+#' @description Searches duplicated timestamps in an xts object and removes them. The new value is the mean of all values with the same timestamp.
 clear.duplicated <- function(x){
-  any.duplicated <- anyDuplicated(time(x))
-  if(length(any.duplicated) > 0){
-    if(any.duplicated != 0){
-      which.duplicated <- which(time(x[any.duplicated]) == time(x))
-      x[which.duplicated[1],] <- mean(x[which.duplicated[1],])
-      x <- x[-which.duplicated[1]]
+  
+  run <- TRUE
+  while(run){
+    any.duplicated <- anyDuplicated(index(x))
+      if(any.duplicated != 0){
+        which.duplicated <- which(index(x[any.duplicated]) == index(x))
+        x[which.duplicated[1],] <- colMeans(x[which.duplicated,])
+        x <- x[-which.duplicated[2:length(which.duplicated)],]
+      }
+    any.duplicated <- anyDuplicated(index(x))
+    if(any.duplicated == 0){
+      run <- FALSE
     }
   }
+  
   return(x)
 }
 

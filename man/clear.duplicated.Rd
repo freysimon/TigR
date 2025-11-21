@@ -13,7 +13,7 @@ clear.duplicated(x)
 xts object
 }
 \description{
-Searches duplicated timestamps in an xts object. If some are found, the values of this entry and its neighbours are averaged
+Searches duplicated timestamps in an xts object and removes them. The new value is the mean of all values with the same timestamp.
 }
 \author{
 Simon Frey
