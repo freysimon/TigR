@@ -1,18 +1,23 @@
+
 #' Columnwise apply a function to receive hourly or daily aggregated values
 #' @param x an xts object
 #' @param FUN an R function
 #' @param agg character string to specify whether to receive monthly, weekly, daily or hourly values, respectively. See details.
-#' @param PB a character indicating whether and what kind of progress bar should be drawn. See details.
-#' @param tz character specifying the time zone or NULL (the standard). If the latter, the time zone of x is used
+#' @param PB deprecated. A character indicating whether and what kind of progress bar should be drawn. See details.
+#' @param tz character specifying the time zone or NULL (the standard). If the latter, the time zone of x is used.
+#' @param ncores integer. Number of CPU cores used. See details.
 #' @param ... additional arguments to FUN
 #' @description Apply a specified function to each column of an xts object creating hourly, daily or monthly values
-#' @details A simple mechanism to use \code{\link{apply.daily}}, \code{\link{apply.hourly}},  \code{\link{apply.weekly}} or \code{\link{apply.monthly}} to each column of an xts object. 
+#' @details A simple mechanism to use \code{\link{apply.daily}}, \code{\link{apply.hourly}},  \code{\link{apply.weekly}} or \code{\link{apply.monthly}} to each column of an xts object.
+#' 
+#'     Since november 2025 apply.daily.columns uses multicore parallel computing. By default it uses all but one cores on the system. By setting ncores, the user may overrule this.
 #'     
-#'     By setting PB, an optional progressbar can be drawn: "w" or "win" draws a \code{\link{winProgressBar}}, 
-#'     "t" or "txt" draws a \code{\link{txtProgressBar}} and "n" or "none" (the default) suppresses the progress bar.
+#'     The argument PB is no longer supported and is kept for compability reasons only.
 #'     
 #' @author Simon Frey
 #' @export
+#' @import foreach
+#' @import doParallel
 #' @import xts
 #' @return An xts object containing hourly, daily, ... values
 #' @seealso \code{\link{apply.daily}}
@@ -28,8 +33,24 @@
 #'     aday <- apply.daily.columns(x, FUN = sum, agg = 'day', PB = 'txt')
 #'     head(aday)
 
-apply.daily.columns <- function(x, FUN, agg = 'day', PB = "n", tz = NULL, ...){
+apply.daily.columns <- function(x, FUN, agg = 'day', PB = "n", ncores = 0, tz = NULL, ...){
+  
+  
+  
   library(xts)
+  library(foreach)
+  library(doParallel)
+  
+  n_cores <- detectCores()
+  
+  if(ncores < n_cores){
+    n_cores <- max(2, ncores)
+  }
+
+  cluster <- makeCluster(n_cores - 1)
+  registerDoParallel(cluster)
+  
+  
   if(class(x)[1] != "xts"){
     stop("x must be an xts object")
   }
@@ -67,59 +88,32 @@ apply.daily.columns <- function(x, FUN, agg = 'day', PB = "n", tz = NULL, ...){
   rm(temp)
   
   if(agg == 'day'){
-    titl <- "Aggregating to daily data"
+    out <-  foreach(j=1:dim.in[2], .export = "apply.daily", .packages = "xts", 
+                 .combine=cbind) %dopar%
+            apply.daily(x[,j], FUN = FUN, ...)
   }
+  
   if(agg == "hour"){
-    titl <- "Aggregating to hourly data"
+    out <-  foreach(j=1:dim.in[2], .export = "apply.hourly", .packages = "xts", 
+                    .combine=cbind) %dopar%
+            apply.hourly(x[,j], FUN = FUN, ...)
   }
-  if(agg == "week"){
-    titl <- "Aggregating to weekly data"
-  }
+  
   if(agg == "month"){
-    titl <- "Aggregating to monthly data"
+    out <-  foreach(j=1:dim.in[2], .export = "apply.monthly", .packages = "xts", 
+                    .combine=cbind) %dopar%
+            apply.monthly(x[,j], FUN = FUN, ...)
   }
   
-  if(!PB %in% c("n", "none")){
-    if(PB %in% c("win", "w")){
-      pb <- winProgressBar(title = titl, label = "",
-                           min = 0, max = dim.in[2], initial = 0, width = 400)
-    }  
-    if(PB %in% c("txt", "t")){
-      pb <- txtProgressBar(min = 0, max = dim.in[2], initial = 0)
-    }
+  if(agg == "week"){
+    out <-  foreach(j=1:dim.in[2], .export = "apply.weekly", .packages = "xts", 
+                    .combine=cbind) %dopar%
+            apply.monthly(x[,j], FUN = FUN, ...)
   }
-  
-  # fill out with data
-  for(j in 1:dim.in[2]){
-    
-    
-    if(agg == 'day'){
-      out[,j] <- apply.daily(x[,j], FUN = FUN, ...)
-    }
-    if(agg == "hour"){
-      out[,j] <- apply.hourly(x[,j], FUN = FUN, ...)
-    }
-    if(agg == "month"){
-      out[,j] <- apply.monthly(x[,j],FUN = FUN, ...)
-    }
-    if(agg == "week"){
-      out[,j] <- apply.weekly(x[,j],FUN = FUN, ...)
-    }
-    
-    
-    if(PB %in% c("win", "w")){
-      setWinProgressBar(pb, j, label =  round((j / dim.in[2]),2))
-    }
-    if(PB %in% c("txt", "t")){
-      setTxtProgressBar(pb, j)
-    }
-    
-  }
-  
-  if(!PB %in% c("n", "none")){
-    close(pb) 
-  }
-  
+
+ 
+ 
+  # 
   # formatting index of out
   #tz <- indexTZ(out)
   if(agg == 'day'){
@@ -134,8 +128,11 @@ apply.daily.columns <- function(x, FUN, agg = 'day', PB = "n", tz = NULL, ...){
   if(agg == "month"){
     index(out) <- as.POSIXct(format(index(out), fomat = "%Y-%m"), tz = tz)
   }
+
   
-  
+  # stopping cluster
+
+  stopCluster(cl = cluster)
   return(out)
   
 }
