@@ -3,22 +3,23 @@
 #' @param x an xts object
 #' @param FUN an R function
 #' @param agg character string to specify whether to receive monthly, weekly, daily or hourly values, respectively. See details.
-#' @param PB deprecated. A character indicating whether and what kind of progress bar should be drawn. See details.
+#' @param PB logical. Should a progressbar be shown? See details.
 #' @param tz character specifying the time zone or NULL (the standard). If the latter, the time zone of x is used.
 #' @param ncores integer. Number of CPU cores used. See details.
 #' @param ... additional arguments to FUN
 #' @description Apply a specified function to each column of an xts object creating hourly, daily or monthly values
 #' @details A simple mechanism to use \code{\link{apply.daily}}, \code{\link{apply.hourly}},  \code{\link{apply.weekly}} or \code{\link{apply.monthly}} to each column of an xts object.
 #' 
-#'     Since november 2025 apply.daily.columns uses multicore parallel computing. By default it uses all but one cores on the system. By setting ncores, the user may overrule this.
+#'     Since November 2025 apply.daily.columns uses multicore parallel computing. By default it uses all but one cores on the system. By setting ncores, the user may overrule this.
 #'     
-#'     The argument PB is no longer supported and is kept for compability reasons only.
+#'     In previous versions, PB indicated whether a txt or winProgressbar should indicate the progress of the calculations. Since parallel computing is now supported PB now indicates whether a progressbar should be displayed (using \code{\link{tkProgressBar}}). Default is TRUE. Still "n" suppresses the progressbar. The old parameters ("t", "txt", "w" "win") are kept for compability reasons.
 #'     
 #' @author Simon Frey
 #' @export
 #' @import foreach
 #' @import doParallel
 #' @import xts
+#' @import tcltk
 #' @return An xts object containing hourly, daily, ... values
 #' @seealso \code{\link{apply.daily}}
 #' @seealso \code{\link{apply.hourly}}
@@ -30,16 +31,17 @@
 #'     head(x)
 #'     
 #'     # aggregate to daily values
-#'     aday <- apply.daily.columns(x, FUN = sum, agg = 'day', PB = 'txt')
+#'     aday <- apply.daily.columns(x, FUN = sum, agg = 'day', PB = TRUE)
 #'     head(aday)
 
-apply.daily.columns <- function(x, FUN, agg = 'day', PB = "n", ncores = 0, tz = NULL, ...){
+apply.daily.columns <- function(x, FUN, agg = 'day', PB = TRUE, ncores = 0, tz = NULL, ...){
   
   
   
   library(xts)
   library(foreach)
   library(doParallel)
+  library(tcltk)
   
   n_cores <- detectCores()
   
@@ -54,10 +56,17 @@ apply.daily.columns <- function(x, FUN, agg = 'day', PB = "n", ncores = 0, tz = 
   if(class(x)[1] != "xts"){
     stop("x must be an xts object")
   }
-  if(!PB %in% c("w", "win", "t", "txt", "n", "none")){
+  if(!PB %in% c("w", "win", "t", "txt", "n", "none", TRUE, FALSE)){
     warning("PB not recognized.")
-    PB <- "n"
+    PB <- TRUE
   }
+  
+  if(PB %in% c("w", "win", "t", "txt",  TRUE)){
+    PB <- TRUE
+  } else {
+    PB <- FALSE
+  }
+  
   if(!agg %in% c('day', 'hour', "week", "month")){
     stop("agg must be one of 'month', 'day' or 'hour'")
   }
@@ -88,27 +97,47 @@ apply.daily.columns <- function(x, FUN, agg = 'day', PB = "n", ncores = 0, tz = 
   rm(temp)
   
   if(agg == 'day'){
-    out <-  foreach(j=1:dim.in[2], .export = "apply.daily", .packages = "xts", 
-                 .combine=cbind) %dopar%
-            apply.daily(x[,j], FUN = FUN, ...)
+    out <-  foreach(j=1:dim.in[2], .export = "apply.daily", .packages = c("xts", "tcltk"),
+                 .combine=cbind) %dopar% {
+                   if(PB){
+                     if(!exists("pb")) pb <- tkProgressBar("Aggregating to daily values", min=1, max=dim.in[2])
+                    setTkProgressBar(pb, j)
+                   }
+                   apply.daily(x[,j], FUN = FUN, ...)
+                 }
   }
   
-  if(agg == "hour"){
-    out <-  foreach(j=1:dim.in[2], .export = "apply.hourly", .packages = "xts", 
-                    .combine=cbind) %dopar%
-            apply.hourly(x[,j], FUN = FUN, ...)
+  if(agg == 'hour'){
+    out <-  foreach(j=1:dim.in[2], .export = "apply.hourly", .packages = c("xts", "tcltk"),
+                    .combine=cbind) %dopar% {
+                      if(PB){
+                        if(!exists("pb")) pb <- tkProgressBar("Aggregating to hourly values", min=1, max=dim.in[2])
+                        setTkProgressBar(pb, j)
+                      }
+                      apply.hourly(x[,j], FUN = FUN, ...)
+                    }
   }
   
   if(agg == "month"){
-    out <-  foreach(j=1:dim.in[2], .export = "apply.monthly", .packages = "xts", 
-                    .combine=cbind) %dopar%
-            apply.monthly(x[,j], FUN = FUN, ...)
+    out <-  foreach(j=1:dim.in[2], .export = "apply.monthly", .packages = c("xts", "tcltk"),
+                    .combine=cbind) %dopar% {
+                      if(PB){
+                        if(!exists("pb")) pb <- tkProgressBar("Aggregating to monthly values", min=1, max=dim.in[2])
+                        setTkProgressBar(pb, j)
+                      }
+                      apply.monthly(x[,j], FUN = FUN, ...)
+                    }
   }
   
   if(agg == "week"){
-    out <-  foreach(j=1:dim.in[2], .export = "apply.weekly", .packages = "xts", 
-                    .combine=cbind) %dopar%
-            apply.monthly(x[,j], FUN = FUN, ...)
+    out <-  foreach(j=1:dim.in[2], .export = "apply.weekly", .packages = c("xts", "tcltk"),
+                    .combine=cbind) %dopar% {
+                      if(PB){
+                        if(!exists("pb")) pb <- tkProgressBar("Aggregating to weekly values", min=1, max=dim.in[2])
+                        setTkProgressBar(pb, j)
+                      }
+                      apply.weekly(x[,j], FUN = FUN, ...)
+                    }
   }
 
  

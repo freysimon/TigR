@@ -4,7 +4,7 @@
 \alias{apply.daily.columns}
 \title{Columnwise apply a function to receive hourly or daily aggregated values}
 \usage{
-apply.daily.columns(x, FUN, agg = "day", PB = "n", tz = NULL, ...)
+apply.daily.columns(x, FUN, agg = "day", PB = TRUE, ncores = 0, tz = NULL, ...)
 }
 \arguments{
 \item{x}{an xts object}
@@ -13,9 +13,11 @@ apply.daily.columns(x, FUN, agg = "day", PB = "n", tz = NULL, ...)
 
 \item{agg}{character string to specify whether to receive monthly, weekly, daily or hourly values, respectively. See details.}
 
-\item{PB}{a character indicating whether and what kind of progress bar should be drawn. See details.}
+\item{PB}{logical. Should a progressbar be shown? See details.}
 
-\item{tz}{character specifying the time zone or NULL (the standard). If the latter, the time zone of x is used}
+\item{ncores}{integer. Number of CPU cores used. See details.}
+
+\item{tz}{character specifying the time zone or NULL (the standard). If the latter, the time zone of x is used.}
 
 \item{...}{additional arguments to FUN}
 }
@@ -26,10 +28,11 @@ An xts object containing hourly, daily, ... values
 Apply a specified function to each column of an xts object creating hourly, daily or monthly values
 }
 \details{
-A simple mechanism to use \code{\link{apply.daily}}, \code{\link{apply.hourly}},  \code{\link{apply.weekly}} or \code{\link{apply.monthly}} to each column of an xts object. 
+A simple mechanism to use \code{\link{apply.daily}}, \code{\link{apply.hourly}},  \code{\link{apply.weekly}} or \code{\link{apply.monthly}} to each column of an xts object.
+
+    Since November 2025 apply.daily.columns uses multicore parallel computing. By default it uses all but one cores on the system. By setting ncores, the user may overrule this.
     
-    By setting PB, an optional progressbar can be drawn: "w" or "win" draws a \code{\link{winProgressBar}}, 
-    "t" or "txt" draws a \code{\link{txtProgressBar}} and "n" or "none" (the default) suppresses the progress bar.
+    In previous versions, PB indicated whether a txt or winProgressbar should indicate the progress of the calculations. Since parallel computing is now supported PB now indicates whether a progressbar should be displayed (using \code{\link{tkProgressBar}}). Default is TRUE. Still "n" suppresses the progressbar. The old parameters ("t", "txt", "w" "win") are kept for compability reasons.
 }
 \examples{
  
@@ -38,7 +41,7 @@ A simple mechanism to use \code{\link{apply.daily}}, \code{\link{apply.hourly}},
     head(x)
     
     # aggregate to daily values
-    aday <- apply.daily.columns(x, FUN = sum, agg = 'day', PB = 'txt')
+    aday <- apply.daily.columns(x, FUN = sum, agg = 'day', PB = TRUE)
     head(aday)
 }
 \seealso{
