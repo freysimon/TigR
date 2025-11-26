@@ -4,7 +4,7 @@
 \alias{apply.daily.columns}
 \title{Columnwise apply a function to receive hourly or daily aggregated values}
 \usage{
-apply.daily.columns(x, FUN, agg = "day", PB = TRUE, ncores = 0, tz = NULL, ...)
+apply.daily.columns(x, FUN, agg = "day", PB = TRUE, ncores = 1, tz = NULL, ...)
 }
 \arguments{
 \item{x}{an xts object}
@@ -30,7 +30,7 @@ Apply a specified function to each column of an xts object creating hourly, dail
 \details{
 A simple mechanism to use \code{\link{apply.daily}}, \code{\link{apply.hourly}},  \code{\link{apply.weekly}} or \code{\link{apply.monthly}} to each column of an xts object.
 
-    Since November 2025 apply.daily.columns uses multicore parallel computing. By default it uses all but one cores on the system. By setting ncores, the user may overrule this.
+    Since November 2025 apply.daily.columns uses multicore parallel computing. By default it uses just a single core. By setting ncores, the user may overrule this.
     
     In previous versions, PB indicated whether a txt or winProgressbar should indicate the progress of the calculations. Since parallel computing is now supported PB now indicates whether a progressbar should be displayed (using \code{\link{progressr}}). Default is TRUE. Still "n" suppresses the progressbar. The old parameters ("t", "txt", "w" "win") are kept for compability reasons.
 }
