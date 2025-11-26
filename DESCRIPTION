@@ -1,7 +1,7 @@
 Package: TigR
 Type: Package
 Title: A collection of more or less usefull R functions
-Version: 0.4.1.0
+Version: 0.4.1.1
 IMPORTS: 
     xts,
     magrittr,
@@ -16,11 +16,12 @@ IMPORTS:
     dygraphs,
     htmltools,
     DescTools,
-    future.apply
+    future.apply,
     hydroGOF,
     foreach,
     doParallel
-    hydroGOF
+    hydroGOF,
+    progressr
 Author: Simon Frey
 Maintainer: Simon Frey <simon.frey@verbund.com>
 Description: No description available.

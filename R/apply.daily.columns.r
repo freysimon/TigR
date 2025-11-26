@@ -12,14 +12,14 @@
 #' 
 #'     Since November 2025 apply.daily.columns uses multicore parallel computing. By default it uses all but one cores on the system. By setting ncores, the user may overrule this.
 #'     
-#'     In previous versions, PB indicated whether a txt or winProgressbar should indicate the progress of the calculations. Since parallel computing is now supported PB now indicates whether a progressbar should be displayed (using \code{\link{tkProgressBar}}). Default is TRUE. Still "n" suppresses the progressbar. The old parameters ("t", "txt", "w" "win") are kept for compability reasons.
+#'     In previous versions, PB indicated whether a txt or winProgressbar should indicate the progress of the calculations. Since parallel computing is now supported PB now indicates whether a progressbar should be displayed (using \code{\link{progressr}}). Default is TRUE. Still "n" suppresses the progressbar. The old parameters ("t", "txt", "w" "win") are kept for compability reasons.
 #'     
 #' @author Simon Frey
 #' @export
 #' @import foreach
 #' @import doParallel
 #' @import xts
-#' @import tcltk
+#' @import progressr
 #' @return An xts object containing hourly, daily, ... values
 #' @seealso \code{\link{apply.daily}}
 #' @seealso \code{\link{apply.hourly}}
@@ -33,135 +33,78 @@
 #'     # aggregate to daily values
 #'     aday <- apply.daily.columns(x, FUN = sum, agg = 'day', PB = TRUE)
 #'     head(aday)
+#'
+#'	   # using a progressbar
+#'	   library(progressr)
+#'	   handlers("txtprogressbar")
+#'	   with_progress({
+#'       aday <- apply.daily.columns(x, FUN = sum, agg = 'day', PB = TRUE)
+#'     })
+#'	   head(aday)
 
-apply.daily.columns <- function(x, FUN, agg = 'day', PB = TRUE, ncores = 0, tz = NULL, ...){
+apply.daily.columns <- function(x, FUN, agg = 'day', PB = TRUE, ncores = 0, tz = NULL, ...) {
+  library("xts")
+  library("foreach")
+  library("doParallel")
+  library("progressr")
   
+  if (class(x)[1] != "xts") stop("x must be an xts object")
+  if (is.null(tz)) tz <- xts::tzone(x)
   
-  
-  library(xts)
-  library(foreach)
-  library(doParallel)
-  library(tcltk)
-  
-  n_cores <- detectCores()
-  
-  if(ncores < n_cores){
-    n_cores <- max(2, ncores)
-  }
-
-  cluster <- makeCluster(n_cores - 1)
-  registerDoParallel(cluster)
-  
-  
-  if(class(x)[1] != "xts"){
-    stop("x must be an xts object")
-  }
-  if(!PB %in% c("w", "win", "t", "txt", "n", "none", TRUE, FALSE)){
-    warning("PB not recognized.")
-    PB <- TRUE
-  }
-  
-  if(PB %in% c("w", "win", "t", "txt",  TRUE)){
-    PB <- TRUE
+  max_cores <- parallel::detectCores()
+  if (is.null(ncores) || ncores <= 0 || ncores > max_cores) {
+    n_cores <- max_cores - 1
   } else {
-    PB <- FALSE
+    n_cores <- min(ncores, max_cores)
   }
+  if(n_cores < 1) n_cores <- 1
   
-  if(!agg %in% c('day', 'hour', "week", "month")){
-    stop("agg must be one of 'month', 'day' or 'hour'")
-  }
-  if(is.null(tz)){
-    tz = tzone(x)
-  }
+  cl <- parallel::makeCluster(n_cores)
+  doParallel::registerDoParallel(cl)
   
-  # get dimensions of x
-  dim.in <- dim(x)
+  agg_fun <- switch(agg,
+                    day = xts::apply.daily,
+                    hour = {
+                      if (!requireNamespace("TigR", quietly = TRUE)) {
+                        parallel::stopCluster(cl)
+                        stop("Package 'TigR' needed for hourly aggregation is not installed.")
+                      }
+                      TigR::apply.hourly
+                    },
+                    week = xts::apply.weekly,
+                    month = xts::apply.monthly,
+                    stop("agg must be one of 'day', 'hour', 'week', 'month'")
+  )
   
-  # get dimensions of processed time series
-  if(agg == 'day'){
-    temp <- apply.daily(x[,1], FUN = FUN)
-  } else if(agg == "hour") {
-    temp <- TigR::apply.hourly(x[,1], FUN = FUN)
-  } else if (agg == "week") {
-    temp <- apply.weekly(x[,1], FUN = FUN)
+  temp <- agg_fun(x[,1, drop=FALSE], FUN = FUN, ...)
+  dim_in <- dim(x)
+  
+  # Nur progressor erzeugen, wenn PB = TRUE
+  if (PB) {
+    p <- progressr::progressor(steps = dim_in[2])
   } else {
-    temp <- apply.monthly(x[,1], FUN = FUN)
+    p <- function(...) NULL
   }
   
-  dim.out <- dim(temp)
+  out_list <- foreach::foreach(j = 1:dim_in[2],
+                               .packages = c("xts", if(agg == "hour") "TigR" else NULL),
+                               .combine = cbind) %dopar% {
+                                 res <- agg_fun(x[, j, drop=FALSE], FUN = FUN, ...)
+                                 p()  # Fortschritt inkrementieren
+                                 return(res)
+                               }
   
-  # create new aggregated xts object with dim.out
-  out <- matrix(nrow = dim.out[1], ncol = dim.in[2], data = NA)
-  out <- xts(out, order.by = index(temp))
+  parallel::stopCluster(cl)
   
-  rm(temp)
+  out_xts <- xts(out_list, order.by = index(temp))
   
-  if(agg == 'day'){
-    out <-  foreach(j=1:dim.in[2], .export = "apply.daily", .packages = c("xts", "tcltk"),
-                 .combine=cbind) %dopar% {
-                   if(PB){
-                     if(!exists("pb")) pb <- tkProgressBar("Aggregating to daily values", min=1, max=dim.in[2])
-                    setTkProgressBar(pb, j)
-                   }
-                   apply.daily(x[,j], FUN = FUN, ...)
-                 }
+  if (agg %in% c("day", "week")) {
+    index(out_xts) <- as.Date(index(out_xts), tz = tz)
+  } else if (agg == "hour") {
+    index(out_xts) <- as.POSIXct(format(index(out_xts), "%Y-%m-%d %H:00:00"), tz = tz)
+  } else if (agg == "month") {
+    index(out_xts) <- as.POSIXct(paste0(format(index(out_xts), "%Y-%m"), "-01"), tz = tz)
   }
   
-  if(agg == 'hour'){
-    out <-  foreach(j=1:dim.in[2], .export = "apply.hourly", .packages = c("xts", "tcltk"),
-                    .combine=cbind) %dopar% {
-                      if(PB){
-                        if(!exists("pb")) pb <- tkProgressBar("Aggregating to hourly values", min=1, max=dim.in[2])
-                        setTkProgressBar(pb, j)
-                      }
-                      apply.hourly(x[,j], FUN = FUN, ...)
-                    }
-  }
-  
-  if(agg == "month"){
-    out <-  foreach(j=1:dim.in[2], .export = "apply.monthly", .packages = c("xts", "tcltk"),
-                    .combine=cbind) %dopar% {
-                      if(PB){
-                        if(!exists("pb")) pb <- tkProgressBar("Aggregating to monthly values", min=1, max=dim.in[2])
-                        setTkProgressBar(pb, j)
-                      }
-                      apply.monthly(x[,j], FUN = FUN, ...)
-                    }
-  }
-  
-  if(agg == "week"){
-    out <-  foreach(j=1:dim.in[2], .export = "apply.weekly", .packages = c("xts", "tcltk"),
-                    .combine=cbind) %dopar% {
-                      if(PB){
-                        if(!exists("pb")) pb <- tkProgressBar("Aggregating to weekly values", min=1, max=dim.in[2])
-                        setTkProgressBar(pb, j)
-                      }
-                      apply.weekly(x[,j], FUN = FUN, ...)
-                    }
-  }
-
- 
- 
-  # 
-  # formatting index of out
-  #tz <- indexTZ(out)
-  if(agg == 'day'){
-    index(out) <- as.Date(index(out), tz = tz)
-  }
-  if(agg == 'week'){
-    index(out) <- as.Date(index(out), tz = tz)
-  }
-  if(agg == "hour"){
-    index(out) <- as.POSIXct(format(index(out), format = "%Y-%m-%d %H:00"), tz = tz)
-  }
-  if(agg == "month"){
-    index(out) <- as.POSIXct(format(index(out), fomat = "%Y-%m"), tz = tz)
-  }
-
-  
-  # stopping cluster
-
-  stopCluster(cl = cluster)
-  return(out)
-  
+  return(out_xts)
 }

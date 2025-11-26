@@ -32,7 +32,7 @@ A simple mechanism to use \code{\link{apply.daily}}, \code{\link{apply.hourly}},
 
     Since November 2025 apply.daily.columns uses multicore parallel computing. By default it uses all but one cores on the system. By setting ncores, the user may overrule this.
     
-    In previous versions, PB indicated whether a txt or winProgressbar should indicate the progress of the calculations. Since parallel computing is now supported PB now indicates whether a progressbar should be displayed (using \code{\link{tkProgressBar}}). Default is TRUE. Still "n" suppresses the progressbar. The old parameters ("t", "txt", "w" "win") are kept for compability reasons.
+    In previous versions, PB indicated whether a txt or winProgressbar should indicate the progress of the calculations. Since parallel computing is now supported PB now indicates whether a progressbar should be displayed (using \code{\link{progressr}}). Default is TRUE. Still "n" suppresses the progressbar. The old parameters ("t", "txt", "w" "win") are kept for compability reasons.
 }
 \examples{
  
@@ -43,6 +43,14 @@ A simple mechanism to use \code{\link{apply.daily}}, \code{\link{apply.hourly}},
     # aggregate to daily values
     aday <- apply.daily.columns(x, FUN = sum, agg = 'day', PB = TRUE)
     head(aday)
+
+   # using a progressbar
+   library(progressr)
+   handlers("txtprogressbar")
+   with_progress({
+      aday <- apply.daily.columns(x, FUN = sum, agg = 'day', PB = TRUE)
+    })
+   head(aday)
 }
 \seealso{
 \code{\link{apply.daily}}
