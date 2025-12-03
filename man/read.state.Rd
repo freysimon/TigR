@@ -27,6 +27,8 @@ This function simply reads a state variable file of COSERO and returns a list co
 }
 \seealso{
 \code{\link{analyse.snow.state}}
+
+\code{\link{write.state}}
 }
 \author{
 Simon Frey

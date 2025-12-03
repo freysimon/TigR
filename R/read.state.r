@@ -12,10 +12,17 @@
 #' @examples 
 #'     read.state("C:/TEMP/statevar.dmp")
 #' @seealso \code{\link{analyse.snow.state}}
+#' @seealso \code{\link{write.state}}
 #' 
 read.state <- function(file = "statevar.dmp"){
   x <- readLines(file)
   x <- strsplit(x, " ")
+  
+  # ignore header info line, if any exists
+  if(substr(paste(x[[1]],collapse=""),1,18) == "DATEANDTIMEOFSTATE"){
+      x[[1]] <- NULL
+      x[[1]] <- NULL
+  }
   
   # get rid of blank entries
   for(k in 1:length(x)){
@@ -77,4 +84,58 @@ read.state <- function(file = "statevar.dmp"){
   }
   
   return(list(NBvar,IZvar,IKLvar,glacvar))
+}
+
+
+#' Write a COSERO state file
+#' @description Write a file containing the state variables of COSERO
+#' @author Simon Frey
+#' @export
+#' @details This function writes a COSERO state file to the hard disk.
+#' @param x a list of length=4. The output of \code{\link{read.state}}
+#' @param file file that will be written
+#' @examples 
+#'     x <- read.state("C:/TEMP/statevar.dmp")
+#'     write.stat(x, file = "C:/TEMP/statevar_by_R.dmp")
+#' @seealso \code{\link{analyse.snow.state}}
+#' @seealso \code{\link{readstate}}
+#' 
+
+
+write.state <- function(x, file = "statevar.dmp"){
+  
+  if(class(x) != "list"){
+    stop("x must be a list.")
+  }
+  if(length(x) != 4){
+    stop("x must be a list of length 4")
+  }
+  
+  xout <- vector(mode = "character")
+  n <- 1
+  
+  
+  for(k in 1:length(x)){
+    for(j in 1:nrow(x[[k]])){
+      if(j == 1){
+
+        if(k == 1){
+          xout[n] <- paste("DATE AND TIME Of STATE: ", format(Sys.time(), format = "%Y-%m-%d %H:%M"), sep = "")
+          n = n + 1
+        }
+
+        xout[n] <- ""
+        n = n + 1
+        xout[n] <-  paste(colnames(x[[k]]), collapse = " ")
+        n = n + 1
+
+     }
+     xout[n] <- paste(as.character(x[[k]][j,]), collapse = "    ")
+     n <- n + 1
+
+    }
+  }
+  
+  writeLines(xout, con = file)
+  
 }

@@ -1,7 +1,7 @@
 Package: TigR
 Type: Package
 Title: A collection of more or less usefull R functions
-Version: 0.4.1.1
+Version: 0.4.1.2
 IMPORTS: 
     xts,
     magrittr,
