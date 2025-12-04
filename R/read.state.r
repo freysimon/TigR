@@ -129,10 +129,63 @@ write.state <- function(x, file = "statevar.dmp"){
         xout[n] <-  paste(colnames(x[[k]]), collapse = " ")
         n = n + 1
 
-     }
-     xout[n] <- paste(as.character(x[[k]][j,]), collapse = "    ")
-     n <- n + 1
-
+      }
+      
+      # first block has the format
+      # NB BW3GEB BWLASIM BWLAOSI BW5SIM
+      # %5.0f %9.3f %9.3f %9.3f %9.3f
+      if(k == 1){
+        xout[n] <- paste(
+          as.character(
+            sprintf(c("%5.0f", rep("%9.3f", 4)),
+              x[[k]][j,]
+            )
+          ), 
+          collapse = "    ")
+        n <- n + 1
+      }
+      
+      # second block has the format
+      # NB IZ BWIZON BW0ZON BW1ZON BW2ZON BW4ZON TSOILZON REDMELTZON KEEPSCOVZON SWWKLMAXZON SWWKLMINZON
+      # %5.0f %5.0f %9.3f %9.3f %9.3f %9.3f %9.3f %9.3f %9.3f %9.3f %9.3f %9.3f
+      if(k == 2){
+        xout[n] <- paste(
+          as.character(
+            sprintf(c(rep("%5.0f",2),rep("%9.3f",10)),
+                    x[[k]][j,]
+            )
+          ), 
+          collapse = "    ")
+        n <- n + 1
+      }
+      
+      # third block has the format
+      # NB IZ NKL KSWIN KSHIN KMELTRIN KSRHOIN KSWUMIN
+      # %5.0f %5.0f %5.0f %9.3f %9.3f %9.3f %9.3f %9.3f
+      if(k == 3){
+        xout[n] <- paste(
+          as.character(
+            sprintf(c(rep("%5.0f",3),rep("%9.3f",5)),
+                    x[[k]][j,]
+            )
+          ), 
+          collapse = "    ")
+        n <- n + 1
+      }
+      
+      # fourth block has the format
+      # NB SCONTHO
+      # %5.0f %9.3f
+      if(k == 4){
+        xout[n] <- paste(
+          as.character(
+            sprintf(c("%5.0f", "%9.3f"),
+                    x[[k]][j,]
+            )
+          ), 
+          collapse = "    ")
+        n <- n + 1
+      }
     }
   }
   
