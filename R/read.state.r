@@ -120,13 +120,13 @@ write.state <- function(x, file = "statevar.dmp"){
       if(j == 1){
 
         if(k == 1){
-          xout[n] <- paste("DATE AND TIME Of STATE: ", format(Sys.time(), format = "%Y-%m-%d %H:%M"), sep = "")
+          xout[n] <- paste(" DATE AND TIME Of STATE: ", format(Sys.time(), format = "%Y-%m-%d %H:%M"), sep = "")
           n = n + 1
         }
 
         xout[n] <- ""
         n = n + 1
-        xout[n] <-  paste(colnames(x[[k]]), collapse = " ")
+        xout[n] <-  paste("", colnames(x[[k]]), collapse = " ")
         n = n + 1
 
       }
