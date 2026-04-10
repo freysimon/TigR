@@ -366,7 +366,7 @@ read.xts <- function(x, datecolumns=1, format="%Y-%m-%d %H:%M", header=TRUE, tz 
   options(xts_check_TZ = FALSE)
   
   # new method
-  temp <- data.table::fread(file = x, header = TRUE, skip = skip, ...)
+  temp <- data.table::fread(file = x, header = header, skip = skip, ...)
   temp <- as.data.frame(temp)
   nc <- ncol(temp)
 
