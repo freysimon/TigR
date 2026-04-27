@@ -2,7 +2,7 @@
 % Please edit documentation in R/rowcolstats.r
 \name{rowStats}
 \alias{rowStats}
-\title{Calculate some simple statistic estimators on rows in a matrix or data.frame}
+\title{Calculate some simple statistic estimators on rows in a matrix, data.frame, or xts object}
 \usage{
 rowStats(
   x,
@@ -30,10 +30,10 @@ rowStats(
 \item{keep.plan}{logical. Should the plan "multisession" be kept or changed back to "sequential" by quitting the function?}
 }
 \value{
-numerical vector
+numerical vector, if x is an xts object, an xts object will be returned, too.
 }
 \description{
-Calculate some simple statistics like median, min, max or quantiles on rows in a matrix or data.frame object
+Calculate some simple statistics like median, min, max or quantiles on rows in a matrix, data.frame, or xts object
 }
 \details{
 \if{html}{\out{<div class="sourceCode">}}\preformatted{This function uses predefined statistical function that can be used:

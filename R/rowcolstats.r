@@ -1,5 +1,5 @@
-#' Calculate some simple statistic estimators on rows in a matrix or data.frame
-#' @description Calculate some simple statistics like median, min, max or quantiles on rows in a matrix or data.frame object
+#' Calculate some simple statistic estimators on rows in a matrix, data.frame, or xts object
+#' @description Calculate some simple statistics like median, min, max or quantiles on rows in a matrix, data.frame, or xts object
 #' @author Simon Frey
 #' @export
 #' @import future.apply
@@ -10,7 +10,7 @@
 #' @param weights numerical vector. Used if fun == weighted.quantile only. See details.
 #' @param run.parallel logical. Should the operation be run in parallel? If TRUE, \link{future_apply} with the plan "multisession" is used.
 #' @param keep.plan logical. Should the plan "multisession" be kept or changed back to "sequential" by quitting the function?
-#' @return numerical vector
+#' @return numerical vector, if x is an xts object, an xts object will be returned, too.
 #' @details 
 #'     This function uses predefined statistical function that can be used:
 #'     * min (determine the minimum value)
@@ -19,6 +19,7 @@
 #'     * median (estimate the median value)
 #'     * quantile (estimate a certain quantile value. Note that values between 0 and 1 are accepted)
 #'     * weighted.quantile (calculation of quantiles using individual weights. \link{Quantile} from \code{DescTools} is used.)
+#'     
 #' @examples
 #'     # load runoff data
 #'     data(runoff)
@@ -48,6 +49,13 @@ rowStats <- function(x, fun, na.rm=TRUE, q = 0.1, weights = NULL, run.parallel=F
   if(isTRUE(run.parallel)){
     library(future.apply)
     plan(multisession)
+  }
+  
+  return_xts <- FALSE
+  
+  if(class(x)[1] == "xts"){
+    return_xts <- TRUE
+    index_x <- index(x)
   }
   
   if(fun %in% c("min","max","median","mean")){
@@ -98,6 +106,10 @@ rowStats <- function(x, fun, na.rm=TRUE, q = 0.1, weights = NULL, run.parallel=F
     if(!isTRUE(keep.plan)){
       plan(sequential)
     }
+  }
+  
+  if(return_xts){
+    result <- xts(result, order.by = index_x)
   }
   
   return(result)
